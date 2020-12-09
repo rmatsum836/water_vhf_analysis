@@ -4,12 +4,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import seaborn as sns
-#import proplot as plot
 
 import numpy as np
 import scattering
 from scattering.utils.features import find_local_maxima, find_local_minima
 from scipy.signal import savgol_filter
+from matplotlib.ticker import MultipleLocator
 
 aimd = {
     'r': np.loadtxt('../aimd/water_form/r.txt'),
@@ -18,11 +18,25 @@ aimd = {
     'name': 'AIMD',
 }
 
+aimd_330 = {
+    'r': np.loadtxt('../aimd/330k/water_form/r.txt'),
+    't': np.loadtxt('../aimd/330k/water_form/t.txt')*0.0005,
+    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt'),
+    'name': 'optB88_330K',
+}
+
 aimd_filtered = {
     'r': aimd['r'],
     't': aimd['t'],
     'g': savgol_filter(aimd['g'], window_length=7, polyorder=3),
-    'name': 'OptB88_filtered',
+    'name': 'optB88 (filtered)',
+}
+
+aimd_filtered_330 = {
+    'r': aimd_330['r'],
+    't': aimd_330['t'],
+    'g': savgol_filter(aimd_330['g'], window_length=7, polyorder=3),
+    'name': 'optB88 at 330K (filtered)',
 }
 
 bk3 = {
@@ -63,7 +77,7 @@ reaxff = {
     'r': np.loadtxt('../reaxff/water_form/r.txt'),
     't': np.loadtxt('../reaxff/water_form/t.txt')*0.0005,
     'g': np.loadtxt('../reaxff/water_form/vhf.txt'),
-    'name': 'ReaxFF',
+    'name': 'CHON-2017_weak',
 }
 
 tip3p = {
@@ -95,29 +109,53 @@ IXS = {
 
 def get_color(name):
     #color_dict = {'IXS': 'black',
-    #              'TIP3P': '#1f77b4',
-    #              'ReaxFF': '#ff7f0e',
-    #              'SPC/E': '#2ca02c',
-    #              'BK3': '#d62728',
-    #              'DFTB_D3/3obw': '#e377c2',
-    #              'DFTB_noD3/3obw': '#17becf',
-    #              'OptB88_filtered': '#bcbd22',
-    #              'AIMD': 'grey'
+    #              'TIP3P': '#4c72b0',
+    #              'TIP3P_EW': '#937860',
+    #              'CHON-2017_weak': '#dd8452',
+    #              'SPC/E': '#55a868',
+    #              'BK3': '#c44e52',
+    #              'DFTB_D3/3obw': '#8172b3',
+    #              'optB88 (filtered)': '#da8bc3',
+    #              'optB88 at 330K (filtered)': '#bcbd22',
+    #              'optB88_330K': '#bcbd22',
+    #              'AIMD': '#8c8c8c'
     #             }
-    color_dict = {'IXS': 'black',
-                  'TIP3P': '#4c72b0',
-                  'TIP3P_EW': '#937860',
-                  'ReaxFF': '#dd8452',
-                  'SPC/E': '#55a868',
-                  'BK3': '#c44e52',
-                  'DFTB_D3/3obw': '#8172b3',
-                  'OptB88_filtered': '#da8bc3',
-                  'AIMD': '#8c8c8c'
-                 }
+    color_dict = dict()
+    colors = sns.color_palette("muted", len(datas))
+    color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
+                  'optB88 at 330K (filtered)', 'AIMD']
+    for model, color in zip(color_list, colors):
+        color_dict[model] = color 
+        
+    color_dict['IXS'] = 'black'
+    # Plot first peak decay
 
     return color_dict[name]
 
-datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered]
+#datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
+datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
+
+def make_heatmap(data, ax, v=0.1, fontsize=14):
+    heatmap = ax.imshow(
+        data['g'] - 1,
+        vmin=-v, vmax=v,
+        cmap='viridis',
+        origin='lower',
+        aspect='auto',
+        extent=(data['r'][0], data['r'][-1], data['t'][0], data['t'][-1])
+    )
+    ax.grid(False)
+    ax.set_xlim((round(data['r'][0], 1), 0.8))
+    ax.set_ylim((0, 1))#ax.set_ylim((round(data['t'][0], 1), round(data['t'][-1], 2)))
+
+    xlabel = r'r, $nm$'
+    ax.set_xlabel(xlabel, fontsize=fontsize)
+    ax.set_ylabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.tick_params(labelsize=14)
+    ax.set_title(data['name'], fontsize=fontsize, y=1.05)
+    ax.xaxis.set_major_locator(MultipleLocator(0.2))
+
+    return heatmap
 
 def get_auc(data, idx):
     r = data['r']
@@ -179,15 +217,16 @@ def first_peak_height(datas):
     ax.set_xlim((0.01, 0.6))
     ax.set_ylim((3e-2, 2.5))
     ax.set_ylabel(r'$g_1(t)-1$', fontsize=fontsize)
-    ax.set_xlabel('Time (ps)', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
     ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color='k', ls='--')
     ax.tick_params(axis='both', labelsize=labelsize)
     
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', prop={'size': fontsize})
+    #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', prop={'size': fontsize})
+    plt.legend(bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': fontsize}, ncol=4)
     plt.tight_layout()
     
-    fig.savefig('figures/first_peak_height.png', dpi=500)
-    fig.savefig('figures/first_peak_height.pdf', dpi=500)
+    fig.savefig('figures/first_peak_height.png', dpi=500, bbox_inches="tight")
+    fig.savefig('figures/first_peak_height.pdf', dpi=500, bbox_inches="tight")
 
 def first_peak_auc(datas):
     fig, ax = plt.subplots()
@@ -204,7 +243,7 @@ def first_peak_auc(datas):
                 break
             I[i] = get_auc(data, i)
         ls = '-'
-        if data['name'] in ['TIP3P', 'ReaxFF']: ls = 'None'
+        if data['name'] in ['TIP3P', 'CHON-2017_weak']: ls = 'None'
         ax.semilogy(t, I, marker='.', linestyle=ls, label=data['name'].lower(), color=get_color(data['name']))
     
     ax.set_xlim((0.01, 0.6))
@@ -238,25 +277,26 @@ def second_peak(datas):
             ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.005, 0.8))
-    ax.set_ylim((.003, .5))
+    #ax.set_ylim((.003, .5))
+    ax.set_ylim((.01, .5))
     ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
-    ax.set_xlabel('Time (ps)', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
     ax.tick_params(axis='both', labelsize=labelsize)
     
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', prop={'size': fontsize})
+    plt.legend(bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': fontsize}, ncol=4)
     plt.tight_layout()
-    fig.savefig('figures/overall_second_peak.png', dpi=500)
-    fig.savefig('figures/overall_second_peak.pdf', dpi=500)
+    fig.savefig('figures/overall_second_peak.png', dpi=500, bbox_inches='tight')
+    fig.savefig('figures/overall_second_peak.pdf', dpi=500, bbox_inches='tight')
 
 def plot_total_subplots(datas):
-    fig = plt.figure(figsize=(16, 6))
-    fig.subplots_adjust(hspace=0.4, wspace=0.8)
+    fontsize = 16
+
+    fig = plt.figure(figsize=(20, 14))
+    fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap('copper')
-    #cmap = plot.Colormap('berlin')
-    #for i in range(1, 9):
-    for i in range(1, 8):
-        ax = fig.add_subplot(2, 4, i)
+    for i in range(1, 9):
+        ax = fig.add_subplot(4, 4, i)
         data = datas[i-1]
         for frame in range(len(data['t'])):
             if data['name'] == 'IXS':
@@ -273,7 +313,7 @@ def plot_total_subplots(datas):
         #cbar = plt.colorbar(sm)
         #cbar.set_label(r'Time, ps', rotation=90)
         ax.plot(data['r'], np.ones(len(data['r'])), 'k--', alpha=0.6)
-        ax.set_title(data['name'], fontsize=12)
+        ax.set_title(data['name'], fontsize=fontsize, y=1.05)
 
         from matplotlib.ticker import MaxNLocator
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
@@ -282,18 +322,159 @@ def plot_total_subplots(datas):
         ax.set_ylim((0, 3.5))
 
         ax.set_xlim((0, 0.8))
-        xlabel = r'$r (nm)$'
+        xlabel = r'r, $nm$'
+        ax.set_xlabel(xlabel, fontsize=fontsize)
+        ax.set_ylabel(r'$g(r, t)$', fontsize=fontsize)
+        ax.tick_params(labelsize=14)
+        ax.xaxis.set_major_locator(MultipleLocator(0.2))
+        axes.append(ax)
+    cbar = fig.colorbar(sm, ax=axes)
+    cbar.ax.tick_params(labelsize=14)
+    cbar.set_label(r'Time, $t$, $ps$', rotation=90, fontsize=fontsize)
+
+    axes = list()
+    for i in range(9, 17):
+        ax = fig.add_subplot(4, 4, i)
+        data = datas[(i-8)-1]
+        heatmap = make_heatmap(data, ax, fontsize=fontsize)
+        axes.append(ax)
+
+    cbar = fig.colorbar(heatmap, ax=axes)
+    cbar.ax.tick_params(labelsize=14)
+    cbar.set_label(r'$g(r, t) - 1$', rotation=90, fontsize=fontsize)
+    plt.savefig('figures/total_subplot.png', bbox_inches='tight', dpi=500)
+    plt.savefig('figures/total_subplot.pdf', bbox_inches='tight', dpi=500)
+
+def plot_self_subplots(datas):
+    fig = plt.figure(figsize=(16, 6))
+    fig.subplots_adjust(hspace=0.4, wspace=0.8)
+    axes = list()
+    cmap = matplotlib.cm.get_cmap('copper')
+    for i in range(1, 8):
+        ax = fig.add_subplot(2, 4, i)
+        data = datas[i-1]
+        cutoff_max = np.where(np.isclose(data['t'], 1.0 , 0.02))[0][0]
+        cutoff_min = np.where(np.isclose(data['t'], 0.1 , 0.05))[0][0]
+        for idx, (frame, g_r) in enumerate(zip(data['t'][cutoff_min:cutoff_max], data['g'][cutoff_min:cutoff_max])):
+            if data['name'] == 'IXS':
+                pass
+            #else:
+            #    if data['t'][frame] < 0.2:
+            #        continue
+            if data['name'] == 'optB88_filtered':
+                if idx % 5 != 0:
+                    continue
+            ax.plot(data['r'], g_r, c=cmap(frame/data['t'][cutoff_max]))
+
+        norm = matplotlib.colors.Normalize(vmin=data['t'][cutoff_min], vmax=data['t'][cutoff_max])
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+
+        ax.plot(data['r'], np.ones(len(data['r'])), 'k--', alpha=0.6)
+        ax.set_title(data['name'], fontsize=12)
+
+        from matplotlib.ticker import MaxNLocator
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        ax.set_xlim((0, 0.2))
+        ax.set_ylim((0, 200.0))
+        ax.yaxis.set_major_locator(MultipleLocator(50))
+        ax.yaxis.set_minor_locator(MultipleLocator(10))
+
+        xlabel = r'r, $nm$'
         ax.set_xlabel(xlabel)
         ax.set_ylabel(r'$g(r, t)$')
         axes.append(ax)
     #fig.subplots_adjust(right=0.8)
     plt.tight_layout()
     cbar = fig.colorbar(sm, ax=axes)
-    cbar.set_label(r'Time, ps', rotation=90)
-    plt.savefig('figures/total_subplot.png', dpi=500)
-    plt.savefig('figures/total_subplot.pdf', dpi=500)
+    cbar.set_label(r'Time, $t$, $ps$', rotation=90, fontsize=14)
+    plt.savefig('figures/self_subplot.png', dpi=500)
+    plt.savefig('figures/self_subplot.pdf', dpi=500)
+
+def plot_heatmap(datas):
+    fig = plt.figure(figsize=(16, 6))
+    fig.subplots_adjust(hspace=0.4, wspace=0.8)
+    axes = list()
+    for i in range(1, 9):
+        ax = fig.add_subplot(2, 4, i)
+        data = datas[i-1]
+        heatmap = make_heatmap(data, ax)
+        axes.append(ax)
+
+    plt.tight_layout()
+    cbar = fig.colorbar(heatmap, ax=axes)
+    cbar.set_label(r'$g(r, t) - 1$', rotation=90, fontsize=14)
+    plt.savefig('figures/heatmap.png', dpi=500)
+    plt.savefig('figures/heatmap.pdf', dpi=500)
+
+def plot_decay_subplot(datas):
+    fontsize = 18
+    labelsize = 18
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    colors = sns.color_palette("muted", len(datas))
+
+    # Plot first peak decay
+    ax = axes[0]
+    ax.set_prop_cycle('color', colors)
+    max_r = list() 
+    for data in datas:    
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            maxs[i] = find_local_maxima(data['r'], frame, r_guess=0.26)[1]
+            #if data['name'] == 'DFTB_noD3/3obw':
+            if data['name'] == 'SPC/E':
+               max_r.append(find_local_maxima(data['r'], frame, r_guess=0.26)[0])
+        if data['name'] == 'IXS':
+            ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        # Grabbing every fifth data point of AIMD data
+        elif data['name'] in ('optB88 (filtered)', 'optB88 at 330K (filtered)', 'AIMD'):
+            ax.semilogy(data['t'][::5], (maxs-1)[::5], ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+        else:
+            ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+    ax.set_xlim((0.01, 0.6))
+    ax.set_ylim((3e-2, 2.5))
+    ax.set_ylabel(r'$g_1(t)-1$', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color='k', ls='--')
+    ax.tick_params(axis='both', labelsize=labelsize)
+    fig.legend(bbox_to_anchor=(0.45, 1.15), loc='upper center', prop={'size': fontsize}, ncol=4)
+
+    # Plot second peak decay
+    ax = axes[1]
+    for data in datas:
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            local_maximas = find_local_maxima(data['r'], frame, r_guess=0.44)
+            maxs[i] = local_maximas[1]
+        if data['name'] == 'IXS':
+            ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        elif data['name'] in ('optB88 (filtered)', 'optB88 at 330K (filtered)', 'AIMD'):
+            #ax.semilogy(data['t'][::5], savgol_filter((maxs-1)[::5], window_length=7, polyorder=1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.semilogy(data['t'][::5], (maxs-1)[::5], ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+        else:    
+            ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
     
-first_peak_height(datas)
+    ax.set_xlim((0.005, 0.8))
+    #ax.set_ylim((.003, .5))
+    ax.set_ylim((.01, .5))
+    ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.tick_params(axis='both', labelsize=labelsize)
+    
+    fig.savefig('figures/peak_decay.png', dpi=500, bbox_inches='tight')
+    fig.savefig('figures/peak_decay.pdf', dpi=500, bbox_inches='tight')
+    
+#first_peak_height(datas)
 #first_peak_auc(datas)
-second_peak(datas)
+#second_peak(datas)
 plot_total_subplots(datas)
+#plot_self_subplots(datas)
+#plot_heatmap(datas)
+#plot_decay_subplot(datas)
