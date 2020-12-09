@@ -416,6 +416,8 @@ def plot_decay_subplot(datas):
 
     # Plot first peak decay
     ax = axes[0]
+    ax.text(-0.10, 0.90, 'a)', transform=ax.transAxes,
+            size=20, weight='bold')
     ax.set_prop_cycle('color', colors)
     max_r = list() 
     for data in datas:    
@@ -435,16 +437,19 @@ def plot_decay_subplot(datas):
             ax.semilogy(data['t'][::5], (maxs-1)[::5], ls='--', lw=2, label=data['name'], color=get_color(data['name']))
         else:
             ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
-    ax.set_xlim((0.01, 0.6))
+    ax.set_xlim((0.00, 0.6))
     ax.set_ylim((3e-2, 2.5))
     ax.set_ylabel(r'$g_1(t)-1$', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.xaxis.set_major_locator(MultipleLocator(0.1))
     ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color='k', ls='--')
     ax.tick_params(axis='both', labelsize=labelsize)
     fig.legend(bbox_to_anchor=(0.45, 1.15), loc='upper center', prop={'size': fontsize}, ncol=4)
 
     # Plot second peak decay
     ax = axes[1]
+    ax.text(-0.10, 0.90, 'b)', transform=ax.transAxes,
+            size=20, weight='bold')
     for data in datas:
         maxs = np.zeros(len(data['t']))
         for i, frame in enumerate(data['g']):
@@ -461,11 +466,13 @@ def plot_decay_subplot(datas):
         else:    
             ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
     
-    ax.set_xlim((0.005, 0.8))
+    ax.set_xlim((0.00, 0.8))
     #ax.set_ylim((.003, .5))
     ax.set_ylim((.01, .5))
     ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.xaxis.set_major_locator(MultipleLocator(0.2))
+    ax.xaxis.set_minor_locator(MultipleLocator(0.1))
     ax.tick_params(axis='both', labelsize=labelsize)
     
     fig.savefig('figures/peak_decay.png', dpi=500, bbox_inches='tight')
@@ -474,7 +481,7 @@ def plot_decay_subplot(datas):
 #first_peak_height(datas)
 #first_peak_auc(datas)
 #second_peak(datas)
-plot_total_subplots(datas)
+#plot_total_subplots(datas)
 #plot_self_subplots(datas)
 #plot_heatmap(datas)
-#plot_decay_subplot(datas)
+plot_decay_subplot(datas)
