@@ -83,14 +83,14 @@ def plot_first_peak(datas):
 
     plt.savefig("maxima.pdf")
 
-def first_peak_auc(datas, fit=True):
+def first_peak_auc(datas, calc_fit=True):
     """ Plot AUC of first peak
 
     Parameters
     ----------
     datas : list
         List of dictionaries containing VHF data
-    fit : bool, default=True
+    calc_fit : bool, default=True
         If true, calculate fit of AUC curves
 
     """
@@ -112,15 +112,15 @@ def first_peak_auc(datas, fit=True):
 
         ax.semilogy(t, I, marker='.', linestyle=ls, label=data['name'].lower())
 
-        if fit:
+        if calc_fit == True:
             # Get finite values
             I = I[np.isfinite(I)]
             t = t[:len(I)]
             # Get fits for both steps of decay
             for i in range(1, 2):
                 if i == 1:
-                    I_range = I[:30]
-                    t_range = t[:30]
+                    I_range = I[:20]
+                    t_range = t[:20]
                 elif i == 2:
                     I_range = I[30:50]
                     t_range = t[30:50]
@@ -179,5 +179,5 @@ def compute_fit(time, auc):
     return fit, A, tau, gamma
 
 
-first_peak_auc(datas, fit=False)
+first_peak_auc(datas, calc_fit=True)
 plot_first_peak(datas)
