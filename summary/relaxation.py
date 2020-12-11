@@ -54,8 +54,7 @@ IXS = {
 }
 
 
-#datas = [spce, bk3, reaxff, tip3p_ew, dftb_d3]
-datas = [spce, bk3, tip3p_ew]
+datas = [spce, bk3, reaxff, tip3p_ew, dftb_d3, IXS]
 
 # TODO: Instead of using the trapezoidal rule, integrate over G(r, t)
 
@@ -71,7 +70,7 @@ def plot_first_peak(datas):
         I = np.empty_like(t)
         I[:] = np.nan
         for i in range(0, t.shape[0], 5):
-            if t[i] > 0.7:
+            if t[i] > 1.5:
                 continue
             g = data['g'][i][r_low:r_high]
             r_max, g_max = find_local_maxima(r_range, g, 0.3)
@@ -82,9 +81,19 @@ def plot_first_peak(datas):
     plt.xlabel("t (ps)")
     plt.ylim((0.25, 0.5))
 
-    plt.savefig("plots/maxima.pdf")
+    plt.savefig("maxima.pdf")
 
-def first_peak_auc(datas):
+def first_peak_auc(datas, fit=True):
+    """ Plot AUC of first peak
+
+    Parameters
+    ----------
+    datas : list
+        List of dictionaries containing VHF data
+    fit : bool, default=True
+        If true, calculate fit of AUC curves
+
+    """
     fig, ax = plt.subplots(figsize=(4, 5))
     for data in datas:
         print(data['name']) 
@@ -103,26 +112,27 @@ def first_peak_auc(datas):
 
         ax.semilogy(t, I, marker='.', linestyle=ls, label=data['name'].lower())
 
-        # Get finite values
-        I = I[np.isfinite(I)]
-        t = t[:len(I)]
-        # Get fits for both steps of decay
-        for i in range(1, 2):
-            if i == 1:
-                I_range = I[:30]
-                t_range = t[:30]
-            elif i == 2:
-                I_range = I[30:50]
-                t_range = t[30:50]
+        if fit:
+            # Get finite values
+            I = I[np.isfinite(I)]
+            t = t[:len(I)]
+            # Get fits for both steps of decay
+            for i in range(1, 2):
+                if i == 1:
+                    I_range = I[:30]
+                    t_range = t[:30]
+                elif i == 2:
+                    I_range = I[30:50]
+                    t_range = t[30:50]
 
-            fit, A, tau, gamma = compute_fit(t_range, I_range)
-            print(f"tau_{i} is: {tau}")
-            print(f"A_{i} is: {A}")
-            print(f"gamma_{i} is: {gamma}")
-            ax.semilogy(t_range, fit, linestyle=ls, label=f"{data['name'].lower()} (fit)")
-            #ax.plot(t_range, fit, linestyle=ls, label=data['name'].lower())
+                fit, A, tau, gamma = compute_fit(t_range, I_range)
+                print(f"tau_{i} is: {tau}")
+                print(f"A_{i} is: {A}")
+                print(f"gamma_{i} is: {gamma}")
+                ax.semilogy(t_range, fit, linestyle=ls, label=f"{data['name'].lower()} (fit)")
+                #ax.plot(t_range, fit, linestyle=ls, label=data['name'].lower())
     
-    ax.set_xlim((0.00, 1.5))
+    ax.set_xlim((0.00, 1.0))
     ax.set_ylim((5e-3, 1))
     ax.set_ylabel(r'Area under first peak')
     ax.set_xlabel('Time (ps)')
@@ -148,37 +158,6 @@ def get_auc(data, idx):
  
     auc = np.trapz(g_peak[g_peak>1] - 1, r_peak[g_peak>1])
 
-    #auc = 0
-
-    #points = np.array(g > 1) & \
-    #    np.array(r > min1) & \
-    #    np.array(r < min2)
-
-    #for i, val in enumerate(points):
-    #    if val and points[i+1]:
-    #        r1 = r[i]
-    #        r2 = r[i+1]
-    #        g1 = g[i]
-    #        g2 = g[i+1]
-    #        auc += (r2 - r1) * ((g1 - 1) + (g2 - 1)) / 2 
-    #    if not points[i-1] and val:
-    #        r1 = r[i-1]
-    #        r2 = r[i]
-    #        g1 = g[i-1]
-    #        g2 = g[i]
-    #        r_ = r1 + (r2-r1)*(1-g1)/(g2-g1)
-    #        auc += (r2 - r_) * (g2 - 1) /2
-    #    try:
-    #        if not points[i+1] and val:
-    #            r1 = r[i]
-    #            r2 = r[i+1]
-    #            g1 = g[i]
-    #            g2 = g[i+1]
-    #            r_ = r1 + (r2-r1)*(1-g1)/(g2-g1)
-    #            auc += (r_ - r1) * (g1 - 1) /2
-    #    except IndexError:
-    #        pass
-
     return auc
 
 def _pairing_func(x, a, b, c):
@@ -200,5 +179,5 @@ def compute_fit(time, auc):
     return fit, A, tau, gamma
 
 
-first_peak_auc(datas)
-#plot_first_peak(datas)
+first_peak_auc(datas, fit=False)
+plot_first_peak(datas)
