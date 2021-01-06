@@ -66,12 +66,6 @@ spce = {
     'g': np.loadtxt('../../spce_vhf/size_2/1000/total/vhf.txt'),
     'name': 'SPC/E',
 }
-#spce = {
-#    'r': np.loadtxt('../../spce_vhf/spce_270/total/r.txt'),
-#    't': np.loadtxt('../../spce_vhf/spce_270/total/t.txt'),
-#    'g': np.loadtxt('../../spce_vhf/spce_270/total/vhf.txt'),
-#    'name': 'SPC/E',
-#}
 
 reaxff = {
     'r': np.loadtxt('../reaxff/water_form/r.txt'),
@@ -94,12 +88,6 @@ tip3p_ew = {
     'name': 'TIP3P_EW',
 }
 
-#IXS = {
-#    'name': 'IXS',
-#    'r': 0.1 * np.loadtxt('../IXS/r4Matt.txt')[0],
-#    't': 0.5 * np.loadtxt('../IXS/t4Matt.txt')[:, 0],
-#    'g': 1 + np.loadtxt('../IXS/VanHove4Matt.txt'),
-#}
 IXS = {
     'name': 'IXS',
     'r': 0.1 * np.loadtxt('../expt/R_1811pure.txt')[0],
@@ -108,32 +96,20 @@ IXS = {
 }
 
 def get_color(name):
-    #color_dict = {'IXS': 'black',
-    #              'TIP3P': '#4c72b0',
-    #              'TIP3P_EW': '#937860',
-    #              'CHON-2017_weak': '#dd8452',
-    #              'SPC/E': '#55a868',
-    #              'BK3': '#c44e52',
-    #              'DFTB_D3/3obw': '#8172b3',
-    #              'optB88 (filtered)': '#da8bc3',
-    #              'optB88 at 330K (filtered)': '#bcbd22',
-    #              'optB88_330K': '#bcbd22',
-    #              'AIMD': '#8c8c8c'
-    #             }
     color_dict = dict()
-    colors = sns.color_palette("muted", len(datas))
     color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
                   'optB88 at 330K (filtered)', 'AIMD']
+    colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):
         color_dict[model] = color 
         
     color_dict['IXS'] = 'black'
-    # Plot first peak decay
 
     return color_dict[name]
 
 #datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
-datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
+#datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered]
+datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3]
 
 def make_heatmap(data, ax, v=0.1, fontsize=14):
     heatmap = ax.imshow(
@@ -221,7 +197,6 @@ def first_peak_height(datas):
     ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color='k', ls='--')
     ax.tick_params(axis='both', labelsize=labelsize)
     
-    #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', prop={'size': fontsize})
     plt.legend(bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': fontsize}, ncol=4)
     plt.tight_layout()
     
@@ -256,12 +231,16 @@ def first_peak_auc(datas):
     fig.savefig('figures/auc_first_peak.png', dpi=500)
     fig.savefig('figures/auc_first_peak.pdf', dpi=500)
 
-def second_peak(datas):
+def second_peak(datas, normalize=False):
     fontsize = 14
     labelsize = 14
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(8, 8))
     
     for data in datas:
+        print(data['name'])
+        # Find nearest value to 0.1
+        if normalize:
+            #norm_idx = find_nearest(data['t'], 0.25)
         maxs = np.zeros(len(data['t']))
         for i, frame in enumerate(data['g']):
             if data['t'][i] < 0.0:
@@ -269,24 +248,36 @@ def second_peak(datas):
                 continue
             local_maximas = find_local_maxima(data['r'], frame, r_guess=0.44)
             maxs[i] = local_maximas[1]
-            #if data['name'] == 'SPCE':
-            #    print(local_maximas[0])
-        if data['name'] == 'IXS':
-            ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
-        else:    
-            ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+
+        if normalize:
+            if data['name'] == 'IXS':
+                ax.plot(data['t']-data['t'][norm_idx], (maxs-1)/(maxs[norm_idx]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
+            else:    
+                ax.plot(data['t']-data['t'][norm_idx], (maxs-1)/(maxs[norm_idx]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+        else:
+            if data['name'] == 'IXS':
+                ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+            else:    
+                ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
     
-    ax.set_xlim((0.005, 0.8))
-    #ax.set_ylim((.003, .5))
-    ax.set_ylim((.01, .5))
-    ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
-    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
     ax.tick_params(axis='both', labelsize=labelsize)
     
     plt.legend(bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': fontsize}, ncol=4)
     plt.tight_layout()
-    fig.savefig('figures/overall_second_peak.png', dpi=500, bbox_inches='tight')
-    fig.savefig('figures/overall_second_peak.pdf', dpi=500, bbox_inches='tight')
+    if normalize:
+        ax.set_xlim((0.005, 0.8))
+        ax.set_ylim((0.0, 1.1))
+        ax.set_ylabel(r'$g_2(t)-1$, normalized', fontsize=fontsize)
+        ax.set_xlabel(r'Time, $t$ - $t_c$, $ps$', fontsize=fontsize)
+        fig.savefig('figures/overall_second_peak_normalize.png', dpi=500, bbox_inches='tight')
+        fig.savefig('figures/overall_second_peak_normalize.pdf', dpi=500, bbox_inches='tight')
+    else:
+        ax.set_xlim((0.005, 0.8))
+        ax.set_ylim((.01, .5))
+        ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
+        ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+        fig.savefig('figures/overall_second_peak.png', dpi=500, bbox_inches='tight')
+        fig.savefig('figures/overall_second_peak.pdf', dpi=500, bbox_inches='tight')
 
 def plot_total_subplots(datas):
     fontsize = 16
@@ -427,7 +418,6 @@ def plot_decay_subplot(datas):
                 maxs[i] = np.nan
                 continue
             maxs[i] = find_local_maxima(data['r'], frame, r_guess=0.26)[1]
-            #if data['name'] == 'DFTB_noD3/3obw':
             if data['name'] == 'SPC/E':
                max_r.append(find_local_maxima(data['r'], frame, r_guess=0.26)[0])
         if data['name'] == 'IXS':
@@ -461,7 +451,6 @@ def plot_decay_subplot(datas):
         if data['name'] == 'IXS':
             ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
         elif data['name'] in ('optB88 (filtered)', 'optB88 at 330K (filtered)', 'AIMD'):
-            #ax.semilogy(data['t'][::5], savgol_filter((maxs-1)[::5], window_length=7, polyorder=1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
             ax.semilogy(data['t'][::5], (maxs-1)[::5], ls='--', lw=2, label=data['name'], color=get_color(data['name']))
         else:    
             ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
@@ -477,11 +466,16 @@ def plot_decay_subplot(datas):
     
     fig.savefig('figures/peak_decay.png', dpi=500, bbox_inches='tight')
     fig.savefig('figures/peak_decay.pdf', dpi=500, bbox_inches='tight')
+
+def find_nearest(array, value):
+    array = np.asarray(array)
+    idx = (np.abs(array - value)).argmin()
+    return idx
     
 #first_peak_height(datas)
 #first_peak_auc(datas)
-#second_peak(datas)
+second_peak(datas, normalize=False)
 #plot_total_subplots(datas)
 #plot_self_subplots(datas)
 #plot_heatmap(datas)
-plot_decay_subplot(datas)
+#plot_decay_subplot(datas)
