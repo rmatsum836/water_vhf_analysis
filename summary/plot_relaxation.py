@@ -3,6 +3,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import pandas as pd
+import seaborn as sns
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -11,6 +12,18 @@ from scipy.signal import find_peaks, argrelextrema
 from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
 from scattering.utils.features import find_local_maxima, find_local_minima
+
+def get_color(name):
+    color_dict = dict()
+    color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
+                  'optB88 at 330K (filtered)', 'AIMD']
+    colors = sns.color_palette("muted", len(color_list))
+    for model, color in zip(color_list, colors):
+        color_dict[model] = color 
+        
+    color_dict['IXS'] = 'black'
+
+    return color_dict[name]
 
 def get_auc(data, idx):
     from scipy.signal import argrelextrema
@@ -73,15 +86,14 @@ def compute_fit_with_guess(time, auc,guess,bounds):
 
 aimd = {
     'r': np.loadtxt('../aimd/water_form/r.txt'),
-    't': np.loadtxt('../aimd/water_form/t.txt')*0.0005,
-    'g': np.loadtxt('../aimd/water_form/vhf.txt'),
+    't': np.loadtxt('../aimd/water_form/t.txt')[::10]*0.0005,
+    'g': np.loadtxt('../aimd/water_form/vhf.txt')[::10],
     'name': 'AIMD',
 }
-
 aimd_330 = {
     'r': np.loadtxt('../aimd/330k/water_form/r.txt'),
-    't': np.loadtxt('../aimd/330k/water_form/t.txt')*0.0005,
-    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt'),
+    't': np.loadtxt('../aimd/330k/water_form/t.txt')[::10]*0.0005,
+    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt')[::10],
     'name': 'optB88_330K',
 }
 
@@ -155,7 +167,7 @@ IXS = {
     'g': 1 + np.loadtxt('../expt/VHF_1811pure.txt'),
 }
 
-datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3]
+datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
 
 def plot_peak_locations(datas):
     """
@@ -188,7 +200,7 @@ def plot_peak_locations(datas):
             g = data['g'][i][r_low:r_high]
             r_max, g_max = find_local_maxima(r_range, g, 0.3)
 
-            plt.scatter(data['t'][i], r_max, color='k')
+            plt.scatter(data['t'][i], r_max, color=get_color(data["name"]), label=data["name"])
             
         # Get the peak height for the second peak
         # `r_low` and `r_high` are attempt to add bounds for the first peak
@@ -203,7 +215,7 @@ def plot_peak_locations(datas):
             g = data['g'][i][r_low:r_high]
             r_max, g_max = find_local_maxima(r_range, g, 0.45)
 
-            plt.scatter(data['t'][i], r_max, color='blue')
+            plt.scatter(data['t'][i], r_max, color=get_color(data["name"]), label=data["name"])
 
 
     ax.xaxis.set_major_locator(MultipleLocator(0.5))
@@ -211,8 +223,11 @@ def plot_peak_locations(datas):
     plt.xlabel("t (ps)")
     plt.ylim((0.25, 0.5))
     plt.xlim((0.0, 2.0))
-    plt.savefig("figures/peak_locations.pdf")
-    plt.savefig("figures/peak_locations.png")
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': 12}, ncol=4)
+    plt.savefig("figures/peak_locations.pdf", bbox_inches="tight")
+    plt.savefig("figures/peak_locations.png", bbox_inches="tight")
 
 def first_peak_auc(datas):
     """
@@ -288,3 +303,4 @@ def first_peak_auc(datas):
     df.to_csv("tables/first_peak_fits.csv")
 
 first_peak_auc(datas)
+plot_peak_locations(datas)
