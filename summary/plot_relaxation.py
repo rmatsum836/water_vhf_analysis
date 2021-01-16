@@ -226,8 +226,8 @@ def plot_peak_locations(datas):
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
     plt.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': 12}, ncol=4)
-    plt.savefig("figures/peak_locations.pdf", bbox_inches="tight")
-    plt.savefig("figures/peak_locations.png", bbox_inches="tight")
+    plt.savefig("figures/peak_locations.pdf", dpi=500, bbox_inches="tight")
+    plt.savefig("figures/peak_locations.png", dpi=500, bbox_inches="tight")
 
 def first_peak_auc(datas):
     """
@@ -242,11 +242,15 @@ def first_peak_auc(datas):
     returns
     -------
     """
-    fig, ax = plt.subplots(figsize=(8, 8))
+    fig = plt.figure(figsize=(16, 6))
+    fig.subplots_adjust(hspace=0.4, wspace=0.8)
+    axes = list()
     columns = ('A', 'tau', 'gamma')
     index = [i["name"] for i in datas]
     df = pd.DataFrame(index=index, columns=columns)
-    for data in datas:
+    for i in range(1, 9):
+        ax = fig.add_subplot(2, 4, i)
+        data = datas[i-1]
         r = data['r'] * 10 # convert from angstroms to nm
         t = data['t']
         g = data['g']
@@ -255,24 +259,39 @@ def first_peak_auc(datas):
         I[:] = np.nan
         
         # Get area under the curve
-        for i in range(0, t.shape[0], 2):
+        #for i in range(0, t.shape[0], 2):
+        for i in range(0, t.shape[0]):
             I[i] = get_auc(data, i)
-        ls = '-'
+        ls = '--'
 
-        ax.semilogy(t, I, marker='.', linestyle=ls, label=data['name'])
+        if data['name'] == 'IXS':
+            ax.semilogy(t, I, marker='.',
+                label=data['name'],
+                color='k')
+        else: 
+            ax.semilogy(t, I, ls=ls,
+                lw=2,
+                label=data['name'],
+                color=get_color(data['name']))
         
         # Get finite values
         I_idx = np.where(~np.isnan(I))
         I = I[np.isfinite(I)]
         t = t[I_idx]
 
-        t = t[:30]
-        I = I[:30]
+        #t = t[:30]
+        #I = I[:30]
+        upper_limit = np.where(t < 0.3)[0][-1]
+        t = t[:upper_limit]
+        I = I[:upper_limit]
+        #if data["name"] == "IXS":
+        #    import pdb; pdb.set_trace()
 
         # Calling `compute_fit` to get the compressed exponential function fit
         try:
             fit, popt = compute_fit(t, I)
         except:
+            print(f"Fit for {data['name']} has failed")
             continue
         print(data["name"])
         print(f"tau_1 is: {1/popt[1]}")
@@ -284,23 +303,95 @@ def first_peak_auc(datas):
         #print(f"tau_2 is: {1/popt[4]}")
         #print(f"A_2 is: {popt[3]}")
         #print(f"gamma_2 is: {popt[5]}")
-        ax.semilogy(t, fit, linestyle=ls, label=f"{data['name']}_fit")
+        ax.semilogy(t, fit, linestyle=ls, color='k', label=f"{data['name']}_fit")
+        ax.set_title(data['name'], fontsize=12)
 
         # Plot the compressed exponential functions given from 2018 Phys. Rev.
-        A_t = 0.42*(np.exp(-(t/0.12)**1.57)) + 0.026*(np.exp(-(t/0.4)**4.1))
-        ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 310 K")
-        A_t = 0.45*(np.exp(-(t/0.12)**1.57)) + 0.018*(np.exp(-(t/0.43)**12.8))
-        ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 295 K K")
-    ax.xaxis.set_major_locator(MultipleLocator(0.25))
-    ax.set_xlim((0.00, 1.0))
-    ax.set_ylim((5e-3, 1.0))
-    ax.set_ylabel(r'Area under first peak')
-    ax.set_xlabel('Time (ps)')
-    ax.vlines(x=0.1, ymin=1e-3, ymax=2, color='k', ls='--')
-    plt.legend()
+        #A_t = 0.42*(np.exp(-(t/0.12)**1.57)) + 0.026*(np.exp(-(t/0.4)**4.1))
+        #ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 310 K")
+        #A_t = 0.45*(np.exp(-(t/0.12)**1.57)) + 0.018*(np.exp(-(t/0.43)**12.8))
+        #ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 295 K K")
+        ax.xaxis.set_major_locator(MultipleLocator(0.25))
+        ax.set_xlim((0.00, 1.0))
+        ax.set_ylim((5e-3, 1.0))
+        ax.set_ylabel(r'$A(t)$')
+        ax.set_xlabel('Time (ps)')
+
     plt.savefig("figures/first_peak_auc.pdf")
     plt.savefig("figures/first_peak_auc.png")
     df.to_csv("tables/first_peak_fits.csv")
 
+def plot_first_peak_subplot(datas):
+    fontsize = 18
+    labelsize = 18
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    colors = sns.color_palette("muted", len(datas))
+
+    # Plot first peak decay
+    ax = axes[0]
+    ax.text(-0.10, 0.90, 'a)', transform=ax.transAxes,
+            size=20, weight='bold')
+    ax.set_prop_cycle('color', colors)
+    max_r = list() 
+    for data in datas:    
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            maxs[i] = find_local_maxima(data['r'], frame, r_guess=0.26)[1]
+            if data['name'] == 'SPC/E':
+               max_r.append(find_local_maxima(data['r'], frame, r_guess=0.26)[0])
+        if data['name'] == 'IXS':
+            ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        else:
+            ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+    ax.set_xlim((0.00, 0.6))
+    ax.set_ylim((3e-2, 2.5))
+    ax.set_ylabel(r'$g_1(t)-1$', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.xaxis.set_major_locator(MultipleLocator(0.1))
+    ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color='k', ls='--')
+    ax.tick_params(axis='both', labelsize=labelsize)
+    fig.legend(bbox_to_anchor=(0.45, 1.15), loc='upper center', prop={'size': fontsize}, ncol=4)
+
+    ax = axes[1]
+    ax.text(-0.10, 0.90, 'b)', transform=ax.transAxes,
+            size=20, weight='bold')
+    for data in datas:
+        r = data['r'] * 10 # convert from angstroms to nm
+        t = data['t']
+        g = data['g']
+
+        I = np.empty_like(t)
+        I[:] = np.nan
+        
+        # Get area under the curve
+        for i in range(0, t.shape[0], 2):
+            I[i] = get_auc(data, i)
+
+        ls = '--'
+        if data['name'] == 'IXS':
+            ax.semilogy(t, I, marker='.',
+                label=data['name'],
+                color='k')
+        else: 
+            # Get rid of NANs with [::2]
+            ax.semilogy(t[::2], I[::2], ls=ls,
+                lw=2,
+                label=data['name'],
+                color=get_color(data['name']))
+
+        ax.xaxis.set_major_locator(MultipleLocator(0.1))
+        ax.set_xlim((0.00, 0.6))
+        ax.set_ylim((5e-3, 1.0))
+        ax.set_ylabel(r'A($t$)', fontsize=fontsize)
+        ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+        ax.tick_params(axis='both', labelsize=labelsize)
+
+    fig.savefig('figures/first_subplot.png', dpi=500, bbox_inches='tight')
+    fig.savefig('figures/first_subplot.pdf', dpi=500, bbox_inches='tight')
+
 first_peak_auc(datas)
-plot_peak_locations(datas)
+#plot_peak_locations(datas)
+#plot_first_peak_subplot(datas)
