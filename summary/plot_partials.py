@@ -16,7 +16,7 @@ def get_data(pair):
     """Get data based on pair"""
     aimd = {
         'r': np.loadtxt(f'../aimd/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/partial_data/t_{pair}.txt')[::20]*0.005,
+        't': np.loadtxt(f'../aimd/partial_data/t_{pair}.txt')[::20],
         'g': np.loadtxt(f'../aimd/partial_data/vhf_{pair}.txt')[::20],
         'name': 'AIMD',
     }
@@ -59,8 +59,8 @@ def get_data(pair):
 
     aimd_330 = {
         'r': np.loadtxt(f'../aimd/330k/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/330k/partial_data/t_{pair}.txt')[::20]*0.005,
-        'g': np.loadtxt(f'../aimd/330k/partial_data/vhf_{pair}.txt')[::20],
+        't': np.loadtxt(f'../aimd/330k/partial_data/t_{pair}.txt')[::10],
+        'g': np.loadtxt(f'../aimd/330k/partial_data/vhf_{pair}.txt')[::10],
         'name': 'optB88_330K',
     }
 
@@ -75,7 +75,7 @@ def get_data(pair):
         'r': aimd['r'],
         't': aimd['t'],
         'g': savgol_filter(aimd['g'], window_length=11, polyorder=4),
-        'name': 'optB88_filtered',
+        'name': 'optB88 (filtered)',
     }
 
     dftb = {
@@ -86,6 +86,7 @@ def get_data(pair):
     }
 
     datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_filtered_330]
+    #datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_filtered]
 
     return datas
 
@@ -117,6 +118,8 @@ def plot_peak_subplots(datas):
     datas = get_data('O_H')
     for data in datas:    
         maxs = np.zeros(len(data['t']))
+        #if data["name"] in ("optB88 at 330K (filtered)", "SPC/E"):
+        #    import pdb; pdb.set_trace()
         for i, frame in enumerate(data['g'][:50]):
             maxs[i] = find_local_maxima(data['r'], frame, r_guess=peak_guess)[1]
         ax.semilogy(data['t'], maxs, '--', lw=2, label=data['name'], color=get_color(data['name']))
