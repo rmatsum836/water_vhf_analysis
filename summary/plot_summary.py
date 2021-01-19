@@ -10,25 +10,32 @@ import scattering
 from scattering.utils.features import find_local_maxima, find_local_minima
 from scipy.signal import savgol_filter
 from matplotlib.ticker import MultipleLocator
+from scipy import optimize
 
 aimd = {
     'r': np.loadtxt('../aimd/water_form/r.txt'),
-    't': np.loadtxt('../aimd/water_form/t.txt')*0.0005,
-    'g': np.loadtxt('../aimd/water_form/vhf.txt'),
-    'name': 'AIMD',
+    't': np.loadtxt('../aimd/water_form/t.txt')[::20]*0.0005,
+    'g': np.loadtxt('../aimd/water_form/vhf.txt')[::20],
+    'name': 'optB88',
 }
 
 aimd_330 = {
     'r': np.loadtxt('../aimd/330k/water_form/r.txt'),
-    't': np.loadtxt('../aimd/330k/water_form/t.txt')*0.0005,
-    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt'),
+    't': np.loadtxt('../aimd/330k/water_form/t.txt')[::10]*0.0005,
+    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt')[::10],
     'name': 'optB88_330K',
 }
 
+#aimd_filtered = {
+#    'r': aimd['r'],
+#    't': aimd['t'],
+#    'g': savgol_filter(aimd['g'], window_length=7, polyorder=3),
+#    'name': 'optB88 (filtered)',
+#}
 aimd_filtered = {
     'r': aimd['r'],
     't': aimd['t'],
-    'g': savgol_filter(aimd['g'], window_length=7, polyorder=3),
+    'g': savgol_filter(aimd['g'], window_length=11, polyorder=4),
     'name': 'optB88 (filtered)',
 }
 
@@ -58,6 +65,13 @@ dftb_d3 = {
     't': np.loadtxt('../dftb/water_form/2ns/d3_t.txt'),
     'g': np.loadtxt('../dftb/water_form/2ns/d3_vhf.txt'),
     'name': 'DFTB_D3/3obw',
+}
+
+dftb_filtered = {
+    'r': dftb_d3['r'],
+    't': dftb_d3['t'],
+    'g': savgol_filter(dftb_d3['g'], window_length=7, polyorder=2),
+    'name': 'DFTB_D3 (filtered)',
 }
 
 spce = {
@@ -95,10 +109,13 @@ IXS = {
     'g': 1 + np.loadtxt('../expt/VHF_1811pure.txt'),
 }
 
+def gaussian(x, amplitude, mean, stddev):
+    return amplitude * np.exp(-((x - mean) / 4 / stddev)**2)
+
 def get_color(name):
     color_dict = dict()
     color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
-                  'optB88 at 330K (filtered)', 'AIMD']
+                  'optB88 at 330K (filtered)', 'optB88', 'DFTB_D3 (filtered)', 'optB88_330K']
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):
         color_dict[model] = color 
@@ -107,9 +124,10 @@ def get_color(name):
 
     return color_dict[name]
 
-#datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
-#datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered]
-datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3]
+datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
+#datas = [IXS, spce, tip3p_ew, bk3, reaxff, aimd_filtered, dftb_filtered]
+#datas = [aimd, aimd_filtered, aimd_330, aimd_filtered_330]
+#datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3]
 
 def make_heatmap(data, ax, v=0.1, fontsize=14):
     heatmap = ax.imshow(
@@ -177,17 +195,35 @@ def first_peak_height(datas):
     fig, ax = plt.subplots(figsize=(9, 5))
     max_r = list() 
     for data in datas:    
+        # Get r_range for getting gaussian fits
+        r_low = np.where(data["r"] > 0.20)[0][0]
+        r_high = np.where(data["r"] < 0.34)[0][-1]
+        r_range = data["r"][r_low:r_high]
+
         maxs = np.zeros(len(data['t']))
+        gauss_maxs = np.zeros(len(data['t']))
         for i, frame in enumerate(data['g']):
             if data['t'][i] < 0.0:
                 maxs[i] = np.nan
                 continue
             maxs[i] = find_local_maxima(data['r'], frame, r_guess=0.26)[1]
+            #if data["name"] in ("AIMD", "DFTB_D3/3obw"):
+            if data["name"] in ("AIMD"):
+                g_range = data["g"][i][r_low:r_high]
+                try:
+                    popt, _ = optimize.curve_fit(gaussian, r_range, g_range)
+                    gauss_fit = gaussian(r_range, *popt)
+                    gauss_maxs[i] = find_local_maxima(r_range, gauss_fit, r_guess=0.26)[1]
+                except:
+                    continue
             #if data['name'] == 'DFTB_noD3/3obw':
             if data['name'] == 'SPC/E':
                max_r.append(find_local_maxima(data['r'], frame, r_guess=0.26)[0])
         if data['name'] == 'IXS':
             ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        #elif data['name'] in ("AIMD", "DFTB_D3/3obw"):
+        elif data['name'] in ("AIMD"):
+            ax.semilogy(data['t'], gauss_maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
         else:
             ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
     ax.set_xlim((0.01, 0.6))
@@ -240,7 +276,7 @@ def second_peak(datas, normalize=False):
         print(data['name'])
         # Find nearest value to 0.1
         if normalize:
-            #norm_idx = find_nearest(data['t'], 0.25)
+            norm_idx = find_nearest(data['t'], 0.25)
         maxs = np.zeros(len(data['t']))
         for i, frame in enumerate(data['g']):
             if data['t'][i] < 0.0:
@@ -251,9 +287,9 @@ def second_peak(datas, normalize=False):
 
         if normalize:
             if data['name'] == 'IXS':
-                ax.plot(data['t']-data['t'][norm_idx], (maxs-1)/(maxs[norm_idx]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
+                ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
             else:    
-                ax.plot(data['t']-data['t'][norm_idx], (maxs-1)/(maxs[norm_idx]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+                ax.plot(data['t'], (maxs-1)/(maxs[0]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
         else:
             if data['name'] == 'IXS':
                 ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
@@ -266,9 +302,9 @@ def second_peak(datas, normalize=False):
     plt.tight_layout()
     if normalize:
         ax.set_xlim((0.005, 0.8))
-        ax.set_ylim((0.0, 1.1))
-        ax.set_ylabel(r'$g_2(t)-1$, normalized', fontsize=fontsize)
-        ax.set_xlabel(r'Time, $t$ - $t_c$, $ps$', fontsize=fontsize)
+        ax.set_ylim((0.0, 1.5))
+        ax.set_ylabel(r'$g_2(t) / g_2(0)$, normalized', fontsize=fontsize)
+        ax.set_xlabel(r'Time, $t$ / $t(0)$, $ps$', fontsize=fontsize)
         fig.savefig('figures/overall_second_peak_normalize.png', dpi=500, bbox_inches='tight')
         fig.savefig('figures/overall_second_peak_normalize.pdf', dpi=500, bbox_inches='tight')
     else:
@@ -471,11 +507,76 @@ def find_nearest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
     return idx
+
+def plot_second_subplot(datas):
+    fontsize = 18
+    labelsize = 18
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    colors = sns.color_palette("muted", len(datas))
+    
+    ax = axes[0]
+    ax.text(-0.10, 1.0, 'a)', transform=ax.transAxes,
+            size=20, weight='bold')
+    ax.set_prop_cycle('color', colors)
+    for data in datas:
+        print(data['name'])
+        # Find nearest value to 0.1
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            local_maximas = find_local_maxima(data['r'], frame, r_guess=0.44)
+            maxs[i] = local_maximas[1]
+
+        if data['name'] == 'IXS':
+            ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        else:    
+            ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+    
+    ax.tick_params(axis='both', labelsize=labelsize)
+    ax.set_xlim((0.005, 0.8))
+    ax.set_ylim((.01, .5))
+    ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    fig.legend(bbox_to_anchor=(0.45, 1.15), loc='upper center', prop={'size': fontsize}, ncol=4)
+    
+    ax = axes[1]
+    ax.text(-0.10, 1.0, 'b)', transform=ax.transAxes,
+            size=20, weight='bold')
+    for data in datas:
+        print(data['name'])
+        # Find nearest value to 0.1
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            local_maximas = find_local_maxima(data['r'], frame, r_guess=0.44)
+            maxs[i] = local_maximas[1]
+
+        min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
+        if data['name'] == 'IXS':
+            #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.plot(data['t'], min_max, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        else:    
+            #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.plot(data['t'], min_max, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+    ax.set_xlim((0.005, 0.8))
+    ax.set_ylim((0.0, 1.10))
+    #ax.set_ylabel(r'$g_2(t) / g_2(0)$, normalized', fontsize=fontsize)
+    ax.set_ylabel(r'$g_2(t)-1$, normalized', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.tick_params(axis='both', labelsize=labelsize)
+
+    fig.savefig('figures/second_subplot.png', dpi=500, bbox_inches='tight')
+    fig.savefig('figures/second_subplot.pdf', dpi=500, bbox_inches='tight')
     
 #first_peak_height(datas)
 #first_peak_auc(datas)
-second_peak(datas, normalize=False)
+#second_peak(datas, normalize=True)
 #plot_total_subplots(datas)
 #plot_self_subplots(datas)
 #plot_heatmap(datas)
 #plot_decay_subplot(datas)
+plot_second_subplot(datas)
