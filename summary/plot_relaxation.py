@@ -147,9 +147,9 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    'r': np.loadtxt('../bk3/nvt/r.txt'),
-    't': np.loadtxt('../bk3/nvt/t.txt'),
-    'g': np.loadtxt('../bk3/nvt/vhf.txt'),
+    'r': np.loadtxt('../bk3/nvt/r_21.txt'),
+    't': np.loadtxt('../bk3/nvt/t_21.txt'),
+    'g': np.loadtxt('../bk3/nvt/vhf_21.txt'),
     'name': 'BK3',
     'volume': 30.31, # nm
     'nwaters': 1000,
@@ -525,5 +525,5 @@ def first_cn(datas):
 #first_peak_auc(datas)
 #plot_peak_locations(datas)
 #plot_first_peak_subplot(datas, si=True)
-#plot_first_peak_subplot(datas)
-first_cn(datas)
+plot_first_peak_subplot(datas)
+#first_cn(datas)

@@ -47,9 +47,9 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    'r': np.loadtxt('../bk3/nvt/r.txt'),
-    't': np.loadtxt('../bk3/nvt/t.txt'),
-    'g': np.loadtxt('../bk3/nvt/vhf.txt'),
+    'r': np.loadtxt('../bk3/nvt/r_21.txt'),
+    't': np.loadtxt('../bk3/nvt/t_21.txt'),
+    'g': np.loadtxt('../bk3/nvt/vhf_21.txt'),
     'name': 'BK3',
 }
 
@@ -579,4 +579,4 @@ def plot_second_subplot(datas):
 #plot_self_subplots(datas)
 #plot_heatmap(datas)
 #plot_decay_subplot(datas)
-plot_second_subplot(datas)
+#plot_second_subplot(datas)
