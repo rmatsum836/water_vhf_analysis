@@ -16,7 +16,7 @@ from scattering.utils.features import find_local_maxima, find_local_minima
 def get_color(name):
     color_dict = dict()
     color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
-                  'optB88 at 330K (filtered)', 'AIMD']
+                  'optB88 at 330K (filtered)', 'AIMD', 'optB88_330K']
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):
         color_dict[model] = color 
@@ -43,8 +43,9 @@ def get_auc(data, idx):
     if min1 == min2:
         min2 = 0.34 * 10
 
-    min1_idx = np.where(r == min1)[0][0]
-    min2_idx = np.where(np.isclose(r, min2))[0][0]
+    #min1_idx = np.where(r == min1)[0][0]
+    min1_idx = np.where(np.isclose(r, min1, rtol=0.02))[0][0]
+    min2_idx = np.where(np.isclose(r, min2, rtol=0.02))[0][0]
 
     r_peak = r[min1_idx:min2_idx]
     g_peak = g[min1_idx:min2_idx]
@@ -83,7 +84,8 @@ def get_cn(data, idx):
 def _pairing_func(x, a, b, c, d, e, f):
     """exponential function for fitting AUC data"""
     #y = a * np.exp(-(b * x)**c) + d * np.exp(-(e * x)**f)
-    y = a * np.exp(-(b * x)**c)
+    y = a * np.exp(-(b * x)**1.57) + d * np.exp(-(e * x)**f)
+    #y = a * np.exp(-(b * x)**c)
 
     return y
 
@@ -112,17 +114,17 @@ def compute_fit_with_guess(time, auc,guess,bounds):
     return fit, popt
 
 aimd = {
-    'r': np.loadtxt('../aimd/water_form/r.txt'),
-    't': np.loadtxt('../aimd/water_form/t.txt')[::10]*0.0005,
-    'g': np.loadtxt('../aimd/water_form/vhf.txt')[::10],
+    'r': np.loadtxt('../aimd/water_form/r_random.txt'),
+    't': np.loadtxt('../aimd/water_form/t_random.txt'),
+    'g': np.loadtxt('../aimd/water_form/vhf_random.txt'),
     'name': 'AIMD',
     'volume': 3.83, # nm
     'nwaters': 128,
 }
 aimd_330 = {
-    'r': np.loadtxt('../aimd/330k/water_form/r.txt'),
-    't': np.loadtxt('../aimd/330k/water_form/t.txt')[::10]*0.0005,
-    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt')[::10],
+    'r': np.loadtxt('../aimd/330k/water_form/r_random.txt'),
+    't': np.loadtxt('../aimd/330k/water_form/t_random.txt'),
+    'g': np.loadtxt('../aimd/330k/water_form/vhf_random.txt'),
     'name': 'optB88_330K',
     'volume': 3.83, # nm
     'nwaters': 128,
@@ -147,9 +149,9 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    'r': np.loadtxt('../bk3/nvt/r_21.txt'),
-    't': np.loadtxt('../bk3/nvt/t_21.txt'),
-    'g': np.loadtxt('../bk3/nvt/vhf_21.txt'),
+    'r': np.loadtxt('../bk3/nvt/r_random.txt'),
+    't': np.loadtxt('../bk3/nvt/t_random.txt'),
+    'g': np.loadtxt('../bk3/nvt/vhf_random.txt'),
     'name': 'BK3',
     'volume': 30.31, # nm
     'nwaters': 1000,
@@ -165,9 +167,9 @@ dftb = {
 }
 
 dftb_d3 = {
-    'r': np.loadtxt('../dftb/water_form/2ns/d3_r.txt'),
-    't': np.loadtxt('../dftb/water_form/2ns/d3_t.txt'),
-    'g': np.loadtxt('../dftb/water_form/2ns/d3_vhf.txt'),
+    'r': np.loadtxt('../dftb/water_form/2ns/r_random.txt'),
+    't': np.loadtxt('../dftb/water_form/2ns/t_random.txt'),
+    'g': np.loadtxt('../dftb/water_form/2ns/vhf_random.txt'),
     'name': 'DFTB_D3/3obw',
     'volume': 7.49, # nm
     'nwaters': 250,
@@ -183,9 +185,9 @@ spce = {
 }
 
 reaxff = {
-    'r': np.loadtxt('../reaxff/water_form/r.txt'),
-    't': np.loadtxt('../reaxff/water_form/t.txt')*0.0005,
-    'g': np.loadtxt('../reaxff/water_form/vhf.txt'),
+    'r': np.loadtxt('../reaxff/water_form/r_random.txt'),
+    't': np.loadtxt('../reaxff/water_form/t_random.txt'),
+    'g': np.loadtxt('../reaxff/water_form/vhf_random.txt'),
     'name': 'CHON-2017_weak',
     'volume': 15.38, # nm
     'nwaters': 512,
@@ -216,7 +218,11 @@ IXS = {
     'g': 1 + np.loadtxt('../expt/VHF_1811pure.txt'),
 }
 
-datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
+#datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
+
+#datas = [aimd, aimd_filtered, aimd_330, aimd_filtered_330]
+datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3, aimd, aimd_330]
+#datas = [IXS, spce, tip3p_ew, reaxff, dftb_d3, aimd, aimd_330]
 
 def plot_peak_locations(datas):
     """
@@ -295,10 +301,11 @@ def first_peak_auc(datas):
     fig = plt.figure(figsize=(16, 6))
     fig.subplots_adjust(hspace=0.4, wspace=0.8)
     axes = list()
-    columns = ('A', 'tau', 'gamma')
+    columns = ('A_1', 'tau_1', 'gamma_1', 'A_2', 'tau_2', 'gamma_2')
     index = [i["name"] for i in datas]
     df = pd.DataFrame(index=index, columns=columns)
-    for i in range(1, 9):
+    #for i in range(1, 9):
+    for i in range(1, 8):
         ax = fig.add_subplot(2, 4, i)
         data = datas[i-1]
         r = data['r'] * 10 # convert from angstroms to nm
@@ -325,7 +332,8 @@ def first_peak_auc(datas):
 
         #t = t[:30]
         #I = I[:30]
-        upper_limit = np.where(t < 0.28)[0][-1]
+        #upper_limit = np.where(t < 0.28)[0][-1]
+        upper_limit = np.where(t < 0.95)[0][-1]
         t = t[:upper_limit]
         I = I[:upper_limit]
         #if data["name"] == "IXS":
@@ -337,16 +345,34 @@ def first_peak_auc(datas):
         except:
             print(f"Fit for {data['name']} has failed")
             continue
-        print(data["name"])
-        print(f"tau_1 is: {1/popt[1]}")
-        print(f"A_1 is: {popt[0]}")
-        print(f"gamma_1 is: {popt[2]}")
-        df.loc[data["name"]]["A"] = popt[0]
-        df.loc[data["name"]]["tau"] = 1 / popt[1]
-        df.loc[data["name"]]["gamma"] = popt[2]
-        #print(f"tau_2 is: {1/popt[4]}")
-        #print(f"A_2 is: {popt[3]}")
-        #print(f"gamma_2 is: {popt[5]}")
+        if (1 / popt[1]) < (1 / popt[4]):
+            df.loc[data["name"]]["A_1"] = popt[0]
+            df.loc[data["name"]]["tau_1"] = 1 / popt[1]
+            df.loc[data["name"]]["gamma_1"] = popt[2]
+            df.loc[data["name"]]["A_2"] = popt[3]
+            df.loc[data["name"]]["tau_2"] = 1 / popt[4]
+            df.loc[data["name"]]["gamma_2"] = popt[5]
+            print(data["name"])
+            print(f"tau_1 is: {1/popt[1]}")
+            print(f"A_1 is: {popt[0]}")
+            print(f"gamma_1 is: {popt[2]}")
+            print(f"tau_2 is: {1/popt[4]}")
+            print(f"A_2 is: {popt[3]}")
+            print(f"gamma_2 is: {popt[5]}")
+        else:
+            df.loc[data["name"]]["A_1"] = popt[3]
+            df.loc[data["name"]]["tau_1"] = 1 / popt[4]
+            df.loc[data["name"]]["gamma_1"] = popt[5]
+            df.loc[data["name"]]["A_2"] = popt[0]
+            df.loc[data["name"]]["tau_2"] = 1 / popt[1]
+            df.loc[data["name"]]["gamma_2"] = popt[2]
+            print(data["name"])
+            print(f"tau_1 is: {1/popt[4]}")
+            print(f"A_1 is: {popt[3]}")
+            print(f"gamma_1 is: {popt[5]}")
+            print(f"tau_2 is: {1/popt[1]}")
+            print(f"A_2 is: {popt[0]}")
+            print(f"gamma_2 is: {popt[2]}")
         ax.semilogy(t, fit, linestyle=ls, color='k', label=f"{data['name']}_fit")
         ax.set_title(data['name'], fontsize=12)
 
@@ -522,8 +548,8 @@ def first_cn(datas):
     fig.savefig("figures/cn_vs_t.pdf", dpi=500, bbox_inches='tight')
         
 #plot_first_fit()
-#first_peak_auc(datas)
+first_peak_auc(datas)
 #plot_peak_locations(datas)
 #plot_first_peak_subplot(datas, si=True)
-plot_first_peak_subplot(datas)
+#plot_first_peak_subplot(datas)
 #first_cn(datas)
