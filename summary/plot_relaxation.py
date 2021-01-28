@@ -83,9 +83,7 @@ def get_cn(data, idx):
 
 def _pairing_func(x, a, b, c, d, e, f):
     """exponential function for fitting AUC data"""
-    #y = a * np.exp(-(b * x)**c) + d * np.exp(-(e * x)**f)
-    y = a * np.exp(-(b * x)**1.57) + d * np.exp(-(e * x)**f)
-    #y = a * np.exp(-(b * x)**c)
+    y = a * np.exp(-(b * x)**c) + d * np.exp(-(e * x)**f)
 
     return y
 
@@ -94,11 +92,6 @@ def compute_fit(time, auc):
     popt, pcov = curve_fit(_pairing_func, time_interval, auc, maxfev=5000)
     fit = _pairing_func(time_interval, *popt)
 
-    A = popt[0]
-    tau = 1 / popt[1]
-    gamma = popt[2]
-
-    #return fit, A, tau, gamma
     return fit, popt
 
 def compute_fit_with_guess(time, auc,guess,bounds):
@@ -304,8 +297,7 @@ def first_peak_auc(datas):
     columns = ('A_1', 'tau_1', 'gamma_1', 'A_2', 'tau_2', 'gamma_2')
     index = [i["name"] for i in datas]
     df = pd.DataFrame(index=index, columns=columns)
-    #for i in range(1, 9):
-    for i in range(1, 8):
+    for i in range(1, 9):
         ax = fig.add_subplot(2, 4, i)
         data = datas[i-1]
         r = data['r'] * 10 # convert from angstroms to nm
@@ -316,7 +308,6 @@ def first_peak_auc(datas):
         I[:] = np.nan
         
         # Get area under the curve
-        #for i in range(0, t.shape[0], 2):
         for i in range(0, t.shape[0]):
             I[i] = get_auc(data, i)
         ls = '--'
@@ -330,14 +321,11 @@ def first_peak_auc(datas):
         I = I[np.isfinite(I)]
         t = t[I_idx]
 
-        #t = t[:30]
-        #I = I[:30]
         #upper_limit = np.where(t < 0.28)[0][-1]
-        upper_limit = np.where(t < 0.95)[0][-1]
-        t = t[:upper_limit]
-        I = I[:upper_limit]
-        #if data["name"] == "IXS":
-        #    import pdb; pdb.set_trace()
+        if data["name"] != "IXS":
+            upper_limit = np.where(t < 0.95)[0][-1]
+            t = t[:upper_limit]
+            I = I[:upper_limit]
 
         # Calling `compute_fit` to get the compressed exponential function fit
         try:
