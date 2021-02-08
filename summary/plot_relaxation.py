@@ -11,12 +11,91 @@ from scipy.integrate import quad
 from scipy.signal import find_peaks, argrelextrema
 from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
-from scattering.utils.features import find_local_maxima, find_local_minima
+
+def find_local_maxima(r, g_r, r_guess):
+    """Find the local maxima nearest a guess value of r"""
+
+    all_maxima = find_all_maxima(g_r)
+    nearest_maxima, _ = find_nearest(r[all_maxima], r_guess)
+    return r[all_maxima[nearest_maxima]], g_r[all_maxima[nearest_maxima]]
+
+def find_local_minima(r, g_r, r_guess):
+    """Find the local minima nearest a guess value of r"""
+
+    all_minima = find_all_minima(g_r)
+    nearest_minima, _ = find_nearest(r[all_minima], r_guess)
+    return r[all_minima[nearest_minima]], g_r[all_minima[nearest_minima]]
+
+def maxima_in_range(r, g_r, r_min, r_max):
+    """Find the maxima in a range of r, g_r values"""
+    idx = np.where(np.logical_and(np.greater_equal(r, r_min), np.greater_equal(r_max, r)))
+    g_r_slice = g_r[idx]
+    g_r_max = g_r_slice[g_r_slice.argmax()]
+    idx_max, _ = find_nearest(g_r, g_r_max)
+    return r[idx_max], g_r[idx_max]
+
+def minima_in_range(r, g_r, r_min, r_max):
+    """Find the minima in a range of r, g_r values"""
+    idx = np.where(np.logical_and(np.greater_equal(r, r_min), np.greater_equal(r_max, r)))
+    g_r_slice = g_r[idx]
+    g_r_min = g_r_slice[g_r_slice.argmin()]
+    idx_min, _ = find_nearest(g_r, g_r_min)
+    return r[idx_min], g_r[idx_min]
+
+def find_nearest(arr, val):
+    """
+    Find index in an array nearest some value.
+    See https://stackoverflow.com/a/2566508/4248961
+    """
+
+    arr = np.asarray(arr)
+    idx = (np.abs(arr - val)).argmin()
+    return idx, arr[idx]
+
+def find_all_minima(arr):
+    """
+    Find all local minima in a 1-D array, defined as value in which each
+    neighbor is greater. See https://stackoverflow.com/a/4625132/4248961
+
+    Parameters
+    ----------
+    arr : np.ndarray
+        1-D array of values
+
+    Returns
+    -------
+    minima : np.ndarray
+        indices of local minima
+    """
+
+    checks = np.r_[True, arr[1:] < arr[:-1]] & np.r_[arr[:-1] < arr[1:], True]
+    minima = np.where(checks)[0]
+    return minima
+
+def find_all_maxima(arr):
+    """
+    Find all local minima in a 1-D array, defined as value in which each
+    neighbor is lesser. Adopted from https://stackoverflow.com/a/4625132/4248961
+
+    Parameters
+    ----------
+    arr : np.ndarray
+        1-D array of values
+
+    Returns
+    -------
+    minima : np.ndarray
+        indices of local minima
+    """
+
+    checks = np.r_[True, arr[1:] > arr[:-1]] & np.r_[arr[:-1] > arr[1:], True]
+    maxima = np.where(checks)[0]
+    return maxima
 
 def get_color(name):
     color_dict = dict()
     color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
-                  'optB88 at 330K (filtered)', 'AIMD', 'optB88_330K']
+                  'optB88 at 330K (filtered)', 'optB88', 'optB88_330K']
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):
         color_dict[model] = color 
@@ -89,7 +168,9 @@ def _pairing_func(x, a, b, c, d, e, f):
 
 def compute_fit(time, auc):
     time_interval = np.asarray(time)
-    popt, pcov = curve_fit(_pairing_func, time_interval, auc, maxfev=5000)
+    bounds = ((-np.inf, 5, 0, -np.inf, 0, -np.inf), (np.inf, np.inf, 10, np.inf,
+        10, np.inf))
+    popt, pcov = curve_fit(_pairing_func, time_interval, auc, bounds=bounds, maxfev=5000)
     fit = _pairing_func(time_interval, *popt)
 
     return fit, popt
@@ -110,7 +191,7 @@ aimd = {
     'r': np.loadtxt('../aimd/water_form/r_random.txt'),
     't': np.loadtxt('../aimd/water_form/t_random.txt'),
     'g': np.loadtxt('../aimd/water_form/vhf_random.txt'),
-    'name': 'AIMD',
+    'name': 'optB88',
     'volume': 3.83, # nm
     'nwaters': 128,
 }
@@ -169,9 +250,9 @@ dftb_d3 = {
 }
 
 spce = {
-    'r': np.loadtxt('../../spce_vhf/size_2/1000/total/r.txt'),
-    't': np.loadtxt('../../spce_vhf/size_2/1000/total/t.txt'),
-    'g': np.loadtxt('../../spce_vhf/size_2/1000/total/vhf.txt'),
+    'r': np.loadtxt('../spce/nvt/r_random.txt'),
+    't': np.loadtxt('../spce/nvt/t_random.txt'),
+    'g': np.loadtxt('../spce/nvt/vhf_random.txt'),
     'name': 'SPC/E',
     'volume': 30.31, # nm
     'nwaters': 1000,
@@ -186,23 +267,15 @@ reaxff = {
     'nwaters': 512,
 }
 
-tip3p = {
-    'r': np.loadtxt('../../spce_vhf/tip3p/1000/total/r.txt'),
-    't': np.loadtxt('../../spce_vhf/tip3p/1000/total/t.txt'),
-    'g': savgol_filter(np.loadtxt('../../spce_vhf/tip3p/1000/total/vhf.txt'), window_length=7, polyorder=3),
-    'name': 'TIP3P',
-    'volume': 30.31, # nm
-    'nwaters': 1000,
-}
-
 tip3p_ew = {
-    'r': np.loadtxt('../../spce_vhf/tip3p_ew/1000/total/r.txt'),
-    't': np.loadtxt('../../spce_vhf/tip3p_ew/1000/total/t.txt'),
-    'g': np.loadtxt('../../spce_vhf/tip3p_ew/1000/total/vhf.txt'),
+    'r': np.loadtxt('../tip3p_ew/total/r_random.txt'),
+    't': np.loadtxt('../tip3p_ew/total/t_random.txt'),
+    'g': np.loadtxt('../tip3p_ew/total/vhf_random.txt'),
     'name': 'TIP3P_EW',
     'volume': 30.31, # nm
     'nwaters': 1000,
 }
+
 
 IXS = {
     'name': 'IXS',
@@ -211,11 +284,7 @@ IXS = {
     'g': 1 + np.loadtxt('../expt/VHF_1811pure.txt'),
 }
 
-#datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
-
-#datas = [aimd, aimd_filtered, aimd_330, aimd_filtered_330]
-datas = [IXS, bk3, spce, tip3p_ew, reaxff, dftb_d3, aimd, aimd_330]
-#datas = [IXS, spce, tip3p_ew, reaxff, dftb_d3, aimd, aimd_330]
+datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd, aimd_330]
 
 def plot_peak_locations(datas):
     """
@@ -247,7 +316,7 @@ def plot_peak_locations(datas):
         for i in range(0, t.shape[0], 5):
             g = data['g'][i][r_low:r_high]
             r_max, g_max = find_local_maxima(r_range, g, 0.28)
-            print(r_max)
+            print(f"R at time {t[i]} is: {r_max}")
 
             plt.scatter(data['t'][i], r_max, color=get_color(data["name"]), label=data["name"])
             
@@ -312,7 +381,7 @@ def first_peak_auc(datas):
             I[i] = get_auc(data, i)
         ls = '--'
 
-        ax.semilogy(t, I, ls=ls,
+        ax.semilogy(t[::2], I[::2], ls=ls,
             lw=2,
             label=data['name'])
         
@@ -322,8 +391,16 @@ def first_peak_auc(datas):
         t = t[I_idx]
 
         #upper_limit = np.where(t < 0.28)[0][-1]
-        if data["name"] != "IXS":
-            upper_limit = np.where(t < 0.95)[0][-1]
+        if data["name"] not in ("IXS"):
+            if data["name"] == "optB88":
+                upper_limit = np.where(t < 1.15)[0][-1]
+            elif data["name"] == "CHON-2017_weak":
+                upper_limit = np.where(t < 0.75)[0][-1]
+            elif data["name"] == "DFTB_D3/3obw":
+                upper_limit = np.where(t < 0.9)[0][-1]
+            else:
+                #upper_limit = np.where(t < 0.90)[0][-1]
+                upper_limit = np.where(t < 1.00)[0][-1]
             t = t[:upper_limit]
             I = I[:upper_limit]
 
@@ -347,6 +424,18 @@ def first_peak_auc(datas):
             print(f"tau_2 is: {1/popt[4]}")
             print(f"A_2 is: {popt[3]}")
             print(f"gamma_2 is: {popt[5]}")
+            #df.loc[data["name"]]["A_1"] = popt[0]
+            #df.loc[data["name"]]["tau_1"] = 1 / popt[1]
+            #df.loc[data["name"]]["A_2"] = popt[2]
+            #df.loc[data["name"]]["tau_2"] = 1 / popt[3]
+            #df.loc[data["name"]]["gamma_2"] = popt[4]
+            #print(data["name"])
+            #print(f"tau_1 is: {1/popt[1]}")
+            #print(f"A_1 is: {popt[0]}")
+            #print("gamma_1 is: 1.57")
+            #print(f"tau_2 is: {1/popt[3]}")
+            #print(f"A_2 is: {popt[2]}")
+            #print(f"gamma_2 is: {popt[4]}")
         else:
             df.loc[data["name"]]["A_1"] = popt[3]
             df.loc[data["name"]]["tau_1"] = 1 / popt[4]
@@ -361,6 +450,17 @@ def first_peak_auc(datas):
             print(f"tau_2 is: {1/popt[1]}")
             print(f"A_2 is: {popt[0]}")
             print(f"gamma_2 is: {popt[2]}")
+            #df.loc[data["name"]]["A_1"] = popt[3]
+            #df.loc[data["name"]]["tau_1"] = 1 / popt[4]
+            #df.loc[data["name"]]["A_2"] = popt[0]
+            #df.loc[data["name"]]["tau_2"] = 1 / popt[1]
+            #df.loc[data["name"]]["gamma_2"] = popt[2]
+            #print(data["name"])
+            #print(f"tau_1 is: {1/popt[4]}")
+            #print(f"A_1 is: {popt[3]}")
+            #print(f"tau_2 is: {1/popt[1]}")
+            #print(f"A_2 is: {popt[0]}")
+            #print(f"gamma_2 is: {popt[2]}")
         ax.semilogy(t, fit, linestyle=ls, color='k', label=f"{data['name']}_fit")
         ax.set_title(data['name'], fontsize=12)
 
@@ -370,8 +470,10 @@ def first_peak_auc(datas):
         #A_t = 0.45*(np.exp(-(t/0.12)**1.57)) + 0.018*(np.exp(-(t/0.43)**12.8))
         #ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 295 K K")
         ax.xaxis.set_major_locator(MultipleLocator(0.25))
+        #ax.set_xlim((0.00, 1.5))
         ax.set_xlim((0.00, 1.0))
         ax.set_ylim((5e-3, 1.0))
+        #ax.set_ylim((5e-4, 1.0))
         ax.set_ylabel(r'$A(t)$')
         ax.set_xlabel('Time (ps)')
 
@@ -534,10 +636,126 @@ def first_cn(datas):
     ax.set_ylabel('Coordination Number', fontsize=fontsize)
     ax.set_xlim((0, 0.6))
     fig.savefig("figures/cn_vs_t.pdf", dpi=500, bbox_inches='tight')
+
+def plot_fits():
+    """
+    Plot fits of first peak, first subplot shows the first step, second subplot second step
+    """
+    df = pd.read_csv("tables/first_peak_fits.csv")
+
+    # Plot first-step fit
+    fig, ax = plt.subplots(figsize=(6, 6))
+    for i in range(len(df)):
+        data = df.loc[i]
+        time = np.arange(0, 2, 0.1)
+
+        ax.plot(time, data["A_1"]*np.exp(-(time/data["tau_1"])**1.57),
+                label=data[0], color=get_color(data[0]))
+    ax.set_yscale('log')
+    ax.set_ylabel(r'$A_1(t)$')
+    ax.set_ylim(5e-4,1.5)
+    ax.set_xlim(0,1)
+    ax.set_xlabel(r'Time, $t$, $ps$')
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    ax.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.5, 1.25), loc='upper center', prop={'size': 12}, ncol=4)
+
+    fig.savefig("figures/first_step_decay.png", dpi=500, bbox_inches="tight")
+
+    # Plot second-step fit
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+    for i in range(len(df)):
+        data = df.loc[i]
+        fit_two = data["A_2"]*np.exp(-(time/data["tau_2"])**data["gamma_2"])
+        fit_norm = fit_two / fit_two[0]
+        axes[0].plot(time, fit_two, label=data[0], color=get_color(data[0]))
+        axes[1].plot(time, fit_norm, label=data[0], color=get_color(data[0]))
+    for ax in axes[:2]:
+        ax.set_yscale('log')
+        ax.set_ylim(5e-4,1.5)
+        ax.set_xlim(0, 1.0)
+        ax.set_xlabel(r'Time, $t$, $ps$')
+    axes[0].set_ylabel(r'$A_2(t)$')
+    axes[1].set_ylabel(r'$A_2(t) / A_2(0)$')
+
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    axes[0].legend(by_label.values(), by_label.keys(), bbox_to_anchor=(1.05, 1.15), loc='upper center', prop={'size': 12}, ncol=4)
+
+    fig.savefig("figures/second_step_decay.png", dpi=500, bbox_inches="tight")
+
+def plot_second_subplot(datas):
+    """ Plot the height of second peak, and normalized height of second peak"""
+    fontsize = 18
+    labelsize = 18
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    colors = sns.color_palette("muted", len(datas))
+    
+    ax = axes[0]
+    ax.text(-0.10, 1.0, 'a)', transform=ax.transAxes,
+            size=20, weight='bold')
+    ax.set_prop_cycle('color', colors)
+    for data in datas:
+        print(data['name'])
+        # Find nearest value to 0.1
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            local_maximas = find_local_maxima(data['r'], frame, r_guess=0.44)
+            maxs[i] = local_maximas[1]
+
+        if data['name'] == 'IXS':
+            ax.semilogy(data['t'], maxs-1, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        else:    
+            ax.semilogy(data['t'], maxs-1, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+    
+    ax.tick_params(axis='both', labelsize=labelsize)
+    ax.set_xlim((0.005, 0.8))
+    ax.set_ylim((.01, .5))
+    ax.set_ylabel(r'$g_2(t)-1$', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    fig.legend(bbox_to_anchor=(0.45, 1.15), loc='upper center', prop={'size': fontsize}, ncol=4)
+    
+    ax = axes[1]
+    ax.text(-0.10, 1.0, 'b)', transform=ax.transAxes,
+            size=20, weight='bold')
+    for data in datas:
+        print(data['name'])
+        # Find nearest value to 0.1
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            local_maximas = find_local_maxima(data['r'], frame, r_guess=0.44)
+            maxs[i] = local_maximas[1]
+
+        min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
+        if data['name'] == 'IXS':
+            #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.plot(data['t'], min_max, '.', lw=2, label=data['name'], color=get_color(data['name']))
+        else:    
+            #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.plot(data['t'], min_max, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+    ax.set_xlim((0.005, 0.8))
+    ax.set_ylim((0.0, 1.10))
+    #ax.set_ylabel(r'$g_2(t) / g_2(0)$, normalized', fontsize=fontsize)
+    ax.set_ylabel(r'$g_2(t)-1$, normalized', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.tick_params(axis='both', labelsize=labelsize)
+
+    fig.savefig('figures/second_subplot.png', dpi=500, bbox_inches='tight')
+    fig.savefig('figures/second_subplot.pdf', dpi=500, bbox_inches='tight')
+
+
         
 #plot_first_fit()
-first_peak_auc(datas)
+#first_peak_auc(datas)
 #plot_peak_locations(datas)
 #plot_first_peak_subplot(datas, si=True)
 #plot_first_peak_subplot(datas)
 #first_cn(datas)
+#plot_fits()
+plot_second_subplot
