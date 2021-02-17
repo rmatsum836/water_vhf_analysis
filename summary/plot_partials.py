@@ -15,30 +15,30 @@ pairs = ['O_H', 'O_O', 'H_H']
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        'r': np.loadtxt(f'../aimd/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/partial_data/t_{pair}.txt')[::20],
-        'g': np.loadtxt(f'../aimd/partial_data/vhf_{pair}.txt')[::20],
-        'name': 'AIMD',
+        'r': np.loadtxt(f'../aimd/partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../aimd/partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../aimd/partial_data/vhf_random_{pair}.txt'),
+        'name': 'optB88',
     }
     
     spce = {
-        'r': np.loadtxt(f'../spce/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../spce/partial_data/t_{pair}.txt'),
-        'g': np.loadtxt(f'../spce/partial_data/vhf_{pair}.txt'),
+        'r': np.loadtxt(f'../spce/partial_998_density/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../spce/partial_998_density/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../spce/partial_998_density/vhf_random_{pair}.txt'),
         'name': 'SPC/E',
     }
 
     tip3p_ew = {
-        'r': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_data/t_{pair}.txt'),
-        'g': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_data/vhf_{pair}.txt'),
+        'r': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_997_density/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_997_density/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_997_density/vhf_random_{pair}.txt'),
         'name': 'TIP3P_EW',
     }
     
     bk3 = {
-        'r': np.loadtxt(f'../bk3/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../bk3/partial_data/t_{pair}.txt'),
-        'g': np.loadtxt(f'../bk3/partial_data/vhf_{pair}.txt'),
+        'r': np.loadtxt(f'../bk3/partial_998_density/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../bk3/partial_998_density/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../bk3/partial_998_density/vhf_random_{pair}.txt'),
         'name': 'BK3',
     }
     
@@ -58,10 +58,10 @@ def get_data(pair):
 
 
     aimd_330 = {
-        'r': np.loadtxt(f'../aimd/330k/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/330k/partial_data/t_{pair}.txt')[::10],
-        'g': np.loadtxt(f'../aimd/330k/partial_data/vhf_{pair}.txt')[::10],
-        'name': 'optB88_330K',
+        'r': np.loadtxt(f'../aimd/330k/partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../aimd/330k/partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../aimd/330k/partial_data/vhf_random_{pair}.txt'),
+        'name': 'optB88 330K',
     }
 
     aimd_filtered_330 = {
@@ -79,20 +79,21 @@ def get_data(pair):
     }
 
     dftb = {
-        'r': np.loadtxt(f'../dftb/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../dftb/partial_data/t_{pair}.txt'),
-        'g': np.loadtxt(f'../dftb/partial_data/vhf_{pair}.txt'),
+        'r': np.loadtxt(f'../dftb/partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../dftb/partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../dftb/partial_data/vhf_random_{pair}.txt'),
         'name': 'DFTB_D3/3obw',
     }
 
-    datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_filtered_330]
+    datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd, aimd_330]
+    #datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_330]
     #datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_filtered]
 
     return datas
 
 def get_color(name):
     color_dict = dict()
-    color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)', 'optB88 at 330K (filtered)', 'AIMD']
+    color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88', 'optB88 330K', 'AIMD']
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):
         color_dict[model] = color 
@@ -197,7 +198,7 @@ def plot_oh_peak(datas, filename, ylim=(0,3)):
     axes = list()
     cmap = matplotlib.cm.get_cmap('copper')
     for i in range(1, len(datas)+1):
-        ax = fig.add_subplot(2,3,i)
+        ax = fig.add_subplot(3,3,i)
         data = datas[i-1]
         if data['name'] == 'optB88 at 330K (filtered)':
             for j, frame in enumerate(range(len(data['t'][:1000]))):
@@ -237,7 +238,7 @@ def plot_vhf_subplots(datas, filename, ylim=(0,3)):
     axes = list()
     cmap = matplotlib.cm.get_cmap('copper')
     for i in range(1, len(datas)+1):
-        ax = fig.add_subplot(2,3,i)
+        ax = fig.add_subplot(3, 3,i)
         data = datas[i-1]
         for frame in range(len(data['t'])):
             if abs(data['t'][frame] % 0.1) > 0.01:
