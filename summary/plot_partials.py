@@ -8,9 +8,33 @@ import numpy as np
 import scattering
 import seaborn as sns
 from scattering.utils.features import find_local_maxima, find_local_minima
+from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
 
 pairs = ['O_H', 'O_O', 'H_H']
+
+
+def make_heatmap(data, ax, v=0.1, fontsize=14):
+    heatmap = ax.imshow(
+        data['g'] - 1,
+        vmin=-v, vmax=v,
+        cmap='viridis',
+        origin='lower',
+        aspect='auto',
+        extent=(data['r'][0], data['r'][-1], data['t'][0], data['t'][-1])
+    )
+    ax.grid(False)
+    ax.set_xlim((round(data['r'][0], 1), 0.8))
+    ax.set_ylim((0, 1))#ax.set_ylim((round(data['t'][0], 1), round(data['t'][-1], 2)))
+
+    xlabel = r'r, $nm$'
+    ax.set_xlabel(xlabel, fontsize=fontsize)
+    ax.set_ylabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.tick_params(labelsize=14)
+    ax.set_title(data['name'], fontsize=fontsize, y=1.05)
+    ax.xaxis.set_major_locator(MultipleLocator(0.2))
+
+    return heatmap
 
 def get_data(pair):
     """Get data based on pair"""
@@ -183,7 +207,7 @@ def plot_peak_subplots(datas):
     handles, labels = legend_ax.get_legend_handles_labels()
     lgd = fig.legend(handles,
             labels,
-            bbox_to_anchor=(0.45, 1.08),
+            bbox_to_anchor=(0.45, 1.15),
             fontsize=16,
             loc='upper center',
             ncol=3)
@@ -198,7 +222,7 @@ def plot_oh_peak(datas, filename, ylim=(0,3)):
     axes = list()
     cmap = matplotlib.cm.get_cmap('copper')
     for i in range(1, len(datas)+1):
-        ax = fig.add_subplot(3,3,i)
+        ax = fig.add_subplot(3, 3, i)
         data = datas[i-1]
         if data['name'] == 'optB88 at 330K (filtered)':
             for j, frame in enumerate(range(len(data['t'][:1000]))):
@@ -223,6 +247,7 @@ def plot_oh_peak(datas, filename, ylim=(0,3)):
         xlabel = r'r, $nm$'
         ax.set_xlabel(xlabel, fontsize=fontsize)
         ax.set_ylabel(r'$g(r, t)$', fontsize=fontsize)
+        ax.tick_params(labelsize=14)
         axes.append(ax)
     plt.tight_layout()
     cbar = fig.colorbar(sm, ax=axes)
@@ -231,14 +256,14 @@ def plot_oh_peak(datas, filename, ylim=(0,3)):
 
 # Plot all in one subplot
 def plot_vhf_subplots(datas, filename, ylim=(0,3)):
-    fontsize = 14
+    fontsize = 16
     labelsize = 16
-    fig = plt.figure(figsize=(10,6))
-    fig.subplots_adjust(hspace=0.4, wspace=0.8)
+    fig = plt.figure(figsize=(20, 14))
+    fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap('copper')
     for i in range(1, len(datas)+1):
-        ax = fig.add_subplot(3, 3,i)
+        ax = fig.add_subplot(4, 4,i)
         data = datas[i-1]
         for frame in range(len(data['t'])):
             if abs(data['t'][frame] % 0.1) > 0.01:
@@ -256,11 +281,24 @@ def plot_vhf_subplots(datas, filename, ylim=(0,3)):
         xlabel = r'r, $nm$'
         ax.set_xlabel(xlabel, fontsize=fontsize)
         ax.set_ylabel(r'$g(r, t)$', fontsize=fontsize)
+        ax.tick_params(labelsize=14)
+        ax.xaxis.set_major_locator(MultipleLocator(0.2))
         axes.append(ax)
-    plt.tight_layout()
     cbar = fig.colorbar(sm, ax=axes)
+    cbar.ax.tick_params(labelsize=14)
     cbar.set_label(r'Time, $t$, $ps$', rotation=90, fontsize=fontsize)
-    plt.savefig(filename)
+
+    axes = list()
+    for i in range(9, 16):
+        ax = fig.add_subplot(4, 4, i)
+        data = datas[(i-7)-2]
+        heatmap = make_heatmap(data, ax, fontsize=fontsize)
+        axes.append(ax)
+
+    cbar = fig.colorbar(heatmap, ax=axes)
+    cbar.ax.tick_params(labelsize=14)
+    cbar.set_label(r'$g(r, t) - 1$', rotation=90, fontsize=fontsize)
+    plt.savefig(filename, bbox_inches='tight', dpi=500)
 
 def first_peak_height(datas, filename, peak_guess=0.3, ylim=((0.06, .18)), shift=True):
     fontsize = 14
@@ -385,11 +423,11 @@ for pair in pairs:
 
     datas = get_data(pair)
 
-    if pair == 'O_H':
-        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
-        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
-        first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
-        first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
+    #if pair == 'O_H':
+    #    plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
+    #    plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
+    #    first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
+    #    first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
 
     plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.pdf')
     plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.png')
@@ -407,4 +445,4 @@ for pair in pairs:
     #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.pdf')
     #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.png')
 
-plot_peak_subplots(datas)
+#plot_peak_subplots(datas)
