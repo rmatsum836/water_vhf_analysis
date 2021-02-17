@@ -110,8 +110,6 @@ def get_data(pair):
     }
 
     datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd, aimd_330]
-    #datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_330]
-    #datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd_filtered]
 
     return datas
 
@@ -127,8 +125,8 @@ def get_color(name):
     return color_dict[name]
 
 def plot_peak_subplots(datas):
-    fontsize = 18
-    labelsize = 18
+    fontsize = 20
+    labelsize = 20
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
     fig.subplots_adjust(wspace=0.4)
     colors = sns.color_palette("muted", len(datas))
@@ -207,8 +205,8 @@ def plot_peak_subplots(datas):
     handles, labels = legend_ax.get_legend_handles_labels()
     lgd = fig.legend(handles,
             labels,
-            bbox_to_anchor=(0.45, 1.15),
-            fontsize=16,
+            bbox_to_anchor=(0.45, 1.2),
+            fontsize=fontsize,
             loc='upper center',
             ncol=3)
     fig.savefig('figures/partial_peak_decay.png', dpi=500, bbox_inches='tight')
@@ -217,12 +215,12 @@ def plot_peak_subplots(datas):
 def plot_oh_peak(datas, filename, ylim=(0,3)):
     fontsize = 14
     labelsize = 14
-    fig = plt.figure(figsize=(10,6))
-    fig.subplots_adjust(hspace=0.4, wspace=0.8)
+    fig = plt.figure(figsize=(14,10))
+    fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap('copper')
     for i in range(1, len(datas)+1):
-        ax = fig.add_subplot(3, 3, i)
+        ax = fig.add_subplot(4, 4, i)
         data = datas[i-1]
         if data['name'] == 'optB88 at 330K (filtered)':
             for j, frame in enumerate(range(len(data['t'][:1000]))):
@@ -249,10 +247,9 @@ def plot_oh_peak(datas, filename, ylim=(0,3)):
         ax.set_ylabel(r'$g(r, t)$', fontsize=fontsize)
         ax.tick_params(labelsize=14)
         axes.append(ax)
-    plt.tight_layout()
     cbar = fig.colorbar(sm, ax=axes)
     cbar.set_label(r'Time, $t$, $ps$', rotation=90, fontsize=fontsize)
-    plt.savefig(filename)
+    plt.savefig(filename, bbox_inches='tight', dpi=500)
 
 # Plot all in one subplot
 def plot_vhf_subplots(datas, filename, ylim=(0,3)):
@@ -423,11 +420,11 @@ for pair in pairs:
 
     datas = get_data(pair)
 
-    #if pair == 'O_H':
-    #    plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
-    #    plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
-    #    first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
-    #    first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
+    if pair == 'O_H':
+        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
+        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
+        #first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
+        #first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
 
     plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.pdf')
     plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.png')
@@ -445,4 +442,4 @@ for pair in pairs:
     #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.pdf')
     #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.png')
 
-#plot_peak_subplots(datas)
+plot_peak_subplots(datas)
