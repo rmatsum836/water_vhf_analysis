@@ -133,41 +133,52 @@ def plot_peak_subplots(datas):
 
     # Plot OH peak decay
     peak_guess = 0.18
-    ylim = (0.6, 1.8)
+    ylim = (-0.1, 1.8)
     ax = axes[0]
     legend_ax = ax
     ax.text(-0.10, 1.0, 'a)', transform=ax.transAxes,
             size=20, weight='bold')
     datas = get_data('O_H')
     for data in datas:    
+        r_low = np.where(data["r"] > 0.16)[0][0]
+        r_high = np.where(data["r"] < 0.2)[0][-1]
+        r_range = data["r"][r_low:r_high]
         maxs = np.zeros(len(data['t']))
         #if data["name"] in ("optB88 at 330K (filtered)", "SPC/E"):
         #    import pdb; pdb.set_trace()
         for i, frame in enumerate(data['g'][:50]):
-            maxs[i] = find_local_maxima(data['r'], frame, r_guess=peak_guess)[1]
-        ax.semilogy(data['t'], maxs, '--', lw=2, label=data['name'], color=get_color(data['name']))
+            g_range = frame[r_low:r_high]
+            max_r, max_g = find_local_maxima(r_range, g_range, r_guess=peak_guess)
+            print(max_r, max_g)
+            maxs[i] = max_g
+        ax.semilogy(data['t'], maxs-1, '--', lw=2, label=data['name'], color=get_color(data['name']))
     
-    ax.set_xlim((0.00, 0.11))
+    ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
     ax.set_ylabel(r'$g_{OH_1}(t)$', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
     ax.tick_params(axis='both', labelsize=labelsize)
 
     # Plot normalized OH peak decay
-    peak_guess = 0.3
-    ylim = (0.00, 1.05)
+    peak_guess = 0.18
+    ylim = (0.00, 1.15)
     shift = True
     ax = axes[1]
     ax.text(-0.10, 1.0, 'b)', transform=ax.transAxes,
             size=20, weight='bold')
     datas = get_data('O_H')
     for data in datas:    
+        r_low = np.where(data["r"] > 0.16)[0][0]
+        r_high = np.where(data["r"] < 0.2)[0][-1]
+        r_range = data["r"][r_low:r_high]
         maxs = np.zeros(len(data['t']))
         for i, frame in enumerate(data['g'][:50]):
-            maxs[i] = find_local_maxima(data['r'], frame, r_guess=peak_guess)[1]
+            g_range = frame[r_low:r_high]
+            max_r, max_g = find_local_maxima(r_range, g_range, r_guess=peak_guess)
+            maxs[i] = max_g
         ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '--', lw=2, label=data['name'], color=get_color(data['name']))
     
-    ax.set_xlim((0.00, 0.11))
+    ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
     ax.set_ylabel(r'$g_{OH_1}(t)-1$, normalized', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
@@ -420,14 +431,14 @@ for pair in pairs:
 
     datas = get_data(pair)
 
-    if pair == 'O_H':
-        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
-        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
+    #if pair == 'O_H':
+        #plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
+        #plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
         #first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
         #first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
 
-    plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.pdf')
-    plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.png')
+    #plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.pdf')
+    #plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.png')
 
     #if pair == 'H_H':
     #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.pdf', shift=False)
