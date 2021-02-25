@@ -67,9 +67,9 @@ def get_data(pair):
     }
     
     reaxff = {
-        'r': np.loadtxt(f'../reaxff/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../reaxff/partial_data/t_{pair}.txt')-1000,
-        'g': np.loadtxt(f'../reaxff/partial_data/vhf_{pair}.txt'),
+        'r': np.loadtxt(f'../reaxff/partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../reaxff/partial_data/t_random_{pair}.txt')-1000,
+        'g': np.loadtxt(f'../reaxff/partial_data/vhf_random_{pair}.txt'),
         'name': 'CHON-2017_weak',
     }
     
@@ -127,16 +127,15 @@ def get_color(name):
 def plot_peak_subplots(datas):
     fontsize = 20
     labelsize = 20
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-    fig.subplots_adjust(wspace=0.4)
+    fig, axes = plt.subplots(2, 2, figsize=(12, 12))
+    fig.subplots_adjust(wspace=0.5, hspace=0.3)
     colors = sns.color_palette("muted", len(datas))
 
     # Plot OH peak decay
     peak_guess = 0.18
-    ylim = (-0.1, 1.8)
-    ax = axes[0]
-    legend_ax = ax
-    ax.text(-0.10, 1.0, 'a)', transform=ax.transAxes,
+    ylim = (0.5, 10)
+    ax = axes[0][0]
+    ax.text(-0.10, 1.05, 'a)', transform=ax.transAxes,
             size=20, weight='bold')
     datas = get_data('O_H')
     for data in datas:    
@@ -149,9 +148,8 @@ def plot_peak_subplots(datas):
         for i, frame in enumerate(data['g'][:50]):
             g_range = frame[r_low:r_high]
             max_r, max_g = find_local_maxima(r_range, g_range, r_guess=peak_guess)
-            print(max_r, max_g)
             maxs[i] = max_g
-        ax.semilogy(data['t'], maxs-1, '--', lw=2, label=data['name'], color=get_color(data['name']))
+        ax.semilogy(data['t'], maxs, '--', lw=2, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
@@ -163,8 +161,8 @@ def plot_peak_subplots(datas):
     peak_guess = 0.18
     ylim = (0.00, 1.15)
     shift = True
-    ax = axes[1]
-    ax.text(-0.10, 1.0, 'b)', transform=ax.transAxes,
+    ax = axes[0][1]
+    ax.text(-0.10, 1.05, 'b)', transform=ax.transAxes,
             size=20, weight='bold')
     datas = get_data('O_H')
     for data in datas:    
@@ -176,7 +174,9 @@ def plot_peak_subplots(datas):
             g_range = frame[r_low:r_high]
             max_r, max_g = find_local_maxima(r_range, g_range, r_guess=peak_guess)
             maxs[i] = max_g
-        ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '--', lw=2, label=data['name'], color=get_color(data['name']))
+        min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
+        #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '--', lw=2, label=data['name'], color=get_color(data['name']))
+        ax.plot(data['t'], min_max, '--', lw=2, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
@@ -186,26 +186,32 @@ def plot_peak_subplots(datas):
 
     # Plot HH peak decay
     peak_guess = 0.23
-    ylim = (0.8, 1.8)
+    ylim = (.001, 2)
     shift = False
-    ax = axes[2]
-    ax.text(-0.10, 1.0, 'c)', transform=ax.transAxes,
+    ax = axes[1][0]
+    ax.text(-0.10, 1.05, 'c)', transform=ax.transAxes,
             size=20, weight='bold')
     datas = get_data('H_H')
     for data in datas:    
+        r_low = np.where(data["r"] > 0.16)[0][0]
+        r_high = np.where(data["r"] < 0.25)[0][-1]
+        r_range = data["r"][r_low:r_high]
         maxs = np.zeros(len(data['t']))
         for i, frame in enumerate(data['g']):
             if data['t'][i] < 0.0:
                 maxs[i] = np.nan
                 continue
-            maxs[i] = find_local_maxima(data['r'], frame, r_guess=peak_guess)[1]
+            g_range = frame[r_low:r_high]
+            r_max, g_max = find_local_maxima(r_range, g_range, r_guess=peak_guess)
+            #print(r_max)
+            maxs[i] = g_max
         if shift == True:
             ax.semilogy(data['t'], maxs-1, '--', lw=2, label=data['name'], color=get_color(data['name']))
         else:
             ax.semilogy(data['t'], maxs, '--', lw=2, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.8))
-    ax.set_ylim(ylim)
+    #ax.set_ylim(ylim)
     if shift == True:
         ax.set_ylabel(r'$g_{HH_1}(t)-1$', fontsize=fontsize)
     else:
@@ -213,13 +219,45 @@ def plot_peak_subplots(datas):
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
     ax.tick_params(axis='both', labelsize=labelsize)
 
+    # Plot normalized HH peak decay
+    peak_guess = 0.23
+    ylim = (0, 1.05)
+    ax = axes[1][1]
+    legend_ax = ax
+    ax.text(-0.10, 1.05, 'd)', transform=ax.transAxes,
+            size=20, weight='bold')
+    datas = get_data('H_H')
+    for data in datas:    
+        r_low = np.where(data["r"] > 0.16)[0][0]
+        r_high = np.where(data["r"] < 0.25)[0][-1]
+        r_range = data["r"][r_low:r_high]
+        maxs = np.zeros(len(data['t']))
+        for i, frame in enumerate(data['g']):
+            if data['t'][i] < 0.0:
+                maxs[i] = np.nan
+                continue
+            g_range = frame[r_low:r_high]
+            r_max, g_max = find_local_maxima(r_range, g_range, r_guess=peak_guess)
+            #print(r_max)
+            maxs[i] = g_max
+        min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
+        ax.plot(data['t'], min_max, '--', lw=2, label=data['name'], color=get_color(data['name']))
+    
+    ax.set_xlim((0.00, 0.8))
+    ax.set_ylim(ylim)
+    ax.set_ylabel(r'$g_{HH_1}(t)-1$, normalized', fontsize=fontsize)
+    ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
+    ax.tick_params(axis='both', labelsize=labelsize)
+
     handles, labels = legend_ax.get_legend_handles_labels()
     lgd = fig.legend(handles,
             labels,
-            bbox_to_anchor=(0.45, 1.2),
+            bbox_to_anchor=(0.5, 1.15),
             fontsize=fontsize,
             loc='upper center',
-            ncol=3)
+            ncol=2)
+
+    plt.tight_layout()
     fig.savefig('figures/partial_peak_decay.png', dpi=500, bbox_inches='tight')
     fig.savefig('figures/partial_peak_decay.pdf', dpi=500, bbox_inches='tight')
 
