@@ -68,7 +68,7 @@ def get_data(pair):
     
     reaxff = {
         'r': np.loadtxt(f'../reaxff/partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../reaxff/partial_data/t_random_{pair}.txt')-1000,
+        't': np.loadtxt(f'../reaxff/partial_data/t_random_{pair}.txt'),
         'g': np.loadtxt(f'../reaxff/partial_data/vhf_random_{pair}.txt'),
         'name': 'CHON-2017_weak',
     }
@@ -115,7 +115,7 @@ def get_data(pair):
 
 def get_color(name):
     color_dict = dict()
-    color_list = ['TIP3P_EW', 'CHON-2017_weak', 'SPC/E', 'BK3', 'DFTB_D3/3obw', 'optB88', 'optB88 330K', 'AIMD']
+    color_list = ['TIP3P_EW', 'placeholder', 'SPC/E', 'CHON-2017_weak', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)', 'optB88', 'optB88 330K']
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):
         color_dict[model] = color 
@@ -149,7 +149,7 @@ def plot_peak_subplots(datas):
             g_range = frame[r_low:r_high]
             max_r, max_g = find_local_maxima(r_range, g_range, r_guess=peak_guess)
             maxs[i] = max_g
-        ax.semilogy(data['t'], maxs, '--', lw=2, label=data['name'], color=get_color(data['name']))
+        ax.semilogy(data['t'], maxs, '--', lw=3, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
@@ -176,7 +176,7 @@ def plot_peak_subplots(datas):
             maxs[i] = max_g
         min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
         #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '--', lw=2, label=data['name'], color=get_color(data['name']))
-        ax.plot(data['t'], min_max, '--', lw=2, label=data['name'], color=get_color(data['name']))
+        ax.plot(data['t'], min_max, '--', lw=3, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
@@ -206,9 +206,9 @@ def plot_peak_subplots(datas):
             #print(r_max)
             maxs[i] = g_max
         if shift == True:
-            ax.semilogy(data['t'], maxs-1, '--', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.semilogy(data['t'], maxs-1, '--', lw=3, label=data['name'], color=get_color(data['name']))
         else:
-            ax.semilogy(data['t'], maxs, '--', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.semilogy(data['t'], maxs, '--', lw=3, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.8))
     #ax.set_ylim(ylim)
@@ -241,7 +241,7 @@ def plot_peak_subplots(datas):
             #print(r_max)
             maxs[i] = g_max
         min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
-        ax.plot(data['t'], min_max, '--', lw=2, label=data['name'], color=get_color(data['name']))
+        ax.plot(data['t'], min_max, '--', lw=3, label=data['name'], color=get_color(data['name']))
     
     ax.set_xlim((0.00, 0.8))
     ax.set_ylim(ylim)
@@ -252,10 +252,10 @@ def plot_peak_subplots(datas):
     handles, labels = legend_ax.get_legend_handles_labels()
     lgd = fig.legend(handles,
             labels,
-            bbox_to_anchor=(0.5, 1.15),
+            bbox_to_anchor=(0.52, 1.12),
             fontsize=fontsize,
             loc='upper center',
-            ncol=2)
+            ncol=3)
 
     plt.tight_layout()
     fig.savefig('figures/partial_peak_decay.png', dpi=500, bbox_inches='tight')
@@ -469,14 +469,14 @@ for pair in pairs:
 
     datas = get_data(pair)
 
-    #if pair == 'O_H':
-        #plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
-        #plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
+    if pair == 'O_H':
+        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.png')
+        plot_oh_peak(datas, ylim=ylim, filename=f'figures/O_H_hbond_peak.pdf')
         #first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
         #first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
 
-    #plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.pdf')
-    #plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.png')
+    plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.pdf')
+    plot_vhf_subplots(datas, ylim=ylim, filename=f'figures/{pair}_subplot.png')
 
     #if pair == 'H_H':
     #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.pdf', shift=False)
