@@ -13,25 +13,19 @@ from matplotlib.ticker import MultipleLocator
 from scipy import optimize
 
 aimd = {
-    'r': np.loadtxt('../aimd/water_form/r.txt'),
-    't': np.loadtxt('../aimd/water_form/t.txt')[::20]*0.0005,
-    'g': np.loadtxt('../aimd/water_form/vhf.txt')[::20],
+    'r': np.loadtxt('../aimd/water_form/r_random.txt'),
+    't': np.loadtxt('../aimd/water_form/t_random.txt'),
+    'g': np.loadtxt('../aimd/water_form/vhf_random.txt'),
     'name': 'optB88',
 }
 
 aimd_330 = {
-    'r': np.loadtxt('../aimd/330k/water_form/r.txt'),
-    't': np.loadtxt('../aimd/330k/water_form/t.txt')[::10]*0.0005,
-    'g': np.loadtxt('../aimd/330k/water_form/vhf.txt')[::10],
+    'r': np.loadtxt('../aimd/330k/water_form/r_random.txt'),
+    't': np.loadtxt('../aimd/330k/water_form/t_random.txt'),
+    'g': np.loadtxt('../aimd/330k/water_form/vhf_random.txt'),
     'name': 'optB88_330K',
 }
 
-#aimd_filtered = {
-#    'r': aimd['r'],
-#    't': aimd['t'],
-#    'g': savgol_filter(aimd['g'], window_length=7, polyorder=3),
-#    'name': 'optB88 (filtered)',
-#}
 aimd_filtered = {
     'r': aimd['r'],
     't': aimd['t'],
@@ -47,23 +41,23 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    'r': np.loadtxt('../bk3/nvt/r_21.txt'),
-    't': np.loadtxt('../bk3/nvt/t_21.txt'),
-    'g': np.loadtxt('../bk3/nvt/vhf_21.txt'),
+    'r': np.loadtxt('../bk3/nvt/r_random.txt'),
+    't': np.loadtxt('../bk3/nvt/t_random.txt'),
+    'g': np.loadtxt('../bk3/nvt/vhf_random.txt'),
     'name': 'BK3',
 }
 
 dftb = {
-    'r': np.loadtxt('../dftb/water_form/2ns/r.txt'),
-    't': np.loadtxt('../dftb/water_form/2ns/t.txt'),
-    'g': np.loadtxt('../dftb/water_form/2ns/vhf.txt'),
+    'r': np.loadtxt('../dftb/water_form/2ns/r_random.txt'),
+    't': np.loadtxt('../dftb/water_form/2ns/t_random.txt'),
+    'g': np.loadtxt('../dftb/water_form/2ns/vhf_random.txt'),
     'name': 'DFTB_noD3/3obw',
 }
 
 dftb_d3 = {
-    'r': np.loadtxt('../dftb/water_form/2ns/d3_r.txt'),
-    't': np.loadtxt('../dftb/water_form/2ns/d3_t.txt'),
-    'g': np.loadtxt('../dftb/water_form/2ns/d3_vhf.txt'),
+    'r': np.loadtxt('../dftb/water_form/2ns/r_random.txt'),
+    't': np.loadtxt('../dftb/water_form/2ns/t_random.txt'),
+    'g': np.loadtxt('../dftb/water_form/2ns/vhf_random.txt'),
     'name': 'DFTB_D3/3obw',
 }
 
@@ -75,31 +69,24 @@ dftb_filtered = {
 }
 
 spce = {
-    'r': np.loadtxt('../../spce_vhf/size_2/1000/total/r.txt'),
-    't': np.loadtxt('../../spce_vhf/size_2/1000/total/t.txt'),
-    'g': np.loadtxt('../../spce_vhf/size_2/1000/total/vhf.txt'),
+    'r': np.loadtxt('../spce/nvt/r_random.txt'),
+    't': np.loadtxt('../spce/nvt/t_random.txt'),
+    'g': np.loadtxt('../spce/nvt/vhf_random.txt'),
     'name': 'SPC/E',
 }
 
-reaxff = {
-    'r': np.loadtxt('../reaxff/water_form/r.txt'),
-    't': np.loadtxt('../reaxff/water_form/t.txt')*0.0005,
-    'g': np.loadtxt('../reaxff/water_form/vhf.txt'),
-    'name': 'CHON-2017_weak',
-}
-
-tip3p = {
-    'r': np.loadtxt('../../spce_vhf/tip3p/1000/total/r.txt'),
-    't': np.loadtxt('../../spce_vhf/tip3p/1000/total/t.txt'),
-    'g': np.loadtxt('../../spce_vhf/tip3p/1000/total/vhf.txt'),
-    'name': 'TIP3P',
-}
-
 tip3p_ew = {
-    'r': np.loadtxt('../../spce_vhf/tip3p_ew/1000/total/r.txt'),
-    't': np.loadtxt('../../spce_vhf/tip3p_ew/1000/total/t.txt'),
-    'g': np.loadtxt('../../spce_vhf/tip3p_ew/1000/total/vhf.txt'),
+    'r': np.loadtxt('../tip3p_ew/total/r_random.txt'),
+    't': np.loadtxt('../tip3p_ew/total/t_random.txt'),
+    'g': np.loadtxt('../tip3p_ew/total/vhf_random.txt'),
     'name': 'TIP3P_EW',
+}
+
+reaxff = {
+    'r': np.loadtxt('../reaxff/nvt_water_form/r_random.txt'),
+    't': np.loadtxt('../reaxff/nvt_water_form/t_random.txt'),
+    'g': np.loadtxt('../reaxff/nvt_water_form/vhf_random.txt'),
+    'name': 'CHON-2017_weak',
 }
 
 IXS = {
@@ -124,10 +111,7 @@ def get_color(name):
 
     return color_dict[name]
 
-datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd_filtered, aimd_filtered_330]
-#datas = [IXS, spce, tip3p_ew, bk3, reaxff, aimd_filtered, dftb_filtered]
-#datas = [aimd, aimd_filtered, aimd_330, aimd_filtered_330]
-#datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3]
+datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd, aimd_330]
 
 def make_heatmap(data, ax, v=0.1, fontsize=14):
     heatmap = ax.imshow(
@@ -325,12 +309,16 @@ def plot_total_subplots(datas):
     for i in range(1, 9):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i-1]
-        for frame in range(len(data['t'])):
-            if data['name'] == 'IXS':
-                pass
+        for idx, frame in enumerate(range(len(data['t']))):
+            if data['name'] in ['IXS']:
+                if idx % 3 != 0:
+                    continue 
+            elif data['name'] == 'CHON-2017_weak':
+                if idx % 5 != 0:
+                    continue 
             else:
-                if abs(data['t'][frame] % 0.1) > 0.01:
-                    continue
+                if idx % 10 != 0:
+                    continue 
             ax.plot(data['r'], data['g'][frame], c=cmap(data['t'][frame]/data['t'][-1]))
 
         norm = matplotlib.colors.Normalize(vmin=data['t'][0], vmax=data['t'][-1])
@@ -575,7 +563,7 @@ def plot_second_subplot(datas):
 #first_peak_height(datas)
 #first_peak_auc(datas)
 #second_peak(datas, normalize=True)
-#plot_total_subplots(datas)
+plot_total_subplots(datas)
 #plot_self_subplots(datas)
 #plot_heatmap(datas)
 #plot_decay_subplot(datas)
