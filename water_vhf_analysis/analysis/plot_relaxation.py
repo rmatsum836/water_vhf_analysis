@@ -11,21 +11,9 @@ from scipy.integrate import quad
 from scipy.signal import find_peaks, argrelextrema
 from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
-from water_vhf_analysis.utils.utils import get_txt_file
 from scattering.utils.features import find_local_maxima, find_local_minima
-
-
-def get_color(name):
-    color_dict = dict()
-    color_list = ['TIP3P_EW', 'placeholder', 'SPC/E', 'CHON-2017_weak', 'BK3', 'DFTB_D3/3obw', 'optB88 (filtered)',
-                  'optB88', 'optB88_330K']
-    colors = sns.color_palette("muted", len(color_list))
-    for model, color in zip(color_list, colors):
-        color_dict[model] = color 
-        
-    color_dict['IXS'] = 'black'
-
-    return color_dict[name]
+from water_vhf_analysis.utils.utils import get_txt_file
+from water_vhf_analysis.utils.plotting import get_color
 
 def get_auc(data, idx):
     from scipy.signal import argrelextrema
@@ -83,12 +71,6 @@ def get_cn(data, idx):
     
     return auc
 
-#def _pairing_func(x, a, b, c, d, e, f):
-#    """exponential function for fitting AUC data"""
-#    y = a * np.exp(-(b * x)**c) + d * np.exp(-(e * x)**f)
-#
-#    return y
-
 def _pairing_func(x, a, b, c, d, e, f):
     """exponential function for fitting AUC data"""
     y = a * np.exp(-(b * x)**c) + d * np.exp(-(e * x)**f)
@@ -127,7 +109,7 @@ aimd_330 = {
     'r': np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
     't': np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
     'g': np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
-    'name': 'optB88_330K',
+    'name': 'optB88 (330K)',
 }
 
 aimd_filtered = {
