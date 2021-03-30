@@ -10,6 +10,7 @@ import seaborn as sns
 from scattering.utils.features import find_local_maxima, find_local_minima
 from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
+from water_vhf_analysis.utils.utils import get_txt_file
 
 pairs = ['O_H', 'O_O', 'H_H']
 
@@ -39,44 +40,44 @@ def make_heatmap(data, ax, v=0.1, fontsize=14):
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        'r': np.loadtxt(f'../aimd/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../aimd/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('aimd/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('aimd/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('aimd/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'optB88',
     }
     
     spce = {
-        'r': np.loadtxt(f'../spce/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../spce/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../spce/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('spce/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('spce/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('spce/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'SPC/E',
     }
 
     tip3p_ew = {
-        'r': np.loadtxt(f'../tip3p_ew/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../tip3p_ew/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../tip3p_ew/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('tip3p_ew/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('tip3p_ew/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('tip3p_ew/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'TIP3P_EW',
     }
     
     bk3 = {
-        'r': np.loadtxt(f'../bk3/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../bk3/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../bk3/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('bk3/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('bk3/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('bk3/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'BK3',
     }
     
     reaxff = {
-        'r': np.loadtxt(f'../reaxff/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../reaxff/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../reaxff/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('reaxff/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('reaxff/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('reaxff/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'CHON-2017_weak',
     }
     
     aimd_330 = {
-        'r': np.loadtxt(f'../aimd/330k/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/330k/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../aimd/330k/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('aimd/330k/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('aimd/330k/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('aimd/330k/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'optB88 330K',
     }
 
@@ -95,9 +96,9 @@ def get_data(pair):
     }
 
     dftb = {
-        'r': np.loadtxt(f'../dftb/nvt_partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../dftb/nvt_partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../dftb/nvt_partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(get_txt_file('dftb/nvt_partial_data', f'r_random_{pair}.txt')),
+        't': np.loadtxt(get_txt_file('dftb/nvt_partial_data', f't_random_{pair}.txt')),
+        'g': np.loadtxt(get_txt_file('dftb/nvt_partial_data', f'vhf_random_{pair}.txt')),
         'name': 'DFTB_D3/3obw',
     }
 
