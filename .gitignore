@@ -4,3 +4,6 @@ __pycache__
 *.pbs.*
 *.ipynb
 *.o*
+*.xyz
+*.xtc
+*.trr
