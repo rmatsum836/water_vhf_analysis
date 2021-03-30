@@ -5,6 +5,7 @@ from scipy.signal import argrelextrema
 from water_vhf_analysis.tests.base_test import BaseTest
 from water_vhf_analysis.utils import analysis
 
+
 class TestAnalysis(BaseTest):
     def test_auc(self, ixs):
         auc = analysis.get_auc(ixs, 0)
