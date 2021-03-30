@@ -1,0 +1,39 @@
+FROM continuumio/miniconda3:4.8.2-alpine AS builder
+
+ENV PATH /opt/conda/bin:$PATH
+
+USER root
+
+RUN apk --update-cache upgrade && \
+    apk add --no-cache bash vim nano && \
+    apk add --no-cache --virtual .build_deps git git-lfs && \
+    conda update conda -y && \
+    . /opt/conda/etc/profile.d/conda.sh && \
+    conda create --name vanhove numpy scipy seaborn matplotlib mdtraj pytest progressbar \
+    -c conda-forge -c anaconda -c omnia && \
+    	echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/anaconda/.bashrc && \
+	    echo "conda activate base" >> /home/anaconda/.bashrc && \
+	    echo "conda activate vanhove" >> /home/anaconda/.bashrc && \
+	    conda activate vanhove && \
+        mkdir /software && cd /software && \
+    git clone https://github.com/mattwthompson/scattering && \
+    cd scattering && \
+    pip install . && cd ../ && \
+    # Uncomment when water_vhf_analysis is public
+    #git clone https://github.com/rmatsum836/water_vhf_analysis && \
+    #cd water_vhf_analysis && \
+    #python setup.py install && cd ../ && \
+    conda clean -afy && apk del .build_deps && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /software
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh && \
+    chown -R anaconda /software && \
+    chmod 755 /software
+
+USER anaconda
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["none"]
