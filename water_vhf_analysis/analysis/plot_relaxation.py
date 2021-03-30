@@ -8,95 +8,12 @@ import seaborn as sns
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.integrate import quad
-from scipy.signal import find_peaks, argrelextrema
 from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
-from scattering.utils.features import find_local_maxima, find_local_minima
 from water_vhf_analysis.utils.utils import get_txt_file
 from water_vhf_analysis.utils.plotting import get_color
+from water_vhf_analysis.utils.analysis import get_auc, compute_fit
 
-def get_auc(data, idx):
-    from scipy.signal import argrelextrema
-    import scipy
-    """ Get AUC of first peak"""
-    r = data['r'] * 10
-    g = data['g'][idx]
-    
-    min1, _ = find_local_minima(r, data['g'][idx], 0.15*10)
-    min2, _ = find_local_minima(r, data['g'][idx], 0.34*10) # Changed from 3.6 to 3.4
-    
-    # I have also tried setting the bounds to be 2.6 angstroms and 3.2 nm for all frames
-    #min1 = 2.6
-    #min2 = 3.2
-
-    # When this occurs, min2 is usually too low
-    if min1 == min2:
-        min2 = 0.34 * 10
-
-    #min1_idx = np.where(r == min1)[0][0]
-    min1_idx = np.where(np.isclose(r, min1, rtol=0.02))[0][0]
-    min2_idx = np.where(np.isclose(r, min2, rtol=0.02))[0][0]
-
-    r_peak = r[min1_idx:min2_idx]
-    g_peak = g[min1_idx:min2_idx]
-
-    auc = np.trapz(g_peak[g_peak>1] - 1, r_peak[g_peak>1])
-    
-    return auc
-
-def get_cn(data, idx):
-    from scipy.signal import argrelextrema
-    import scipy
-    """ Get integral of g(r) of first peak for CN"""
-    r = data['r']
-    g = data['g'][idx]
-    
-    #min1, _ = find_local_minima(r, data['g'][idx], 0.24)
-    # I have also tried setting the bounds to be 2.6 angstroms and 3.2 nm for all frames
-    min1 = 0.24
-    min2, _ = find_local_minima(r, data['g'][idx], 0.34) # Changed from 3.6 to 3.4
-    
-    # When this occurs, min2 is usually too low
-    if min1 == min2:
-        min2 = 0.34
-
-    min1_idx = np.where(np.isclose(r, min1))[0][0]
-    min2_idx = np.where(np.isclose(r, min2))[0][0]
-
-    r_peak = r[min1_idx:min2_idx]
-    g_peak = g[min1_idx:min2_idx]
-
-    #auc = np.trapz(g_peak[g_peak>1] - 1, r_peak[g_peak>1])
-    auc = np.trapz(g_peak*(r_peak)**2, r_peak)
-    
-    return auc
-
-def _pairing_func(x, a, b, c, d, e, f):
-    """exponential function for fitting AUC data"""
-    y = a * np.exp(-(b * x)**c) + d * np.exp(-(e * x)**f)
-
-    return y
-
-def compute_fit(time, auc):
-    time_interval = np.asarray(time)
-    bounds = ((-np.inf, 5, 0, -np.inf, 0, -np.inf), (np.inf, np.inf, 10, np.inf,
-        10, np.inf))
-    popt, pcov = curve_fit(_pairing_func, time_interval, auc, bounds=bounds, maxfev=5000)
-    fit = _pairing_func(time_interval, *popt)
-
-    return fit, popt
-
-def compute_fit_with_guess(time, auc,guess,bounds):
-    time_interval = np.asarray(time)
-    popt, pcov = curve_fit(_pairing_func, time_interval, auc, p0=guess, bounds=bounds, maxfev=5000)
-    fit = _pairing_func(time_interval, *popt)
-
-    A = popt[0]
-    tau = 1 / popt[1]
-    gamma = popt[2]
-
-    #return fit, A, tau, gamma
-    return fit, popt
 
 aimd = {
     'r': np.loadtxt(get_txt_file("aimd/nvt_total_data", "r_random.txt")),
