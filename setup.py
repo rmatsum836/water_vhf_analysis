@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 setup(
-    name = "vhf_water_analysis",
+    name = "water_vhf_analysis",
     version = "0.0.0",
     author = "Ray Matsumoto",
     author_email = "ray.a.matsumoto@vanderbilt.edu",
