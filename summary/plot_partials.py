@@ -39,30 +39,30 @@ def make_heatmap(data, ax, v=0.1, fontsize=14):
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        'r': np.loadtxt(f'../aimd/partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../aimd/partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../aimd/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../aimd/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../aimd/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'optB88',
     }
     
     spce = {
-        'r': np.loadtxt(f'../spce/partial_998_density/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../spce/partial_998_density/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../spce/partial_998_density/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../spce/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../spce/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../spce/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'SPC/E',
     }
 
     tip3p_ew = {
-        'r': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_997_density/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_997_density/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../../spce_vhf/tip3p_ew/1000/partial_997_density/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../tip3p_ew/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../tip3p_ew/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../tip3p_ew/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'TIP3P_EW',
     }
     
     bk3 = {
-        'r': np.loadtxt(f'../bk3/partial_998_density/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../bk3/partial_998_density/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../bk3/partial_998_density/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../bk3/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../bk3/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../bk3/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'BK3',
     }
     
@@ -73,18 +73,10 @@ def get_data(pair):
         'name': 'CHON-2017_weak',
     }
     
-    tip3p = {
-        'r': np.loadtxt(f'../tip3p/partial_data/r_{pair}.txt'),
-        't': np.loadtxt(f'../tip3p/partial_data/t_{pair}.txt'),
-        'g': np.loadtxt(f'../tip3p/partial_data/vhf_{pair}.txt'),
-        'name': 'TIP3P',
-    }
-
-
     aimd_330 = {
-        'r': np.loadtxt(f'../aimd/330k/partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../aimd/330k/partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../aimd/330k/partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../aimd/330k/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../aimd/330k/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../aimd/330k/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'optB88 330K',
     }
 
@@ -103,9 +95,9 @@ def get_data(pair):
     }
 
     dftb = {
-        'r': np.loadtxt(f'../dftb/partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../dftb/partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../dftb/partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../dftb/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../dftb/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../dftb/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'DFTB_D3/3obw',
     }
 
