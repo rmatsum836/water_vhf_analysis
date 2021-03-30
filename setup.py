@@ -1,4 +1,3 @@
-import os
 from setuptools import setup
 
 setup(
@@ -7,4 +6,6 @@ setup(
     author = "Ray Matsumoto",
     author_email = "ray.a.matsumoto@vanderbilt.edu",
     description = ("Analysis of water models through the van hove function"),
+    packages=["water_vhf_analysis"],
+    zip_safe=False,
 )
