@@ -67,9 +67,9 @@ def get_data(pair):
     }
     
     reaxff = {
-        'r': np.loadtxt(f'../reaxff/partial_data/r_random_{pair}.txt'),
-        't': np.loadtxt(f'../reaxff/partial_data/t_random_{pair}.txt'),
-        'g': np.loadtxt(f'../reaxff/partial_data/vhf_random_{pair}.txt'),
+        'r': np.loadtxt(f'../reaxff/nvt_partial_data/r_random_{pair}.txt'),
+        't': np.loadtxt(f'../reaxff/nvt_partial_data/t_random_{pair}.txt'),
+        'g': np.loadtxt(f'../reaxff/nvt_partial_data/vhf_random_{pair}.txt'),
         'name': 'CHON-2017_weak',
     }
     
@@ -143,8 +143,6 @@ def plot_peak_subplots(datas):
         r_high = np.where(data["r"] < 0.2)[0][-1]
         r_range = data["r"][r_low:r_high]
         maxs = np.zeros(len(data['t']))
-        #if data["name"] in ("optB88 at 330K (filtered)", "SPC/E"):
-        #    import pdb; pdb.set_trace()
         for i, frame in enumerate(data['g'][:50]):
             g_range = frame[r_low:r_high]
             max_r, max_g = find_local_maxima(r_range, g_range, r_guess=peak_guess)
@@ -277,10 +275,14 @@ def plot_oh_peak(datas, filename, ylim=(0,3)):
                     ax.plot(data['r'], data['g'][frame], c=cmap(data['t'][:1000][frame]/data['t'][:1000][-1]))
                     ax.set_title(data['name'], fontsize=fontsize)
             norm = matplotlib.colors.Normalize(vmin=data['t'][0], vmax=data['t'][:1000][-1])
+        elif data['name'] == 'CHON-2017_weak':
+            for frame in range(len(data['t'][:25])):
+                ax.plot(data['r'], data['g'][frame], c=cmap(data['t'][:25][frame]/data['t'][:25][-1]))
+                ax.set_title(data['name'], fontsize=fontsize)
+            norm = matplotlib.colors.Normalize(vmin=data['t'][0], vmax=data['t'][:25][-1])
         else:
             for frame in range(len(data['t'][:50])):
                 ax.plot(data['r'], data['g'][frame], c=cmap(data['t'][:50][frame]/data['t'][:50][-1]))
-                #ax.text(0.4, 0.1, data['name'], fontsize=12)
                 ax.set_title(data['name'], fontsize=fontsize)
             norm = matplotlib.colors.Normalize(vmin=data['t'][0], vmax=data['t'][:50][-1])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
@@ -311,9 +313,13 @@ def plot_vhf_subplots(datas, filename, ylim=(0,3)):
     for i in range(1, len(datas)+1):
         ax = fig.add_subplot(4, 4,i)
         data = datas[i-1]
-        for frame in range(len(data['t'])):
-            if abs(data['t'][frame] % 0.1) > 0.01:
-                continue
+        for idx, frame in enumerate(range(len(data['t']))):
+            if data["name"] == "CHON-2017_weak":
+                if idx % 5 != 0:
+                    continue 
+            else:
+                if idx % 10 != 0:
+                    continue
             ax.plot(data['r'], data['g'][frame], c=cmap(data['t'][frame]/data['t'][-1]))
         norm = matplotlib.colors.Normalize(vmin=data['t'][0], vmax=data['t'][-1])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
