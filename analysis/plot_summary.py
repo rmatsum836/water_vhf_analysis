@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import seaborn as sns
+import os
 
 import numpy as np
 import scattering
@@ -11,6 +12,8 @@ from scattering.utils.features import find_local_maxima, find_local_minima
 from scipy.signal import savgol_filter
 from matplotlib.ticker import MultipleLocator
 from scipy import optimize
+
+import pdb; pdb.set_trace()
 
 aimd = {
     'r': np.loadtxt('../aimd/nvt_total_data/r_random.txt'),

@@ -734,11 +734,11 @@ def plot_second_subplot(datas):
 
         min_max = ((maxs-1)-np.min(maxs-1)) / (np.max(maxs-1)-np.min(maxs-1))
         if data['name'] == 'IXS':
-            #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
-            ax.plot(data['t'], min_max, '.', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '.', lw=2, label=data['name'], color=get_color(data['name']))
+            #ax.plot(data['t'], min_max, '.', lw=2, label=data['name'], color=get_color(data['name']))
         else:    
-            #ax.plot(data['t'], (maxs-1)/(maxs[0]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
-            ax.plot(data['t'], min_max, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+            ax.plot(data['t'], (maxs-1)/(maxs[0]-1), ls='--', lw=2, label=data['name'], color=get_color(data['name']))
+            #ax.plot(data['t'], min_max, ls='--', lw=2, label=data['name'], color=get_color(data['name']))
     ax.set_xlim((0.005, 0.8))
     ax.set_ylim((0.0, 1.10))
     #ax.set_ylabel(r'$g_2(t) / g_2(0)$, normalized', fontsize=fontsize)
@@ -758,4 +758,4 @@ def plot_second_subplot(datas):
 #plot_first_peak_subplot(datas)
 #first_cn(datas)
 #plot_fits()
-plot_second_subplot
+plot_second_subplot(datas)
