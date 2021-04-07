@@ -6,13 +6,13 @@ import pandas as pd
 import seaborn as sns
 
 import numpy as np
-from scipy.optimize import curve_fit
 from scipy.integrate import quad
 from matplotlib.ticker import MultipleLocator
 from scipy.signal import savgol_filter
 from water_vhf_analysis.utils.utils import get_txt_file
 from water_vhf_analysis.utils.plotting import get_color
 from water_vhf_analysis.utils.analysis import get_auc, compute_fit
+from scattering.utils.features import find_local_maxima, find_local_minima
 
 
 aimd = {
@@ -61,7 +61,7 @@ dftb_d3 = {
     "r": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "vhf_random.txt")),
-    "name": "DFTB_D3/3obw",
+    "name": "3obw",
 }
 
 dftb_filtered = {
@@ -132,7 +132,6 @@ def plot_peak_locations(datas):
         for i in range(0, t.shape[0], 5):
             g = data["g"][i][r_low:r_high]
             r_max, g_max = find_local_maxima(r_range, g, 0.28)
-            print(f"R at time {t[i]} is: {r_max}")
 
             plt.scatter(
                 data["t"][i], r_max, color=get_color(data["name"]), label=data["name"]
@@ -226,7 +225,7 @@ def first_peak_auc(datas, si=False):
                     upper_limit = np.where(t < 1.15)[0][-1]
                 elif data["name"] == "CHON-2017_weak":
                     upper_limit = np.where(t < 0.85)[0][-1]
-                elif data["name"] == "DFTB_D3/3obw":
+                elif data["name"] == "3obw":
                     upper_limit = np.where(t < 0.7)[0][-1]
                 else:
                     upper_limit = np.where(t < 1.00)[0][-1]
@@ -253,18 +252,6 @@ def first_peak_auc(datas, si=False):
             print(f"tau_2 is: {1/popt[4]}")
             print(f"A_2 is: {popt[3]}")
             print(f"gamma_2 is: {popt[5]}")
-            # df.loc[data["name"]]["A_1"] = popt[0]
-            # df.loc[data["name"]]["tau_1"] = 1 / popt[1]
-            # df.loc[data["name"]]["A_2"] = popt[2]
-            # df.loc[data["name"]]["tau_2"] = 1 / popt[3]
-            # df.loc[data["name"]]["gamma_2"] = popt[4]
-            # print(data["name"])
-            # print(f"tau_1 is: {1/popt[1]}")
-            # print(f"A_1 is: {popt[0]}")
-            # print("gamma_1 is: 1.57")
-            # print(f"tau_2 is: {1/popt[3]}")
-            # print(f"A_2 is: {popt[2]}")
-            # print(f"gamma_2 is: {popt[4]}")
         else:
             df.loc[data["name"]]["A_1"] = popt[3]
             df.loc[data["name"]]["tau_1"] = 1 / popt[4]
@@ -279,25 +266,9 @@ def first_peak_auc(datas, si=False):
             print(f"tau_2 is: {1/popt[1]}")
             print(f"A_2 is: {popt[0]}")
             print(f"gamma_2 is: {popt[2]}")
-            # df.loc[data["name"]]["A_1"] = popt[3]
-            # df.loc[data["name"]]["tau_1"] = 1 / popt[4]
-            # df.loc[data["name"]]["A_2"] = popt[0]
-            # df.loc[data["name"]]["tau_2"] = 1 / popt[1]
-            # df.loc[data["name"]]["gamma_2"] = popt[2]
-            # print(data["name"])
-            # print(f"tau_1 is: {1/popt[4]}")
-            # print(f"A_1 is: {popt[3]}")
-            # print(f"tau_2 is: {1/popt[1]}")
-            # print(f"A_2 is: {popt[0]}")
-            # print(f"gamma_2 is: {popt[2]}")
         ax.semilogy(t, fit, linestyle=ls, color="k", label=f"{data['name']}_fit")
         ax.set_title(data["name"], fontsize=12)
 
-        # Plot the compressed exponential functions given from 2018 Phys. Rev.
-        # A_t = 0.42*(np.exp(-(t/0.12)**1.57)) + 0.026*(np.exp(-(t/0.4)**4.1))
-        # ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 310 K")
-        # A_t = 0.45*(np.exp(-(t/0.12)**1.57)) + 0.018*(np.exp(-(t/0.43)**12.8))
-        # ax.plot(t, A_t, label="IXS fit (2018 Phys. Rev.) at 295 K K")
         ax.xaxis.set_major_locator(MultipleLocator(0.25))
         # ax.set_xlim((0.00, 1.5))
         ax.set_xlim((0.00, 1.0))
@@ -565,7 +536,6 @@ def plot_second_subplot(datas):
     ax.text(-0.10, 0.95, "a)", transform=ax.transAxes, size=20, weight="bold")
     ax.set_prop_cycle("color", colors)
     for data in datas:
-        print(data["name"])
         # Find nearest value to 0.1
         maxs = np.zeros(len(data["t"]))
         for i, frame in enumerate(data["g"]):
@@ -606,7 +576,6 @@ def plot_second_subplot(datas):
     ax = axes[1]
     ax.text(-0.10, 0.95, "b)", transform=ax.transAxes, size=20, weight="bold")
     for data in datas:
-        print(data["name"])
         # Find nearest value to 0.1
         maxs = np.zeros(len(data["t"]))
         for i, frame in enumerate(data["g"]):

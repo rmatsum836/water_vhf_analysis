@@ -11,7 +11,7 @@ def get_color(name):
         "SPC/E",
         "CHON-2017_weak",
         "BK3",
-        "DFTB_D3/3obw",
+        "3obw",
         "optB88 (filtered)",
         "optB88",
         "optB88 (330K)",

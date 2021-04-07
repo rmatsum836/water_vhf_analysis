@@ -102,7 +102,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("dftb/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "DFTB_D3/3obw",
+        "name": "3obw",
     }
 
     datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd, aimd_330]

@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 from scipy.signal import argrelextrema
+from scipy.optimize import curve_fit
 from scattering.utils.features import find_local_maxima, find_local_minima
 
 

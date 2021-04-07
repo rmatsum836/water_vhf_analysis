@@ -61,14 +61,14 @@ dftb_d3 = {
     "r": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "vhf_random.txt")),
-    "name": "DFTB_D3/3obw",
+    "name": "3obw",
 }
 
 dftb_filtered = {
     "r": dftb_d3["r"],
     "t": dftb_d3["t"],
     "g": savgol_filter(dftb_d3["g"], window_length=7, polyorder=2),
-    "name": "DFTB_D3 (filtered)",
+    "name": "3obw/D3 (filtered)",
 }
 
 spce = {
