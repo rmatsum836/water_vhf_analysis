@@ -143,7 +143,7 @@ def plot_peak_subplots(datas):
 
     ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
-    ax.set_ylabel(r"$g_{OH_1}(t)$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_{\mathrm{OH}_1}(t)$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
@@ -178,7 +178,7 @@ def plot_peak_subplots(datas):
 
     ax.set_xlim((0.00, 0.21))
     ax.set_ylim(ylim)
-    ax.set_ylabel(r"$g_{OH_1}(t)-1$, normalized", fontsize=fontsize)
+    ax.set_ylabel(r"$G_{\mathrm{OH}_1}(t)-1$, normalized", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
@@ -224,9 +224,9 @@ def plot_peak_subplots(datas):
     ax.set_xlim((0.00, 0.8))
     # ax.set_ylim(ylim)
     if shift == True:
-        ax.set_ylabel(r"$g_{HH_1}(t)-1$", fontsize=fontsize)
+        ax.set_ylabel(r"$G_{\mathrm{HH}_1}(t)-1$", fontsize=fontsize)
     else:
-        ax.set_ylabel(r"$g_{HH_1}(t)$", fontsize=fontsize)
+        ax.set_ylabel(r"$G_{\mathrm{HH}_1}(t)$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
@@ -264,7 +264,7 @@ def plot_peak_subplots(datas):
 
     ax.set_xlim((0.00, 0.8))
     ax.set_ylim(ylim)
-    ax.set_ylabel(r"$g_{HH_1}(t)-1$, normalized", fontsize=fontsize)
+    ax.set_ylabel(r"$G_{\mathrm{HH}_1}(t)-1$, normalized", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
@@ -337,7 +337,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3)):
         ax.set_ylim(ylim)
         xlabel = r"r, $nm$"
         ax.set_xlabel(xlabel, fontsize=fontsize)
-        ax.set_ylabel(r"$g(r, t)$", fontsize=fontsize)
+        ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
         ax.tick_params(labelsize=14)
         axes.append(ax)
     cbar = fig.colorbar(sm, ax=axes)
@@ -377,7 +377,7 @@ def plot_vhf_subplots(datas, filename, ylim=(0, 3)):
         ax.set_ylim(ylim)
         xlabel = r"r, $nm$"
         ax.set_xlabel(xlabel, fontsize=fontsize)
-        ax.set_ylabel(r"$g(r, t)$", fontsize=fontsize)
+        ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
         ax.tick_params(labelsize=14)
         ax.xaxis.set_major_locator(MultipleLocator(0.2))
         axes.append(ax)
@@ -432,9 +432,9 @@ def first_peak_height(datas, filename, peak_guess=0.3, ylim=((0.06, 0.18)), shif
     ax.set_xlim((0.01, 0.8))
     ax.set_ylim(ylim)
     if shift == True:
-        ax.set_ylabel(r"$g_1(t)-1$", fontsize=fontsize)
+        ax.set_ylabel(r"$G_1(t)-1$", fontsize=fontsize)
     else:
-        ax.set_ylabel(r"$g_1(t)$", fontsize=fontsize)
+        ax.set_ylabel(r"$G_1(t)$", fontsize=fontsize)
     ax.set_xlabel("Time (ps)", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", prop={"size": fontsize})
@@ -466,7 +466,7 @@ def first_oh_peak(datas, filename, peak_guess=0.18, ylim=((0.6, 1.8))):
 
     ax.set_xlim((0.01, 0.11))
     ax.set_ylim(ylim)
-    ax.set_ylabel(r"$g_1(t)$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_1(t)$", fontsize=fontsize)
     ax.set_xlabel("Time (ps)", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", prop={"size": fontsize})
@@ -498,7 +498,7 @@ def first_peak_min(datas, filename, peak_guess=0.3):
 
     # ax.set_xlim((0.01, 0.6))
     # ax.set_ylim((3e-2, 2.5))
-    ax.set_ylabel(r"$g_{1min}(t)-1$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_{1min}(t)-1$", fontsize=fontsize)
     ax.set_xlabel("Time (ps)", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", prop={"size": fontsize})
