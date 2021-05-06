@@ -560,39 +560,39 @@ def first_second_peak(datas, filename, first_peak_guess=0.25, second_peak_guess=
     # plt.legend()
     fig.savefig(filename, dpi=500)
 
-
-for pair in pairs:
-    if pair == "O_H":
-        ylim = (0, 2)
-        peak_guess = 0.3
-    elif pair == "O_O":
-        ylim = (0, 3.5)
-    elif pair == "H_H":
-        ylim = (0, 2)
-        peak_guess = 0.23
-
-    datas = get_data(pair)
-
-    if pair == "O_H":
-        plot_oh_peak(datas, ylim=ylim, filename=f"figures/O_H_hbond_peak.png")
-        plot_oh_peak(datas, ylim=ylim, filename=f"figures/O_H_hbond_peak.pdf")
-        # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
-        # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
-
-    plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.pdf")
-    plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.png")
-
-    # if pair == 'H_H':
-    #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.pdf', shift=False)
-    #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.png', shift=False)
-    # if pair == 'H_H':
-    #    first_second_peak(datas, first_peak_guess=0.25, second_peak_guess=0.4, filename=f'figures/{pair}_first_second.pdf')
-    #    first_second_peak(datas, first_peak_guess=0.25, second_peak_guess=0.4, filename=f'figures/{pair}_first_second.png')
-    # if pair == 'O_H':
-    #    first_peak_min(datas, peak_guess=0.2, filename=f'figures/{pair}_minima.pdf')
-    #    first_peak_min(datas, peak_guess=0.2, filename=f'figures/{pair}_minima.png')
-    # if pair == 'O_O':
-    #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.pdf')
-    #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.png')
-
-plot_peak_subplots(datas)
+if __name__ == "__main__":
+    for pair in pairs:
+        if pair == "O_H":
+            ylim = (0, 2)
+            peak_guess = 0.3
+        elif pair == "O_O":
+            ylim = (0, 3.5)
+        elif pair == "H_H":
+            ylim = (0, 2)
+            peak_guess = 0.23
+    
+        datas = get_data(pair)
+    
+        if pair == "O_H":
+            plot_oh_peak(datas, ylim=ylim, filename=f"figures/O_H_hbond_peak.png")
+            plot_oh_peak(datas, ylim=ylim, filename=f"figures/O_H_hbond_peak.pdf")
+            # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
+            # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
+    
+        plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.pdf")
+        plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.png")
+    
+        # if pair == 'H_H':
+        #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.pdf', shift=False)
+        #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.png', shift=False)
+        # if pair == 'H_H':
+        #    first_second_peak(datas, first_peak_guess=0.25, second_peak_guess=0.4, filename=f'figures/{pair}_first_second.pdf')
+        #    first_second_peak(datas, first_peak_guess=0.25, second_peak_guess=0.4, filename=f'figures/{pair}_first_second.png')
+        # if pair == 'O_H':
+        #    first_peak_min(datas, peak_guess=0.2, filename=f'figures/{pair}_minima.pdf')
+        #    first_peak_min(datas, peak_guess=0.2, filename=f'figures/{pair}_minima.png')
+        # if pair == 'O_O':
+        #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.pdf')
+        #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.png')
+    
+    plot_peak_subplots(datas)

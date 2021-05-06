@@ -253,11 +253,11 @@ def first_peak_auc(datas, si=False):
             print(f"A_2 is: {popt[3]}")
             print(f"gamma_2 is: {popt[5]}")
         else:
-            df.loc[data["name"]]["A_1"] = popt[3]
             df.loc[data["name"]]["tau_1"] = 1 / popt[4]
+            df.loc[data["name"]]["A_1"] = popt[3]
             df.loc[data["name"]]["gamma_1"] = popt[5]
-            df.loc[data["name"]]["A_2"] = popt[0]
             df.loc[data["name"]]["tau_2"] = 1 / popt[1]
+            df.loc[data["name"]]["A_2"] = popt[0]
             df.loc[data["name"]]["gamma_2"] = popt[2]
             print(data["name"])
             print(f"tau_1 is: {1/popt[4]}")
@@ -339,7 +339,7 @@ def plot_first_peak_subplot(datas, si=False):
         ax.set_xlim((0.00, 0.6))
         ax.xaxis.set_major_locator(MultipleLocator(0.1))
     ax.set_ylim((3e-2, 2.5))
-    ax.set_ylabel(r"$g_1(t)-1$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_1(t)-1$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color="k", ls="--")
     ax.tick_params(axis="both", labelsize=labelsize)
@@ -567,7 +567,7 @@ def plot_second_subplot(datas):
     ax.tick_params(axis="both", labelsize=labelsize)
     ax.set_xlim((0.005, 0.8))
     ax.set_ylim((0.01, 0.5))
-    ax.set_ylabel(r"$g_2(t)-1$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_2(t)-1$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     fig.legend(
         bbox_to_anchor=(0.45, 1.10), loc="upper center", prop={"size": fontsize}, ncol=4
@@ -611,20 +611,20 @@ def plot_second_subplot(datas):
     ax.set_xlim((0.005, 0.8))
     ax.set_ylim((0.2, 1.10))
     # ax.set_ylabel(r'$g_2(t) / g_2(0)$, normalized', fontsize=fontsize)
-    ax.set_ylabel(r"$g_2(t)-1$, normalized", fontsize=fontsize)
+    ax.set_ylabel(r"$G_2(t)-1$, normalized", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
-
-# plot_first_fit()
-first_peak_auc(datas)
-first_peak_auc(datas, si=True)
-plot_peak_locations(datas)
-plot_first_peak_subplot(datas, si=True)
-plot_first_peak_subplot(datas)
-# first_cn(datas)
-plot_fits()
-plot_second_subplot(datas)
+if __name__ == "__main__":
+    # plot_first_fit()
+    first_peak_auc(datas)
+    first_peak_auc(datas, si=True)
+    plot_peak_locations(datas)
+    plot_first_peak_subplot(datas, si=True)
+    plot_first_peak_subplot(datas)
+    # first_cn(datas)
+    plot_fits()
+    plot_second_subplot(datas)

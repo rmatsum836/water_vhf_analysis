@@ -173,7 +173,7 @@ def second_peak(datas, normalize=False):
     if normalize:
         ax.set_xlim((0.005, 0.8))
         ax.set_ylim((0.0, 1.5))
-        ax.set_ylabel(r"$g_2(t) / g_2(0)$, normalized", fontsize=fontsize)
+        ax.set_ylabel(r"$G_2(t) / G_2(0)$, normalized", fontsize=fontsize)
         ax.set_xlabel(r"Time, $t$ / $t(0)$, $ps$", fontsize=fontsize)
         fig.savefig(
             "figures/overall_second_peak_normalize.png", dpi=500, bbox_inches="tight"
@@ -184,7 +184,7 @@ def second_peak(datas, normalize=False):
     else:
         ax.set_xlim((0.005, 0.8))
         ax.set_ylim((0.01, 0.5))
-        ax.set_ylabel(r"$g_2(t)-1$", fontsize=fontsize)
+        ax.set_ylabel(r"$G_2(t)-1$", fontsize=fontsize)
         ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
         fig.savefig("figures/overall_second_peak.png", dpi=500, bbox_inches="tight")
         fig.savefig("figures/overall_second_peak.pdf", dpi=500, bbox_inches="tight")
@@ -233,7 +233,7 @@ def plot_total_subplots(datas):
         ax.set_xlim((0, 0.8))
         xlabel = r"r, $nm$"
         ax.set_xlabel(xlabel, fontsize=fontsize)
-        ax.set_ylabel(r"$g(r, t)$", fontsize=fontsize)
+        ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
         ax.tick_params(labelsize=14)
         ax.xaxis.set_major_locator(MultipleLocator(0.2))
         axes.append(ax)
@@ -298,7 +298,7 @@ def plot_self_subplots(datas):
 
         xlabel = r"r, $nm$"
         ax.set_xlabel(xlabel)
-        ax.set_ylabel(r"$g(r, t)$")
+        ax.set_ylabel(r"$G(r, t)$")
         axes.append(ax)
     # fig.subplots_adjust(right=0.8)
     plt.tight_layout()
@@ -375,7 +375,7 @@ def plot_decay_subplot(datas):
             )
     ax.set_xlim((0.00, 0.6))
     ax.set_ylim((3e-2, 2.5))
-    ax.set_ylabel(r"$g_1(t)-1$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_1(t)-1$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.xaxis.set_major_locator(MultipleLocator(0.1))
     ax.vlines(x=0.1, ymin=2e-2, ymax=2.5, color="k", ls="--")
@@ -426,7 +426,7 @@ def plot_decay_subplot(datas):
     ax.set_xlim((0.00, 0.8))
     # ax.set_ylim((.003, .5))
     ax.set_ylim((0.01, 0.5))
-    ax.set_ylabel(r"$g_2(t)-1$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_2(t)-1$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.xaxis.set_major_locator(MultipleLocator(0.2))
     ax.xaxis.set_minor_locator(MultipleLocator(0.1))
@@ -484,7 +484,7 @@ def plot_second_subplot(datas):
     ax.tick_params(axis="both", labelsize=labelsize)
     ax.set_xlim((0.005, 0.8))
     ax.set_ylim((0.01, 0.5))
-    ax.set_ylabel(r"$g_2(t)-1$", fontsize=fontsize)
+    ax.set_ylabel(r"$G_2(t)-1$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     fig.legend(
         bbox_to_anchor=(0.45, 1.15), loc="upper center", prop={"size": fontsize}, ncol=4
@@ -529,16 +529,16 @@ def plot_second_subplot(datas):
     ax.set_xlim((0.005, 0.8))
     ax.set_ylim((0.0, 1.10))
     # ax.set_ylabel(r'$g_2(t) / g_2(0)$, normalized', fontsize=fontsize)
-    ax.set_ylabel(r"$g_2(t)-1$, normalized", fontsize=fontsize)
+    ax.set_ylabel(r"$G_2(t)-1$, normalized", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
-
-plot_total_subplots(datas)
-# plot_self_subplots(datas)
-# plot_heatmap(datas)
-# plot_decay_subplot(datas)
-# plot_second_subplot(datas)
+if __name__ == "__main__":
+    plot_total_subplots(datas)
+    # plot_self_subplots(datas)
+    # plot_heatmap(datas)
+    # plot_decay_subplot(datas)
+    # plot_second_subplot(datas)
