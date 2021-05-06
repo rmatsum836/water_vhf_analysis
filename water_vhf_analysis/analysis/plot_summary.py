@@ -536,6 +536,7 @@ def plot_second_subplot(datas):
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
+
 if __name__ == "__main__":
     plot_total_subplots(datas)
     # plot_self_subplots(datas)

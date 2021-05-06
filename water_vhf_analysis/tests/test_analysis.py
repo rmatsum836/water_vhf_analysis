@@ -20,4 +20,4 @@ class TestAnalysis(BaseTest):
     def test_first_peak_auc(self, si, ixs):
         os.mkdir("./figures")
         os.mkdir("./tables")
-        first_peak_auc([ixs], si=si) 
+        first_peak_auc([ixs], si=si)

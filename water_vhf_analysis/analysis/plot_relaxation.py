@@ -394,7 +394,7 @@ def plot_first_peak_subplot(datas, si=False):
 
 
 def plot_first_fit():
-    """ Plot compressed exponential fit for each method"""
+    """Plot compressed exponential fit for each method"""
     df = pd.read_csv("tables/first_peak_fits.csv")
     fig, ax = plt.subplots(figsize=(6, 6))
     time = np.arange(0, 2.0, 0.05)
@@ -526,7 +526,7 @@ def plot_fits():
 
 
 def plot_second_subplot(datas):
-    """ Plot the height of second peak, and normalized height of second peak"""
+    """Plot the height of second peak, and normalized height of second peak"""
     fontsize = 18
     labelsize = 18
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
@@ -617,6 +617,7 @@ def plot_second_subplot(datas):
 
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
+
 
 if __name__ == "__main__":
     # plot_first_fit()

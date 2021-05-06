@@ -4,14 +4,12 @@ from water_vhf_analysis.utils import utils
 
 
 class TestUtils(object):
-    @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew",
-    "reaxff"))
+    @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew", "reaxff"))
     def test_get_txt(self, model):
         file_path = model + "/nvt_total_data/"
         utils.get_txt_file(file_path, "t_random.txt")
 
-    @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew",
-    "reaxff"))
+    @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew", "reaxff"))
     def test_read_txt_file(self, model):
         file_path = model + "/nvt_total_data/"
         time = np.loadtxt(utils.get_txt_file(file_path, "t_random.txt"))
@@ -30,7 +28,6 @@ class TestUtils(object):
 
         assert np.isclose(r[0], 0.0025)
         assert np.isclose(r[-1], 0.9975)
-
 
     @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew"))
     def test_read_vhf_txt_file(self, model):
@@ -71,8 +68,7 @@ class TestUtils(object):
 
         assert np.isclose(vhf[0][-1], 1.0, rtol=1e-1)
 
-    @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew",
-    "reaxff", "dftb"))
+    @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew", "reaxff", "dftb"))
     def test_read_partial_txt_file(self, model):
         file_path = model + "/nvt_partial_data/"
         if model == "reaxff":
@@ -81,14 +77,16 @@ class TestUtils(object):
             last = 1.99
 
         for pair in ["O_O", "O_H", "H_H"]:
-            time = np.loadtxt(utils.get_txt_file(file_path,
-                "t_random_{}.txt".format(pair)))
+            time = np.loadtxt(
+                utils.get_txt_file(file_path, "t_random_{}.txt".format(pair))
+            )
 
             assert np.isclose(time[0], 0)
             assert np.isclose(time[-1], last)
 
-            r = np.loadtxt(utils.get_txt_file(file_path,
-                "r_random_{}.txt".format(pair)))
+            r = np.loadtxt(
+                utils.get_txt_file(file_path, "r_random_{}.txt".format(pair))
+            )
 
             assert np.isclose(r[0], 0.002)
             assert np.isclose(r[-1], 0.798)
@@ -100,14 +98,16 @@ class TestUtils(object):
         else:
             file_path = "aimd/{}/nvt_partial_data/".format(temp)
         for pair in ["O_O", "O_H", "H_H"]:
-            time = np.loadtxt(utils.get_txt_file(file_path,
-                "t_random_{}.txt".format(pair)))
+            time = np.loadtxt(
+                utils.get_txt_file(file_path, "t_random_{}.txt".format(pair))
+            )
 
             assert np.isclose(time[0], 0)
             assert np.isclose(time[-1], 1.99)
 
-            r = np.loadtxt(utils.get_txt_file(file_path,
-                "r_random_{}.txt".format(pair)))
+            r = np.loadtxt(
+                utils.get_txt_file(file_path, "r_random_{}.txt".format(pair))
+            )
 
             assert np.isclose(r[0], 0.002)
             assert np.isclose(r[-1], 0.798)
