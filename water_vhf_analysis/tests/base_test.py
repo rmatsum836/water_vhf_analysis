@@ -18,3 +18,25 @@ class BaseTest:
         }
 
         return IXS
+
+    @pytest.fixture
+    def spce(self):
+        model_dict = {
+            "name": "SPC/E",
+            "r": np.loadtxt(get_txt_file("spce/nvt_total_data", "r_random.txt")),
+            "t": np.loadtxt(get_txt_file("spce/nvt_total_data", "t_random.txt")),
+            "g": np.loadtxt(get_txt_file("spce/nvt_total_data", "vhf_random.txt")),
+        }
+
+        return model_dict
+
+    @pytest.fixture
+    def reaxff(self):
+        model_dict = {
+            "name": "CHON-2017_weak",
+            "r": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "r_random.txt")),
+            "t": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "t_random.txt")),
+            "g": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "vhf_random.txt")),
+        }
+
+        return model_dict
