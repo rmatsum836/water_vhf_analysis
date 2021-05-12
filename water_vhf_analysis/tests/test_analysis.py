@@ -17,8 +17,7 @@ class TestAnalysis(BaseTest):
     def test_ixs_auc(self, ixs):
         auc = analysis.get_auc(ixs, 0)
 
-    @pytest.mark.parametrize("model", ("spce", "reaxff", "bk3",
-        "dftb"))
+    @pytest.mark.parametrize("model", ("spce", "reaxff", "bk3", "dftb"))
     def test_spce_auc(self, model):
         model_dict = {
             "name": model,
@@ -30,7 +29,7 @@ class TestAnalysis(BaseTest):
 
     def test_check_auc_value(self, ixs):
         auc = analysis.get_auc(ixs, 0)
-        assert np.isclose(auc, 0.45078)
+        assert np.allclose(auc, 0.45078)
 
     @pytest.mark.parametrize("si", (True, False))
     def test_first_peak_ixs_auc(self, si, ixs):
@@ -38,8 +37,7 @@ class TestAnalysis(BaseTest):
         os.mkdir("./tables")
         first_peak_auc([ixs], si=si)
 
-    @pytest.mark.parametrize("si,model", [(True, "spce"), (False,
-    "spce")])
+    @pytest.mark.parametrize("si,model", [(True, "spce"), (False, "spce")])
     def test_first_peak_auc(self, si, model):
         model_dict = {
             "name": model,
