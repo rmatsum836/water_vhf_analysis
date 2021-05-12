@@ -50,17 +50,10 @@ bk3 = {
     "name": "BK3",
 }
 
-dftb = {
-    "r": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "vhf_random.txt")),
-    "name": "DFTB_noD3/3obw",
-}
-
 dftb_d3 = {
-    "r": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("dftb/nvt_total_data/2ns", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("dftb/nvt_total_data", "r_random.txt")),
+    "t": np.loadtxt(get_txt_file("dftb/nvt_total_data", "t_random.txt")),
+    "g": np.loadtxt(get_txt_file("dftb/nvt_total_data", "vhf_random.txt")),
     "name": "3obw",
 }
 
