@@ -110,12 +110,11 @@ def get_data(pair):
     return datas
 
 
-def plot_peak_subplots(datas):
+def plot_peak_subplots(save=True):
     fontsize = 20
     labelsize = 20
     fig, axes = plt.subplots(2, 2, figsize=(12, 12))
     fig.subplots_adjust(wspace=0.5, hspace=0.3)
-    colors = sns.color_palette("muted", len(datas))
 
     # Plot OH peak decay
     peak_guess = 0.18
@@ -123,6 +122,7 @@ def plot_peak_subplots(datas):
     ax = axes[0][0]
     ax.text(-0.10, 1.05, "a)", transform=ax.transAxes, size=20, weight="bold")
     datas = get_data("O_H")
+    colors = sns.color_palette("muted", len(datas))
     for data in datas:
         r_low = np.where(data["r"] > 0.16)[0][0]
         r_high = np.where(data["r"] < 0.2)[0][-1]
@@ -279,8 +279,9 @@ def plot_peak_subplots(datas):
     )
 
     plt.tight_layout()
-    fig.savefig("figures/partial_peak_decay.png", dpi=500, bbox_inches="tight")
-    fig.savefig("figures/partial_peak_decay.pdf", dpi=500, bbox_inches="tight")
+    if save:
+        fig.savefig("figures/partial_peak_decay.png", dpi=500, bbox_inches="tight")
+        fig.savefig("figures/partial_peak_decay.pdf", dpi=500, bbox_inches="tight")
 
 
 def plot_oh_peak(datas, filename, ylim=(0, 3)):
@@ -346,7 +347,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3)):
 
 
 # Plot all in one subplot
-def plot_vhf_subplots(datas, filename, ylim=(0, 3)):
+def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
     fontsize = 16
     labelsize = 16
     fig = plt.figure(figsize=(20, 14))
@@ -395,7 +396,8 @@ def plot_vhf_subplots(datas, filename, ylim=(0, 3)):
     cbar = fig.colorbar(heatmap, ax=axes)
     cbar.ax.tick_params(labelsize=14)
     cbar.set_label(r"$g(r, t) - 1$", rotation=90, fontsize=fontsize)
-    plt.savefig(filename, bbox_inches="tight", dpi=500)
+    if filename:
+        plt.savefig(filename, bbox_inches="tight", dpi=500)
 
 
 def first_peak_height(datas, filename, peak_guess=0.3, ylim=((0.06, 0.18)), shift=True):
@@ -596,4 +598,4 @@ if __name__ == "__main__":
         #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.pdf')
         #    first_peak_height(datas, peak_guess=0.3, ylim=(0.01, 2.5), filename=f'figures/{pair}_first_peak.png')
 
-    plot_peak_subplots(datas)
+    plot_peak_subplots()
