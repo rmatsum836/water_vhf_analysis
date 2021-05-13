@@ -6,16 +6,15 @@ USER root
 
 RUN apk --update-cache upgrade && \
     apk add --no-cache bash vim nano && \
-    apk add --no-cache --virtual .build_deps git git-lfs && \
+    apk add --no-cache --virtual .build_deps git && \
     conda update conda -y && \
     . /opt/conda/etc/profile.d/conda.sh && \
-    conda create --name vanhove numpy scipy seaborn matplotlib mdtraj pytest progressbar \
+    conda create --name vanhove numpy scipy seaborn matplotlib mdtraj pytest progressbar2 \
     -c conda-forge -c anaconda -c omnia && \
     	echo ". /opt/conda/etc/profile.d/conda.sh" >> /home/anaconda/.bashrc && \
 	    echo "conda activate base" >> /home/anaconda/.bashrc && \
 	    echo "conda activate vanhove" >> /home/anaconda/.bashrc && \
 	    conda activate vanhove && \
-        mkdir /software && cd /software && \
     git clone https://github.com/mattwthompson/scattering && \
     cd scattering && \
     pip install . && cd ../ && \
@@ -25,13 +24,15 @@ RUN apk --update-cache upgrade && \
     #python setup.py install && cd ../ && \
     conda clean -afy && apk del .build_deps && \
     rm -rf /var/cache/apk/*
+    mkdir /home/anaconda/data && \
+    chown -R anaconda:anaconda /water_vhf_analysis && \
+    chown -R anaconda:anaconda /opt && \
+    chown -R anaconda:anaconda /home/anaconda && \
 
-WORKDIR /software
+WORKDIR /home/anaconda
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh && \
-    chown -R anaconda /software && \
-    chmod 755 /software
 
 USER anaconda
 
