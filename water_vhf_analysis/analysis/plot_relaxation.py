@@ -273,6 +273,8 @@ def first_peak_auc(datas, si=False):
 
     # Rename df index
     df = df.rename_axis("Model")
+    df = df.rename(index={"TIP3P_EW": "TIP3P\_EW", 
+                          "CHON-2017_weak": "CHON-2017\_weak"})
 
     if si:
         plt.savefig("figures/first_peak_auc_si.pdf")
@@ -462,6 +464,9 @@ def plot_fits():
     Plot fits of first peak, first subplot shows the first step, second subplot second step
     """
     df = pd.read_csv("tables/first_peak_fits.csv")
+    # Hacky
+    df.Model[2] = "TIP3P_EW"
+    df.Model[4] = "CHON-2017_weak"
 
     # Plot first-step fit
     fig, ax = plt.subplots(figsize=(6, 6))
