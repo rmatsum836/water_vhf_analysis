@@ -151,7 +151,7 @@ def plot_peak_locations(datas):
     plt.ylabel("Peak Position (nm)")
     plt.xlabel("t (ps)")
     plt.ylim((0.25, 0.5))
-    plt.xlim((0.0, 2.0))
+    plt.xlim((0.0, 1.0))
     handles, labels = plt.gca().get_legend_handles_labels()
     by_label = dict(zip(labels, handles))
     plt.legend(
@@ -182,7 +182,8 @@ def first_peak_auc(datas, si=False):
     fig = plt.figure(figsize=(16, 6))
     fig.subplots_adjust(hspace=0.4, wspace=0.8)
     axes = list()
-    columns = ("A_1", "tau_1", "gamma_1", "A_2", "tau_2", "gamma_2")
+    columns = ("$A_{1}$", r"$\tau_{1}$", "$\gamma_{1}$", "$A_{2}$",
+            r"$\tau_{2}$", "$\gamma_{2}$")
     index = [i["name"] for i in datas]
     df = pd.DataFrame(index=index, columns=columns)
     for i in range(1, len(datas) + 1):
@@ -232,12 +233,12 @@ def first_peak_auc(datas, si=False):
             print(f"Fit for {data['name']} has failed")
             continue
         if (1 / popt[1]) < (1 / popt[4]):
-            df.loc[data["name"]]["A_1"] = popt[0]
-            df.loc[data["name"]]["tau_1"] = 1 / popt[1]
-            df.loc[data["name"]]["gamma_1"] = popt[2]
-            df.loc[data["name"]]["A_2"] = popt[3]
-            df.loc[data["name"]]["tau_2"] = 1 / popt[4]
-            df.loc[data["name"]]["gamma_2"] = popt[5]
+            df.loc[data["name"]]["$A_{1}$"] = popt[0]
+            df.loc[data["name"]][r"$\tau_{1}$"] = 1 / popt[1]
+            df.loc[data["name"]]["$\gamma_{1}$"] = popt[2]
+            df.loc[data["name"]]["$A_{2}$"] = popt[3]
+            df.loc[data["name"]][r"$\tau_{2}$"] = 1 / popt[4]
+            df.loc[data["name"]]["$\gamma_{2}$"] = popt[5]
             print(data["name"])
             print(f"tau_1 is: {1/popt[1]}")
             print(f"A_1 is: {popt[0]}")
@@ -246,12 +247,12 @@ def first_peak_auc(datas, si=False):
             print(f"A_2 is: {popt[3]}")
             print(f"gamma_2 is: {popt[5]}")
         else:
-            df.loc[data["name"]]["tau_1"] = 1 / popt[4]
-            df.loc[data["name"]]["A_1"] = popt[3]
-            df.loc[data["name"]]["gamma_1"] = popt[5]
-            df.loc[data["name"]]["tau_2"] = 1 / popt[1]
-            df.loc[data["name"]]["A_2"] = popt[0]
-            df.loc[data["name"]]["gamma_2"] = popt[2]
+            df.loc[data["name"]][r"$\tau_{1}$"] = 1 / popt[4]
+            df.loc[data["name"]]["$A_{1}$"] = popt[3]
+            df.loc[data["name"]]["$\gamma_{1}$"] = popt[5]
+            df.loc[data["name"]][r"$\tau_{2}$"] = 1 / popt[1]
+            df.loc[data["name"]]["$A_{2}$"] = popt[0]
+            df.loc[data["name"]]["$\gamma_{2}$"] = popt[2]
             print(data["name"])
             print(f"tau_1 is: {1/popt[4]}")
             print(f"A_1 is: {popt[3]}")
@@ -269,6 +270,9 @@ def first_peak_auc(datas, si=False):
         # ax.set_ylim((5e-4, 1.0))
         ax.set_ylabel(r"$A(t)$")
         ax.set_xlabel("Time (ps)")
+
+    # Rename df index
+    df = df.rename_axis("Model")
 
     if si:
         plt.savefig("figures/first_peak_auc_si.pdf")
@@ -466,7 +470,8 @@ def plot_fits():
         time = np.arange(0, 2, 0.1)
         ax.plot(
             time,
-            data["A_1"] * np.exp(-((time / data["tau_1"]) ** data["gamma_1"])),
+            data["$A_{1}$"] * np.exp(-((time / data[r"$\tau_{1}$"]) **
+                data["$\gamma_{1}$"])),
             label=data[0],
             color=get_color(data[0]),
         )
@@ -492,7 +497,8 @@ def plot_fits():
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
     for i in range(len(df)):
         data = df.loc[i]
-        fit_two = data["A_2"] * np.exp(-((time / data["tau_2"]) ** data["gamma_2"]))
+        fit_two = data["$A_{2}$"] * np.exp(-((time /
+            data[r"$\tau_{2}$"]) ** data["$\gamma_{2}$"]))
         fit_norm = fit_two / fit_two[0]
         axes[0].plot(time, fit_two, label=data[0], color=get_color(data[0]))
         axes[1].plot(time, fit_norm, label=data[0], color=get_color(data[0]))
