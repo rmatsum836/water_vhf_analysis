@@ -66,23 +66,23 @@ class TestAnalysis(BaseTest):
         )
 
         assert (
-            table[table["Unnamed: 0"] == "IXS"].A_1.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "IXS"].A_1.values[0]
+            table[table["Model"] == "IXS"]["$A_{1}$"].values[0]
+            == ref_table[ref_table["Model"] == "IXS"]["$A_{1}$"].values[0]
         )
 
         assert (
-            table[table["Unnamed: 0"] == "IXS"].gamma_1.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "IXS"].gamma_1.values[0]
+            table[table["Model"] == "IXS"]["$\gamma_{1}$"].values[0]
+            == ref_table[ref_table["Model"] == "IXS"]["$\gamma_{1}$"].values[0]
         )
 
         assert (
-            table[table["Unnamed: 0"] == "IXS"].A_2.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "IXS"].A_2.values[0]
+            table[table["Model"] == "IXS"]["$A_{2}$"].values[0]
+            == ref_table[ref_table["Model"] == "IXS"]["$A_{2}$"].values[0]
         )
 
         assert (
-            table[table["Unnamed: 0"] == "IXS"].gamma_2.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "IXS"].gamma_2.values[0]
+            table[table["Model"] == "IXS"]["$\gamma_{2}$"].values[0]
+            == ref_table[ref_table["Model"] == "IXS"]["$\gamma_{2}$"].values[0]
         )
 
     @pytest.mark.parametrize("si", (True, False))
@@ -102,21 +102,21 @@ class TestAnalysis(BaseTest):
         )
 
         assert (
-            table[table["Unnamed: 0"] == "SPC/E"].A_1.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].A_1.values[0]
+            table[table["Model"] == "SPC/E"]["$A_{1}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E"]["$A_{1}$"].values[0]
         )
 
         assert (
-            table[table["Unnamed: 0"] == "SPC/E"].gamma_1.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].gamma_1.values[0]
+            table[table["Model"] == "SPC/E"]["$\gamma_{1}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E"]["$\gamma_{1}$"].values[0]
         )
 
         assert (
-            table[table["Unnamed: 0"] == "SPC/E"].A_2.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].A_2.values[0]
+            table[table["Model"] == "SPC/E"]["$A_{2}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E"]["$A_{2}$"].values[0]
         )
 
         assert (
-            table[table["Unnamed: 0"] == "SPC/E"].gamma_2.values[0]
-            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].gamma_2.values[0]
+            table[table["Model"] == "SPC/E"]["$\gamma_{2}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E"]["$\gamma_{2}$"].values[0]
         )
