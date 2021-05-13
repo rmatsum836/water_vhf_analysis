@@ -14,7 +14,7 @@ def get_color(name):
         "3obw",
         "optB88 (filtered)",
         "optB88",
-        "optB88 (330K)",
+        "optB88 (330 K)",
     ]
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):

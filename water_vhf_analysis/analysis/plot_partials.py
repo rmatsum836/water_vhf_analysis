@@ -79,7 +79,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("aimd/330k/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "optB88 (330K)",
+        "name": "optB88 (330 K)",
     }
 
     aimd_filtered_330 = {

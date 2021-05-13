@@ -26,7 +26,7 @@ aimd_330 = {
     "r": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88 (330K)",
+    "name": "optB88 (330 K)",
 }
 
 aimd_filtered = {
@@ -95,7 +95,7 @@ IXS = {
 datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd, aimd_330]
 
 
-def plot_peak_locations(datas):
+def plot_peak_locations(datas, save=True):
     """
     Function designed to replicated Fig. 2 of 2018 Phys. Rev. E paper.
     Plots the peak positions as a function of time
@@ -162,11 +162,12 @@ def plot_peak_locations(datas):
         prop={"size": 12},
         ncol=4,
     )
-    plt.savefig("figures/peak_locations.pdf", dpi=500, bbox_inches="tight")
-    plt.savefig("figures/peak_locations.png", dpi=500, bbox_inches="tight")
+    if save:
+        plt.savefig("figures/peak_locations.pdf", dpi=500, bbox_inches="tight")
+        plt.savefig("figures/peak_locations.png", dpi=500, bbox_inches="tight")
 
 
-def first_peak_auc(datas, si=False):
+def first_peak_auc(datas, si=False, save=True):
     """
     Plot the AUC of first peak as a function of time
     Attempting to replicate Fig. 4b of Phys. Rev. E
@@ -275,18 +276,18 @@ def first_peak_auc(datas, si=False):
     df = df.rename_axis("Model")
     df = df.rename(index={"TIP3P_EW": "TIP3P\_EW", 
                           "CHON-2017_weak": "CHON-2017\_weak"})
+    if save:
+        if si:
+            plt.savefig("figures/first_peak_auc_si.pdf")
+            plt.savefig("figures/first_peak_auc_si.png")
+            df.to_csv("tables/first_peak_fits_si.csv")
+        else:
+            plt.savefig("figures/first_peak_auc.pdf")
+            plt.savefig("figures/first_peak_auc.png")
+            df.to_csv("tables/first_peak_fits.csv")
 
-    if si:
-        plt.savefig("figures/first_peak_auc_si.pdf")
-        plt.savefig("figures/first_peak_auc_si.png")
-        df.to_csv("tables/first_peak_fits_si.csv")
-    else:
-        plt.savefig("figures/first_peak_auc.pdf")
-        plt.savefig("figures/first_peak_auc.png")
-        df.to_csv("tables/first_peak_fits.csv")
 
-
-def plot_first_peak_subplot(datas, si=False):
+def plot_first_peak_subplot(datas, si=False, save=True):
     fontsize = 18
     labelsize = 18
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
@@ -384,12 +385,13 @@ def plot_first_peak_subplot(datas, si=False):
         ax.set_ylabel(r"A($t$)", fontsize=fontsize)
         ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
         ax.tick_params(axis="both", labelsize=labelsize)
-    if si:
-        fig.savefig("figures/first_subplot_si.png", dpi=500, bbox_inches="tight")
-        fig.savefig("figures/first_subplot_si.pdf", dpi=500, bbox_inches="tight")
-    else:
-        fig.savefig("figures/first_subplot.png", dpi=500, bbox_inches="tight")
-        fig.savefig("figures/first_subplot.pdf", dpi=500, bbox_inches="tight")
+    if save:
+        if si:
+            fig.savefig("figures/first_subplot_si.png", dpi=500, bbox_inches="tight")
+            fig.savefig("figures/first_subplot_si.pdf", dpi=500, bbox_inches="tight")
+        else:
+            fig.savefig("figures/first_subplot.png", dpi=500, bbox_inches="tight")
+            fig.savefig("figures/first_subplot.pdf", dpi=500, bbox_inches="tight")
 
 
 def plot_first_fit():
@@ -459,7 +461,7 @@ def first_cn(datas):
     fig.savefig("figures/cn_vs_t.pdf", dpi=500, bbox_inches="tight")
 
 
-def plot_fits():
+def plot_fits(save=True):
     """
     Plot fits of first peak, first subplot shows the first step, second subplot second step
     """
@@ -495,8 +497,8 @@ def plot_fits():
         prop={"size": 12},
         ncol=4,
     )
-
-    fig.savefig("figures/first_step_decay.png", dpi=500, bbox_inches="tight")
+    if save:
+        fig.savefig("figures/first_step_decay.png", dpi=500, bbox_inches="tight")
 
     # Plot second-step fit
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
@@ -529,7 +531,7 @@ def plot_fits():
     fig.savefig("figures/second_step_decay.png", dpi=500, bbox_inches="tight")
 
 
-def plot_second_subplot(datas):
+def plot_second_subplot(datas, save=True):
     """Plot the height of second peak, and normalized height of second peak"""
     fontsize = 18
     labelsize = 18
@@ -619,8 +621,9 @@ def plot_second_subplot(datas):
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
     ax.tick_params(axis="both", labelsize=labelsize)
 
-    fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
-    fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
+    if save:
+        fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
+        fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ aimd_330 = {
     "r": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88 (330K)",
+    "name": "optB88 (330 K)",
 }
 
 aimd_filtered = {
@@ -100,7 +100,7 @@ def gaussian(x, amplitude, mean, stddev):
 datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd, aimd_330]
 
 
-def second_peak(datas, normalize=False):
+def second_peak(datas, normalize=False, save=True):
     fontsize = 14
     labelsize = 14
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -168,22 +168,24 @@ def second_peak(datas, normalize=False):
         ax.set_ylim((0.0, 1.5))
         ax.set_ylabel(r"$G_2(t) / G_2(0)$, normalized", fontsize=fontsize)
         ax.set_xlabel(r"Time, $t$ / $t(0)$, $ps$", fontsize=fontsize)
-        fig.savefig(
-            "figures/overall_second_peak_normalize.png", dpi=500, bbox_inches="tight"
-        )
-        fig.savefig(
-            "figures/overall_second_peak_normalize.pdf", dpi=500, bbox_inches="tight"
-        )
+        if save:
+            fig.savefig(
+                "figures/overall_second_peak_normalize.png", dpi=500, bbox_inches="tight"
+            )
+            fig.savefig(
+                "figures/overall_second_peak_normalize.pdf", dpi=500, bbox_inches="tight"
+            )
     else:
         ax.set_xlim((0.005, 0.8))
         ax.set_ylim((0.01, 0.5))
         ax.set_ylabel(r"$G_2(t)-1$", fontsize=fontsize)
         ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
-        fig.savefig("figures/overall_second_peak.png", dpi=500, bbox_inches="tight")
-        fig.savefig("figures/overall_second_peak.pdf", dpi=500, bbox_inches="tight")
+        if save:
+            fig.savefig("figures/overall_second_peak.png", dpi=500, bbox_inches="tight")
+            fig.savefig("figures/overall_second_peak.pdf", dpi=500, bbox_inches="tight")
 
 
-def plot_total_subplots(datas):
+def plot_total_subplots(datas, save=True):
     fontsize = 16
 
     fig = plt.figure(figsize=(20, 14))
@@ -243,12 +245,13 @@ def plot_total_subplots(datas):
 
     cbar = fig.colorbar(heatmap, ax=axes)
     cbar.ax.tick_params(labelsize=14)
-    cbar.set_label(r"$g(r, t) - 1$", rotation=90, fontsize=fontsize)
-    plt.savefig("figures/total_subplot.png", bbox_inches="tight", dpi=500)
-    plt.savefig("figures/total_subplot.pdf", bbox_inches="tight", dpi=500)
+    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=fontsize)
+    if save:
+        plt.savefig("figures/total_subplot.png", bbox_inches="tight", dpi=500)
+        plt.savefig("figures/total_subplot.pdf", bbox_inches="tight", dpi=500)
 
 
-def plot_self_subplots(datas):
+def plot_self_subplots(datas, save=True):
     fig = plt.figure(figsize=(16, 6))
     fig.subplots_adjust(hspace=0.4, wspace=0.8)
     axes = list()
@@ -297,8 +300,9 @@ def plot_self_subplots(datas):
     plt.tight_layout()
     cbar = fig.colorbar(sm, ax=axes)
     cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=14)
-    plt.savefig("figures/self_subplot.png", dpi=500)
-    plt.savefig("figures/self_subplot.pdf", dpi=500)
+    if save:
+        plt.savefig("figures/self_subplot.png", dpi=500)
+        plt.savefig("figures/self_subplot.pdf", dpi=500)
 
 
 def plot_heatmap(datas):
@@ -313,7 +317,7 @@ def plot_heatmap(datas):
 
     plt.tight_layout()
     cbar = fig.colorbar(heatmap, ax=axes)
-    cbar.set_label(r"$g(r, t) - 1$", rotation=90, fontsize=14)
+    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=14)
     plt.savefig("figures/heatmap.png", dpi=500)
     plt.savefig("figures/heatmap.pdf", dpi=500)
 
