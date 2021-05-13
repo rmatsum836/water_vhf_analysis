@@ -395,7 +395,7 @@ def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
 
     cbar = fig.colorbar(heatmap, ax=axes)
     cbar.ax.tick_params(labelsize=14)
-    cbar.set_label(r"$g(r, t) - 1$", rotation=90, fontsize=fontsize)
+    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=fontsize)
     if filename:
         plt.savefig(filename, bbox_inches="tight", dpi=500)
 
