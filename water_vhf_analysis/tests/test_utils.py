@@ -18,8 +18,9 @@ class TestUtils(object):
             last = 1.98
         else:
             last = 1.99
+
         assert np.isclose(time[0], 0)
-        assert np.isclose(time[-1], last)
+        assert np.isclose(time[-1], last, atol=1e-4)
 
     @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew"))
     def test_read_r_txt_file(self, model):
@@ -53,7 +54,7 @@ class TestUtils(object):
         assert np.isclose(r[-1], 0.9975)
 
     def test_read_dftb_txt_file(self):
-        file_path = "dftb/nvt_total_data/2ns"
+        file_path = "dftb/nvt_total_data"
         time = np.loadtxt(utils.get_txt_file(file_path, "t_random.txt"))
 
         assert np.isclose(time[0], 0)
