@@ -98,6 +98,7 @@ def gaussian(x, amplitude, mean, stddev):
 
 
 datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd, aimd_330]
+comp_datas = [IXS, aimd, aimd_330]
 
 
 def second_peak(datas, normalize=False, save=True):
@@ -533,10 +534,75 @@ def plot_second_subplot(datas):
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
+def plot_total_comparison(datas, save=True):
+    """Plot comparison between IXS and one or two other model"""
+    fontsize = 16
+
+    fig = plt.figure(figsize=(10, 5))
+    fig.subplots_adjust(hspace=0.8, wspace=0.7)
+    axes = list()
+    cmap = matplotlib.cm.get_cmap("copper")
+    for i in range(1, len(datas)+1):
+        ax = fig.add_subplot(2, len(datas), i)
+        data = datas[i - 1]
+        for idx, frame in enumerate(range(len(data["t"]))):
+            if data["name"] in ["IXS"]:
+                if idx % 3 != 0:
+                    continue
+            elif data["name"] == "CHON-2017_weak":
+                if idx % 5 != 0:
+                    continue
+            else:
+                if idx % 10 != 0:
+                    continue
+            ax.plot(
+                data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+            )
+
+        norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+
+        ax.plot(data["r"], np.ones(len(data["r"])), "k--", alpha=0.6)
+        ax.set_title(data["name"], fontsize=fontsize, y=1.05)
+
+        from matplotlib.ticker import MaxNLocator
+
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        ax.set_xlim((round(data["r"][0], 1), round(data["r"][-1], 1)))
+        ax.set_ylim((0, 3.5))
+
+        ax.set_xlim((0, 0.8))
+        xlabel = r"r, $nm$"
+        ax.set_xlabel(xlabel, fontsize=fontsize)
+        ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
+        ax.tick_params(labelsize=14)
+        ax.xaxis.set_major_locator(MultipleLocator(0.2))
+        axes.append(ax)
+    cbar = fig.colorbar(sm, ax=axes)
+    cbar.ax.tick_params(labelsize=14)
+    cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=fontsize)
+
+    axes = list()
+    for i in range(len(datas)+1, len(datas)*2+1):
+        ax = fig.add_subplot(2, len(datas), i)
+        data = datas[(i - len(datas)) - 1]
+        heatmap = make_heatmap(data, ax, fontsize=fontsize)
+        axes.append(ax)
+
+    cbar = fig.colorbar(heatmap, ax=axes)
+    cbar.ax.tick_params(labelsize=14)
+    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=fontsize)
+    if save:
+        plt.savefig("figures/comp_subplot.png", bbox_inches="tight", dpi=500)
+        plt.savefig("figures/comp_subplot.pdf", bbox_inches="tight", dpi=500)
+
 
 if __name__ == "__main__":
-    plot_total_subplots(datas)
+    #plot_total_subplots(datas)
     # plot_self_subplots(datas)
     # plot_heatmap(datas)
     # plot_decay_subplot(datas)
     # plot_second_subplot(datas)
+    plot_total_comparison(comp_datas)
