@@ -9,6 +9,7 @@ from water_vhf_analysis.utils import analysis, utils
 from scattering.utils.features import find_local_maxima, find_local_minima
 from water_vhf_analysis.utils.utils import get_txt_file
 
+
 class TestPeaks(BaseTest):
     """Test to ensure peak heights are accurate"""
 
@@ -60,9 +61,15 @@ class TestPeaks(BaseTest):
     def test_hbond_peak_max(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_partial_data", "r_random_O_H.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_partial_data", "t_random_O_H.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_partial_data", "vhf_random_O_H.txt")),
+            "r": np.loadtxt(
+                get_txt_file(f"{model}/nvt_partial_data", "r_random_O_H.txt")
+            ),
+            "t": np.loadtxt(
+                get_txt_file(f"{model}/nvt_partial_data", "t_random_O_H.txt")
+            ),
+            "g": np.loadtxt(
+                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_O_H.txt")
+            ),
         }
 
         r_low = np.where(model_dict["r"] > 0.16)[0][0]
@@ -82,9 +89,15 @@ class TestPeaks(BaseTest):
     def test_hh_peak_max(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_partial_data", "r_random_H_H.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_partial_data", "t_random_H_H.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_partial_data", "vhf_random_H_H.txt")),
+            "r": np.loadtxt(
+                get_txt_file(f"{model}/nvt_partial_data", "r_random_H_H.txt")
+            ),
+            "t": np.loadtxt(
+                get_txt_file(f"{model}/nvt_partial_data", "t_random_H_H.txt")
+            ),
+            "g": np.loadtxt(
+                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_H_H.txt")
+            ),
         }
 
         r_low = np.where(model_dict["r"] > 0.16)[0][0]

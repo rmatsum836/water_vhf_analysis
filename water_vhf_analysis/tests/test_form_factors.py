@@ -70,7 +70,7 @@ class TestFF(BaseTest):
         O_form = float(9 + 1 / 3)
         oo_coeff = O_conc ** 2 * O_form ** 2
         oh_coeff = O_conc * H_conc * O_form * H_form
-        hh_coeff = H_conc * H_conc * H_form * H_form 
+        hh_coeff = H_conc * H_conc * H_form * H_form
         norm = oo_coeff + oh_coeff + hh_coeff
 
         oo_part = oo_coeff * OO["g"]
