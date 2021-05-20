@@ -26,6 +26,10 @@ Plotting and analysis functions are contained in the `analysis` directory.
 Unit tests are contained within `tests` to verify the results of the analysis functions.
 
 ## Required Packages:
+
+The conda environment used to perform the analysis is contained in `environment.yml`.  Note that
+the scattering package needs to be installed from source via GitHub.
+
 - [MDTraj](https://github.com/mdtraj/mdtraj)
 - [scattering](https://github.com/mattwthompson/scattering)
 - NumPy
