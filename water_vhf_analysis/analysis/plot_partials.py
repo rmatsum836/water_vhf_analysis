@@ -199,7 +199,7 @@ def plot_peak_subplots(save=True):
                 continue
             g_range = frame[r_low:r_high]
             r_max, g_max = find_local_maxima(r_range, g_range, r_guess=peak_guess)
-            # print(r_max)
+            print(r_max)
             maxs[i] = g_max
         if shift == True:
             ax.semilogy(
