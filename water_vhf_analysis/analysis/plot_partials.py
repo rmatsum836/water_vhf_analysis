@@ -166,7 +166,6 @@ def plot_peak_subplots(save=True):
         min_max = ((maxs - 1) - np.min(maxs - 1)) / (
             np.max(maxs - 1) - np.min(maxs - 1)
         )
-        # ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '--', lw=2, label=data['name'], color=get_color(data['name']))
         ax.plot(
             data["t"],
             min_max,
@@ -284,7 +283,18 @@ def plot_peak_subplots(save=True):
         fig.savefig("figures/partial_peak_decay.pdf", dpi=500, bbox_inches="tight")
 
 
-def plot_oh_peak(datas, filename, ylim=(0, 3)):
+def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
+    """Plot H-bond peak around 0.18 nm
+
+    datas : list of dicts
+        List of VHF data
+    filename : str
+        File save data out to
+    ylim : tuple
+        ylim for Matplotlib
+    plot_max : bool, default=False
+        Plot local maxima for peaks
+    """
     fontsize = 14
     labelsize = 14
     fig = plt.figure(figsize=(14, 10))
@@ -294,39 +304,44 @@ def plot_oh_peak(datas, filename, ylim=(0, 3)):
     for i in range(1, len(datas) + 1):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
-        if data["name"] == "optB88 at 330K (filtered)":
-            for j, frame in enumerate(range(len(data["t"][:1000]))):
-                if j % 20 == 0:
-                    ax.plot(
-                        data["r"],
-                        data["g"][frame],
-                        c=cmap(data["t"][:1000][frame] / data["t"][:1000][-1]),
-                    )
-                    ax.set_title(data["name"], fontsize=fontsize)
-            norm = matplotlib.colors.Normalize(
-                vmin=data["t"][0], vmax=data["t"][:1000][-1]
-            )
-        elif data["name"] == "CHON-2017_weak":
+
+        # Test to check where point is
+        r_low = np.where(data["r"] > 0.16)[0][0]
+        r_high = np.where(data["r"] < 0.2)[0][-1]
+        r_range = data["r"][r_low:r_high]
+
+        if data["name"] == "CHON-2017_weak":
             for frame in range(len(data["t"][:25])):
+                g_range = data["g"][frame][r_low:r_high]
+                max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
                 ax.plot(
                     data["r"],
                     data["g"][frame],
                     c=cmap(data["t"][:25][frame] / data["t"][:25][-1]),
                 )
+                if plot_max:
+                    ax.scatter(max_r, max_g, c="k")
                 ax.set_title(data["name"], fontsize=fontsize)
             norm = matplotlib.colors.Normalize(
                 vmin=data["t"][0], vmax=data["t"][:25][-1]
             )
         else:
-            for frame in range(len(data["t"][:50])):
+            t_max = 50
+            for frame in range(len(data["t"][:t_max])):
+                # Test to check where point is
+                g_range = data["g"][frame][r_low:r_high]
+                max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
+
                 ax.plot(
                     data["r"],
                     data["g"][frame],
-                    c=cmap(data["t"][:50][frame] / data["t"][:50][-1]),
+                    c=cmap(data["t"][:t_max][frame] / data["t"][:t_max][-1]),
                 )
+                if plot_max:
+                    ax.scatter(max_r, max_g, c="k")
                 ax.set_title(data["name"], fontsize=fontsize)
             norm = matplotlib.colors.Normalize(
-                vmin=data["t"][0], vmax=data["t"][:50][-1]
+                vmin=data["t"][0], vmax=data["t"][:t_max][-1]
             )
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
@@ -341,6 +356,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3)):
         ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
         ax.tick_params(labelsize=14)
         axes.append(ax)
+        ax.xaxis.set_major_locator(MultipleLocator(0.05))
     cbar = fig.colorbar(sm, ax=axes)
     cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=fontsize)
     plt.savefig(filename, bbox_inches="tight", dpi=500)
@@ -582,8 +598,8 @@ if __name__ == "__main__":
             # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
             # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
 
-        plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.pdf")
-        plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.png")
+        #plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.pdf")
+        #plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.png")
 
         # if pair == 'H_H':
         #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.pdf', shift=False)
