@@ -24,7 +24,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("aimd/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "optB88",
+        "name": "optB88 (AIMD)",
     }
 
     spce = {
@@ -33,7 +33,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("spce/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "SPC/E",
+        "name": "SPC/E (CMD)",
     }
 
     tip3p_ew = {
@@ -46,14 +46,14 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("tip3p_ew/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "TIP3P_EW",
+        "name": "TIP3P_EW (CMD)",
     }
 
     bk3 = {
         "r": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"r_random_{pair}.txt")),
         "t": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"t_random_{pair}.txt")),
         "g": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"vhf_random_{pair}.txt")),
-        "name": "BK3",
+        "name": "BK3 (Polarizable CMD)",
     }
 
     reaxff = {
@@ -66,7 +66,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("reaxff/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "CHON-2017_weak",
+        "name": "CHON-2017_weak (ReaxFF)",
     }
 
     aimd_330 = {
@@ -79,7 +79,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("aimd/330k/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "optB88 (330 K)",
+        "name": "optB88 at 330 K (AIMD)",
     }
 
     aimd_filtered_330 = {
@@ -102,7 +102,7 @@ def get_data(pair):
         "g": np.loadtxt(
             get_txt_file("dftb/nvt_partial_data", f"vhf_random_{pair}.txt")
         ),
-        "name": "3obw",
+        "name": "3obw (DFTB)",
     }
 
     datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd, aimd_330]
@@ -111,7 +111,7 @@ def get_data(pair):
 
 
 def plot_peak_subplots(save=True):
-    fontsize = 20
+    fontsize = 18
     labelsize = 20
     fig, axes = plt.subplots(2, 2, figsize=(12, 12))
     fig.subplots_adjust(wspace=0.5, hspace=0.3)
@@ -271,7 +271,7 @@ def plot_peak_subplots(save=True):
     lgd = fig.legend(
         handles,
         labels,
-        bbox_to_anchor=(0.52, 1.12),
+        bbox_to_anchor=(0.5, 1.12),
         fontsize=fontsize,
         loc="upper center",
         ncol=3,
@@ -388,7 +388,7 @@ def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
         sm.set_array([])
 
         ax.plot(data["r"], np.ones(len(data["r"])), "k--", alpha=0.6)
-        ax.set_title(data["name"], fontsize=fontsize)
+        ax.set_title(data["name"], fontsize=fontsize, y=1.05)
 
         ax.set_xlim((0, 0.8))
         ax.set_ylim(ylim)
@@ -598,8 +598,8 @@ if __name__ == "__main__":
             # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.png')
             # first_oh_peak(datas,filename=f'figures/{pair}_first_peak.pdf')
 
-        #plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.pdf")
-        #plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.png")
+        plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.pdf")
+        plot_vhf_subplots(datas, ylim=ylim, filename=f"figures/{pair}_subplot.png")
 
         # if pair == 'H_H':
         #    first_peak_height(datas, peak_guess=peak_guess, ylim=(0.8, 1.8), filename=f'figures/{pair}_first_peak.pdf', shift=False)
