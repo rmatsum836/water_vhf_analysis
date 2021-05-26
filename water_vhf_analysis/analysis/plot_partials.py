@@ -295,7 +295,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
     plot_max : bool, default=False
         Plot local maxima for peaks
     """
-    fontsize = 14
+    fontsize = 12
     labelsize = 14
     fig = plt.figure(figsize=(14, 10))
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
@@ -339,7 +339,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
                 )
                 if plot_max:
                     ax.scatter(max_r, max_g, c="k")
-                ax.set_title(data["name"], fontsize=fontsize)
+                ax.set_title(data["name"], fontsize=fontsize, y=1.05)
             norm = matplotlib.colors.Normalize(
                 vmin=data["t"][0], vmax=data["t"][:t_max][-1]
             )
