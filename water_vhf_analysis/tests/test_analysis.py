@@ -102,21 +102,21 @@ class TestAnalysis(BaseTest):
         )
 
         assert (
-            table[table["Model"] == "SPC/E"]["$A_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E"]["$A_{1}$"].values[0]
+            table[table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0]
         )
 
         assert (
-            table[table["Model"] == "SPC/E"]["$\gamma_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E"]["$\gamma_{1}$"].values[0]
+            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0]
         )
 
         assert (
-            table[table["Model"] == "SPC/E"]["$A_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E"]["$A_{2}$"].values[0]
+            table[table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0]
         )
 
         assert (
-            table[table["Model"] == "SPC/E"]["$\gamma_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E"]["$\gamma_{2}$"].values[0]
+            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0]
+            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0]
         )
