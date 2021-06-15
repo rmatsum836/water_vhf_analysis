@@ -22,7 +22,7 @@ class BaseTest:
     @pytest.fixture
     def spce(self):
         model_dict = {
-            "name": "SPC/E",
+            "name": "SPC/E (CMD)",
             "r": np.loadtxt(get_txt_file("spce/nvt_total_data", "r_random.txt")),
             "t": np.loadtxt(get_txt_file("spce/nvt_total_data", "t_random.txt")),
             "g": np.loadtxt(get_txt_file("spce/nvt_total_data", "vhf_random.txt")),

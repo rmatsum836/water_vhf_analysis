@@ -6,15 +6,15 @@ from matplotlib.ticker import MultipleLocator
 def get_color(name):
     color_dict = dict()
     color_list = [
-        "TIP3P_EW",
+        "TIP3P_EW (CMD)",
         "placeholder",
-        "SPC/E",
-        "CHON-2017_weak",
-        "BK3",
-        "3obw",
+        "SPC/E (CMD)",
+        "CHON-2017_weak (ReaxFF)",
+        "BK3 (Polarizable CMD)",
+        "3obw (DFTB)",
         "optB88 (filtered)",
-        "optB88",
-        "optB88 (330 K)",
+        "optB88 (AIMD)",
+        "optB88 at 330 K (AIMD)",
     ]
     colors = sns.color_palette("muted", len(color_list))
     for model, color in zip(color_list, colors):

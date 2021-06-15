@@ -19,14 +19,14 @@ aimd = {
     "r": np.loadtxt(get_txt_file("aimd/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("aimd/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("aimd/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88",
+    "name": "optB88 (AIMD)",
 }
 
 aimd_330 = {
     "r": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88 (330 K)",
+    "name": "optB88 at 330 K (AIMD)",
 }
 
 aimd_filtered = {
@@ -47,14 +47,14 @@ bk3 = {
     "r": np.loadtxt(get_txt_file("bk3/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("bk3/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("bk3/nvt_total_data", "vhf_random.txt")),
-    "name": "BK3",
+    "name": "BK3 (Polarizable CMD)",
 }
 
 dftb_d3 = {
     "r": np.loadtxt(get_txt_file("dftb/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("dftb/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("dftb/nvt_total_data", "vhf_random.txt")),
-    "name": "3obw",
+    "name": "3obw (DFTB)",
 }
 
 dftb_filtered = {
@@ -68,21 +68,21 @@ spce = {
     "r": np.loadtxt(get_txt_file("spce/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("spce/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("spce/nvt_total_data", "vhf_random.txt")),
-    "name": "SPC/E",
+    "name": "SPC/E (CMD)",
 }
 
 tip3p_ew = {
     "r": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "vhf_random.txt")),
-    "name": "TIP3P_EW",
+    "name": "TIP3P_EW (CMD)",
 }
 
 reaxff = {
     "r": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "r_random.txt")),
     "t": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "t_random.txt")),
     "g": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "vhf_random.txt")),
-    "name": "CHON-2017_weak",
+    "name": "CHON-2017_weak (ReaxFF)",
 }
 
 IXS = {
