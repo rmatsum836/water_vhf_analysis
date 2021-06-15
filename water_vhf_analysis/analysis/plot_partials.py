@@ -141,7 +141,9 @@ def plot_peak_subplots(save=True):
             color=get_color(data["name"]),
         )
 
-    ax.set_xlim((0.00, 0.21))
+    #ax.set_xlim((0.00, 0.21))
+    ax.xaxis.set_major_locator(MultipleLocator(0.04))
+    ax.set_xlim((0.00, 0.12))
     ax.set_ylim(ylim)
     ax.set_ylabel(r"$G_{\mathrm{OH}_1}(t)$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
@@ -175,7 +177,9 @@ def plot_peak_subplots(save=True):
             color=get_color(data["name"]),
         )
 
-    ax.set_xlim((0.00, 0.21))
+    #ax.set_xlim((0.00, 0.21))
+    ax.xaxis.set_major_locator(MultipleLocator(0.04))
+    ax.set_xlim((0.00, 0.12))
     ax.set_ylim(ylim)
     ax.set_ylabel(r"$G_{\mathrm{OH}_1}(t)-1$, normalized", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
