@@ -16,16 +16,16 @@ from scattering.utils.features import find_local_maxima, find_local_minima
 
 
 aimd = {
-    "r": np.loadtxt(get_txt_file("aimd/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("aimd/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("aimd/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("aimd/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("aimd/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("aimd/overlap_nvt", "vhf_final.txt")),
     "name": "optB88 (AIMD)",
 }
 
 aimd_330 = {
-    "r": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "vhf_final.txt")),
     "name": "optB88 at 330 K (AIMD)",
 }
 
@@ -44,16 +44,16 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    "r": np.loadtxt(get_txt_file("bk3/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("bk3/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("bk3/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("bk3/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("bk3/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("bk3/overlap_nvt", "vhf_final.txt")),
     "name": "BK3 (Polarizable CMD)",
 }
 
 dftb_d3 = {
-    "r": np.loadtxt(get_txt_file("dftb/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("dftb/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("dftb/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("dftb/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("dftb/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("dftb/overlap_nvt", "vhf_final.txt")),
     "name": "3obw (DFTB)",
 }
 
@@ -65,23 +65,23 @@ dftb_filtered = {
 }
 
 spce = {
-    "r": np.loadtxt(get_txt_file("spce/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("spce/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("spce/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("spce/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("spce/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("spce/overlap_nvt", "vhf_final.txt")),
     "name": "SPC/E (CMD)",
 }
 
 tip3p_ew = {
-    "r": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "vhf_final.txt")),
     "name": "TIP3P_EW (CMD)",
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "vhf_random.txt")),
+    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
     "name": "CHON-2017_weak (ReaxFF)",
 }
 
@@ -216,9 +216,11 @@ def first_peak_auc(datas, si=False, save=True):
             I = I[:upper_limit]
         else:
             if data["name"] not in ("IXS"):
-                if data["name"] == "optB88 (AIMD)":
-                    upper_limit = np.where(t < 1.15)[0][-1]
-                elif data["name"] == "CHON-2017_weak (ReaxFF)":
+                #if data["name"] == "optB88 (AIMD)":
+                #    #upper_limit = np.where(t < 1.15)[0][-1]
+                #    upper_limit = np.where(t < 1.15)[0][-1]
+                #elif data["name"] == "CHON-2017_weak (ReaxFF)":
+                if data["name"] == "CHON-2017_weak (ReaxFF)":
                     upper_limit = np.where(t < 0.85)[0][-1]
                 elif data["name"] == "3obw (DFTB)":
                     upper_limit = np.where(t < 0.7)[0][-1]
