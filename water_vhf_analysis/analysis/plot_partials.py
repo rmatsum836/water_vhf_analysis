@@ -19,65 +19,65 @@ pairs = ["O_H", "O_O", "H_H"]
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        "r": np.loadtxt(get_txt_file("aimd/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("aimd/nvt_partial_data", f"t_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("aimd/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("aimd/partial_overlap_nvt", f"t_final_{pair}.txt")),
         "g": np.loadtxt(
-            get_txt_file("aimd/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("aimd/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "optB88 (AIMD)",
     }
 
     spce = {
-        "r": np.loadtxt(get_txt_file("spce/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("spce/nvt_partial_data", f"t_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("spce/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("spce/partial_overlap_nvt", f"t_final_{pair}.txt")),
         "g": np.loadtxt(
-            get_txt_file("spce/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("spce/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "SPC/E (CMD)",
     }
 
     tip3p_ew = {
         "r": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "TIP3P_EW (CMD)",
     }
 
     bk3 = {
-        "r": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"t_random_{pair}.txt")),
-        "g": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"vhf_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"t_final_{pair}.txt")),
+        "g": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"vhf_final_{pair}.txt")),
         "name": "BK3 (Polarizable CMD)",
     }
 
     reaxff = {
         "r": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "CHON-2017_weak (ReaxFF)",
     }
 
     aimd_330 = {
         "r": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "optB88 at 330 K (AIMD)",
     }
@@ -97,10 +97,10 @@ def get_data(pair):
     }
 
     dftb = {
-        "r": np.loadtxt(get_txt_file("dftb/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("dftb/nvt_partial_data", f"t_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("dftb/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("dftb/partial_overlap_nvt", f"t_final_{pair}.txt")),
         "g": np.loadtxt(
-            get_txt_file("dftb/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("dftb/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "3obw (DFTB)",
     }
