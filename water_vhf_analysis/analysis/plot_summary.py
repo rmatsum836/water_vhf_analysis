@@ -79,9 +79,9 @@ tip3p_ew = {
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
+    "r": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "vhf_final.txt")),
     "name": "CHON-2017_weak (ReaxFF)",
 }
 

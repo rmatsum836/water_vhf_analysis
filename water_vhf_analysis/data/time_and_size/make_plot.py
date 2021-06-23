@@ -301,7 +301,7 @@ def combined_auc(datas, size_datas):
                 )
 
     ax.xaxis.set_major_locator(MultipleLocator(0.1))
-    ax.set_xlim((0.00, 0.6))
+    ax.set_xlim((0.00, 1.0))
     ax.set_ylim((5e-3, 1.0))
     ax.set_ylabel(r'A($t$)', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
@@ -337,7 +337,7 @@ def combined_auc(datas, size_datas):
                 )
 
     ax.xaxis.set_major_locator(MultipleLocator(0.1))
-    ax.set_xlim((0.00, 0.6))
+    ax.set_xlim((0.00, 1.0))
     ax.set_ylim((5e-3, 1.0))
     ax.set_ylabel(r'A($t$)', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
@@ -459,7 +459,7 @@ def first_peak_auc(time_datas, size_datas):
 
 #first_peak_height(datas)
 #first_peak_auc(datas)
-#combined_with_size(datas, size_datas)
+combined_with_size(datas, size_datas)
 combined_auc(datas, size_datas)
 first_peak_auc(datas, size_datas_no_ixs)
 #first_subplot(datas)

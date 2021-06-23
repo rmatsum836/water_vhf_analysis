@@ -58,13 +58,13 @@ def get_data(pair):
 
     reaxff = {
         "r": np.loadtxt(
-            get_txt_file("reaxff/partial_overlap_nvt", f"r_final_{pair}.txt")
+            get_txt_file("reaxff/9000_partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("reaxff/partial_overlap_nvt", f"t_final_{pair}.txt")
-        ),
+            get_txt_file("reaxff/9000_partial_overlap_nvt", f"t_final_{pair}.txt")
+        )-200,
         "g": np.loadtxt(
-            get_txt_file("reaxff/partial_overlap_nvt", f"vhf_final_{pair}.txt")
+            get_txt_file("reaxff/9000_partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "CHON-2017_weak (ReaxFF)",
     }
