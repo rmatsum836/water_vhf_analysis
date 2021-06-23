@@ -314,8 +314,10 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
         r_high = np.where(data["r"] < 0.2)[0][-1]
         r_range = data["r"][r_low:r_high]
 
-        if data["name"] == "CHON-2017_weak":
+        if data["name"] == "CHON-2017_weak (ReaxFF)":
+            print(data["name"])
             for frame in range(len(data["t"][:25])):
+                print(data["t"][frame])
                 g_range = data["g"][frame][r_low:r_high]
                 max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
                 ax.plot(
@@ -330,8 +332,10 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
                 vmin=data["t"][0], vmax=data["t"][:25][-1]
             )
         else:
+            print(data["name"])
             t_max = 50
-            for frame in range(len(data["t"][:t_max])):
+            for frame in range(0, len(data["t"][:t_max]), 2):
+                print(data["t"][frame])
                 # Test to check where point is
                 g_range = data["g"][frame][r_low:r_high]
                 max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
@@ -378,7 +382,7 @@ def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
         for idx, frame in enumerate(range(len(data["t"]))):
-            if data["name"] == "CHON-2017_weak":
+            if data["name"] == "CHON-2017_weak (ReaxFF)":
                 if idx % 5 != 0:
                     continue
             else:

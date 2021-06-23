@@ -194,11 +194,12 @@ def plot_total_subplots(datas, save=True):
     for i in range(1, 9):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
+        print(data["name"])
         for idx, frame in enumerate(range(len(data["t"]))):
             if data["name"] in ["IXS"]:
                 if idx % 3 != 0:
                     continue
-            elif data["name"] == "CHON-2017_weak":
+            elif data["name"] == "CHON-2017_weak (ReaxFF)":
                 if idx % 5 != 0:
                     continue
             else:
