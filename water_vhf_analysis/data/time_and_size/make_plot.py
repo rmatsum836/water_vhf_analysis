@@ -75,9 +75,9 @@ sys_1ns = {
 
 sys_100ps = {
     'name': '100 ps', 
-    'r': np.loadtxt('time/100ps/overlap_nvt_2/r_final.txt'),
-    't': np.loadtxt('time/100ps/overlap_nvt_2/t_final.txt'),
-    'g': np.loadtxt('time/100ps/overlap_nvt_2/vhf_final.txt'),
+    'r': np.loadtxt('time/100ps/overlap_nvt/r_final.txt'),
+    't': np.loadtxt('time/100ps/overlap_nvt/t_final.txt'),
+    'g': np.loadtxt('time/100ps/overlap_nvt/vhf_final.txt'),
 }
 
 
