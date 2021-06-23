@@ -6,7 +6,6 @@ import matplotlib.patches as patches
 import seaborn as sns
 import os
 
-import numpy as np
 import scattering
 from scattering.utils.features import find_local_maxima, find_local_minima
 from scipy.signal import savgol_filter

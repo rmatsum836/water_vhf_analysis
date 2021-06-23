@@ -366,7 +366,8 @@ def first_peak_auc(time_datas, size_datas):
     fig.subplots_adjust(hspace=0.4, wspace=0.8)
     datas = time_datas + size_datas
     axes = list()
-    columns = ('A_1', 'tau_1', 'gamma_1', 'A_2', 'tau_2', 'gamma_2')
+    columns = ("$A_{1}$", r"$\tau_{1}$", "$\gamma_{1}$", "$A_{2}$",
+            r"$\tau_{2}$", "$\gamma_{2}$")
     index = [i["name"] for i in datas]
     print(index)
     df = pd.DataFrame(index=index, columns=columns)
@@ -410,19 +411,17 @@ def first_peak_auc(time_datas, size_datas):
 
         # Calling `compute_fit` to get the compressed exponential function fit
         try:
-            print(len(t[::2]))
-            print(len(I[::2]))
             fit, popt = compute_fit(t[::2], I[::2])
         except:
             print(f"Fit for {data['name']} has failed")
             continue
         if (1 / popt[1]) < (1 / popt[4]):
-            df.loc[data["name"]]["A_1"] = popt[0]
-            df.loc[data["name"]]["tau_1"] = 1 / popt[1]
-            df.loc[data["name"]]["gamma_1"] = popt[2]
-            df.loc[data["name"]]["A_2"] = popt[3]
-            df.loc[data["name"]]["tau_2"] = 1 / popt[4]
-            df.loc[data["name"]]["gamma_2"] = popt[5]
+            df.loc[data["name"]]["$A_{1}$"] = popt[0]
+            df.loc[data["name"]][r"$\tau_{1}$"] = 1 / popt[1]
+            df.loc[data["name"]]["$\gamma_{1}$"] = popt[2]
+            df.loc[data["name"]]["$A_{2}$"] = popt[3]
+            df.loc[data["name"]][r"$\tau_{2}$"] = 1 / popt[4]
+            df.loc[data["name"]]["$\gamma_{2}$"] = popt[5]
             print(data["name"])
             print(f"tau_1 is: {1/popt[1]}")
             print(f"A_1 is: {popt[0]}")
@@ -431,12 +430,12 @@ def first_peak_auc(time_datas, size_datas):
             print(f"A_2 is: {popt[3]}")
             print(f"gamma_2 is: {popt[5]}")
         else:
-            df.loc[data["name"]]["A_1"] = popt[3]
-            df.loc[data["name"]]["tau_1"] = 1 / popt[4]
-            df.loc[data["name"]]["gamma_1"] = popt[5]
-            df.loc[data["name"]]["A_2"] = popt[0]
-            df.loc[data["name"]]["tau_2"] = 1 / popt[1]
-            df.loc[data["name"]]["gamma_2"] = popt[2]
+            df.loc[data["name"]][r"$\tau_{1}$"] = 1 / popt[4]
+            df.loc[data["name"]]["$A_{1}$"] = popt[3]
+            df.loc[data["name"]]["$\gamma_{1}$"] = popt[5]
+            df.loc[data["name"]][r"$\tau_{2}$"] = 1 / popt[1]
+            df.loc[data["name"]]["$A_{2}$"] = popt[0]
+            df.loc[data["name"]]["$\gamma_{2}$"] = popt[2]
             print(data["name"])
             print(f"tau_1 is: {1/popt[4]}")
             print(f"A_1 is: {popt[3]}")
@@ -444,16 +443,20 @@ def first_peak_auc(time_datas, size_datas):
             print(f"tau_2 is: {1/popt[1]}")
             print(f"A_2 is: {popt[0]}")
             print(f"gamma_2 is: {popt[2]}")
-        ax.semilogy(t[::2], fit, linestyle=ls, color='k', label=f"{data['name']}_fit")
-        ax.set_title(data['name'], fontsize=12)
 
-        # Plot the compressed exponential functions given from 2018 Phys. Rev.
+        ax.semilogy(t[::2], fit, linestyle=ls, color="k", label=f"{data['name']}_fit")
+        ax.set_title(data["name"], fontsize=12)
+
         ax.xaxis.set_major_locator(MultipleLocator(0.25))
+        # ax.set_xlim((0.00, 1.5))
         ax.set_xlim((0.00, 1.0))
         ax.set_ylim((5e-3, 1.0))
-        ax.set_ylabel(r'$A(t)$')
-        ax.set_xlabel('Time (ps)')
+        # ax.set_ylim((5e-4, 1.0))
+        ax.set_ylabel(r"$A(t)$")
+        ax.set_xlabel("Time (ps)")
 
+    # Rename df index
+    df = df.rename_axis("Type")
     df.to_csv("tables/time_and_size_peak_fits.csv")
     plt.savefig("plots/auc_subplot_time_size.png", dpi=500)
 
