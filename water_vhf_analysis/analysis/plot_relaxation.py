@@ -202,7 +202,8 @@ def first_peak_auc(datas, si=False, save=True):
             I[i] = get_auc(data, i)
         ls = "--"
 
-        ax.semilogy(t[::2], I[::2], ls=ls, lw=2, label=data["name"])
+        #ax.semilogy(t[::2], I[::2], ls=ls, lw=2, label=data["name"])
+        ax.semilogy(t, I, ls=ls, lw=2, label=data["name"])
 
         # Get finite values
         I_idx = np.where(~np.isnan(I))
@@ -216,10 +217,6 @@ def first_peak_auc(datas, si=False, save=True):
             I = I[:upper_limit]
         else:
             if data["name"] not in ("IXS"):
-                #if data["name"] == "optB88 (AIMD)":
-                #    #upper_limit = np.where(t < 1.15)[0][-1]
-                #    upper_limit = np.where(t < 1.15)[0][-1]
-                #elif data["name"] == "CHON-2017_weak (ReaxFF)":
                 if data["name"] == "CHON-2017_weak (ReaxFF)":
                     upper_limit = np.where(t < 0.85)[0][-1]
                 elif data["name"] == "3obw (DFTB)":
@@ -632,9 +629,9 @@ if __name__ == "__main__":
     # plot_first_fit()
     first_peak_auc(datas)
     first_peak_auc(datas, si=True)
-    plot_peak_locations(datas)
-    plot_first_peak_subplot(datas, si=True)
-    plot_first_peak_subplot(datas)
+    #plot_peak_locations(datas)
+    #plot_first_peak_subplot(datas, si=True)
+    #plot_first_peak_subplot(datas)
     # first_cn(datas)
-    plot_fits()
-    plot_second_subplot(datas)
+    #plot_fits()
+    #plot_second_subplot(datas)
