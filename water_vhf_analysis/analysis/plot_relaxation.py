@@ -79,9 +79,9 @@ tip3p_ew = {
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
+    "r": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "vhf_final.txt")),
     "name": "CHON-2017_weak (ReaxFF)",
 }
 
@@ -629,9 +629,9 @@ if __name__ == "__main__":
     # plot_first_fit()
     first_peak_auc(datas)
     first_peak_auc(datas, si=True)
-    #plot_peak_locations(datas)
-    #plot_first_peak_subplot(datas, si=True)
-    #plot_first_peak_subplot(datas)
+    plot_peak_locations(datas)
+    plot_first_peak_subplot(datas, si=True)
+    plot_first_peak_subplot(datas)
     # first_cn(datas)
-    #plot_fits()
+    plot_fits()
     #plot_second_subplot(datas)
