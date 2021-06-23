@@ -75,9 +75,9 @@ sys_1ns = {
 
 sys_100ps = {
     'name': '100 ps', 
-    'r': np.loadtxt('time/100ps/overlap_nvt/r_final.txt'),
-    't': np.loadtxt('time/100ps/overlap_nvt/t_final.txt'),
-    'g': np.loadtxt('time/100ps/overlap_nvt/vhf_final.txt'),
+    'r': np.loadtxt('time/100ps/overlap_nvt_2/r_final.txt'),
+    't': np.loadtxt('time/100ps/overlap_nvt_2/t_final.txt'),
+    'g': np.loadtxt('time/100ps/overlap_nvt_2/vhf_final.txt'),
 }
 
 
@@ -301,7 +301,7 @@ def combined_auc(datas, size_datas):
                 )
 
     ax.xaxis.set_major_locator(MultipleLocator(0.1))
-    ax.set_xlim((0.00, 1.0))
+    ax.set_xlim((0.00, 0.6))
     ax.set_ylim((5e-3, 1.0))
     ax.set_ylabel(r'A($t$)', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
@@ -337,7 +337,7 @@ def combined_auc(datas, size_datas):
                 )
 
     ax.xaxis.set_major_locator(MultipleLocator(0.1))
-    ax.set_xlim((0.00, 1.0))
+    ax.set_xlim((0.00, 0.6))
     ax.set_ylim((5e-3, 1.0))
     ax.set_ylabel(r'A($t$)', fontsize=fontsize)
     ax.set_xlabel(r'Time, $t$, $ps$', fontsize=fontsize)
