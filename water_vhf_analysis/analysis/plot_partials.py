@@ -315,9 +315,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
         r_range = data["r"][r_low:r_high]
 
         if data["name"] == "CHON-2017_weak (ReaxFF)":
-            print(data["name"])
             for frame in range(len(data["t"][:25])):
-                print(data["t"][frame])
                 g_range = data["g"][frame][r_low:r_high]
                 max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
                 ax.plot(
@@ -332,10 +330,8 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
                 vmin=data["t"][0], vmax=data["t"][:25][-1]
             )
         else:
-            print(data["name"])
             t_max = 50
-            for frame in range(0, len(data["t"][:t_max]), 2):
-                print(data["t"][frame])
+            for frame in range(0, len(data["t"][:t_max])):
                 # Test to check where point is
                 g_range = data["g"][frame][r_low:r_high]
                 max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
