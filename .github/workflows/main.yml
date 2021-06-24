@@ -44,8 +44,11 @@ jobs:
     - name: Install scattering
       shell: bash -l {0}
       run: |
+        cd ..
         git clone https://github.com/mattwthompson/scattering.git
+        cd scattering
         python setup.py develop --no-deps
+        cd ../water_vhf_analysis
     - name: Install package
       shell: bash -l {0}
       run: |
