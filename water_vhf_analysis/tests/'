@@ -17,19 +17,20 @@ class TestAnalysis(BaseTest):
     def test_ixs_auc(self, ixs):
         auc = analysis.get_auc(ixs, 0)
 
-    @pytest.mark.parametrize("model", ("spce", "reaxff", "bk3", "dftb"))
+    @pytest.mark.parametrize("model", ("spce", "reaxff", "bk3",
+        "dftb"))
     def test_spce_auc(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
         }
         auc = analysis.get_auc(model_dict, 0)
 
     def test_check_auc_value(self, ixs):
         auc = analysis.get_auc(ixs, 0)
-        assert np.allclose(auc, 0.45078)
+        assert np.isclose(auc, 0.45078)
 
     @pytest.mark.parametrize("si", (True, False))
     def test_first_peak_ixs_auc(self, si, ixs):
@@ -37,13 +38,14 @@ class TestAnalysis(BaseTest):
         os.mkdir("./tables")
         first_peak_auc([ixs], si=si)
 
-    @pytest.mark.parametrize("si,model", [(True, "spce"), (False, "spce")])
+    @pytest.mark.parametrize("si,model", [(True, "spce"), (False,
+    "spce")])
     def test_first_peak_auc(self, si, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
         }
         os.mkdir("./figures")
         os.mkdir("./tables")
@@ -66,23 +68,23 @@ class TestAnalysis(BaseTest):
         )
 
         assert (
-            table[table["Model"] == "IXS"]["$A_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$A_{1}$"].values[0]
+            table[table["Unnamed: 0"] == "IXS"].A_1.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "IXS"].A_1.values[0]
         )
 
         assert (
-            table[table["Model"] == "IXS"]["$\gamma_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$\gamma_{1}$"].values[0]
+            table[table["Unnamed: 0"] == "IXS"].gamma_1.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "IXS"].gamma_1.values[0]
         )
 
         assert (
-            table[table["Model"] == "IXS"]["$A_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$A_{2}$"].values[0]
+            table[table["Unnamed: 0"] == "IXS"].A_2.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "IXS"].A_2.values[0]
         )
 
         assert (
-            table[table["Model"] == "IXS"]["$\gamma_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$\gamma_{2}$"].values[0]
+            table[table["Unnamed: 0"] == "IXS"].gamma_2.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "IXS"].gamma_2.values[0]
         )
 
     @pytest.mark.parametrize("si", (True, False))
@@ -102,21 +104,21 @@ class TestAnalysis(BaseTest):
         )
 
         assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0]
+            table[table["Unnamed: 0"] == "SPC/E"].A_1.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].A_1.values[0]
         )
 
         assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0]
+            table[table["Unnamed: 0"] == "SPC/E"].gamma_1.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].gamma_1.values[0]
         )
 
         assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0]
+            table[table["Unnamed: 0"] == "SPC/E"].A_2.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].A_2.values[0]
         )
 
         assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0]
+            table[table["Unnamed: 0"] == "SPC/E"].gamma_2.values[0]
+            == ref_table[ref_table["Unnamed: 0"] == "SPC/E"].gamma_2.values[0]
         )

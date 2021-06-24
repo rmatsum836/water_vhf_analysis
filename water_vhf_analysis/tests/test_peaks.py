@@ -17,9 +17,9 @@ class TestPeaks(BaseTest):
     def test_total_first_peak_max(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
 
         r = model_dict["r"]
@@ -42,9 +42,9 @@ class TestPeaks(BaseTest):
     def test_total_second_peak_max(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
 
         maxs = list()
@@ -62,13 +62,13 @@ class TestPeaks(BaseTest):
         model_dict = {
             "name": model,
             "r": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "r_random_O_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "r_final_O_H.txt")
             ),
             "t": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "t_random_O_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "t_final_O_H.txt")
             ),
             "g": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_O_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "vhf_final_O_H.txt")
             ),
         }
 
@@ -90,13 +90,13 @@ class TestPeaks(BaseTest):
         model_dict = {
             "name": model,
             "r": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "r_random_H_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "r_final_H_H.txt")
             ),
             "t": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "t_random_H_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "t_final_H_H.txt")
             ),
             "g": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_H_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "vhf_final_H_H.txt")
             ),
         }
 

@@ -305,6 +305,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
+
     for i in range(1, len(datas) + 1):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]

@@ -191,6 +191,10 @@ def plot_total_subplots(datas, save=True):
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
+
+    # Get a uniform colormap scale
+    color_t = datas[-1]["t"]
+    norm = matplotlib.colors.Normalize(vmin=color_t[0], vmax=color_t[-1])
     for i in range(1, 9):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
@@ -206,10 +210,11 @@ def plot_total_subplots(datas, save=True):
                 if idx % 10 != 0:
                     continue
             ax.plot(
-                data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                #data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                data["r"], data["g"][frame], c=cmap(data["t"][frame] / color_t[-1])
             )
 
-        norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
+        #norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
 
@@ -240,7 +245,7 @@ def plot_total_subplots(datas, save=True):
     for i in range(9, 17):
         ax = fig.add_subplot(4, 4, i)
         data = datas[(i - 8) - 1]
-        heatmap = make_heatmap(data, ax, fontsize=fontsize)
+        heatmap = make_heatmap(data, ax, color_t=color_t, fontsize=fontsize)
         axes.append(ax)
 
     cbar = fig.colorbar(heatmap, ax=axes)
