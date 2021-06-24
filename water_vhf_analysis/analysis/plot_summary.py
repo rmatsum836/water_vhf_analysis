@@ -6,7 +6,6 @@ import matplotlib.patches as patches
 import seaborn as sns
 import os
 
-import numpy as np
 import scattering
 from scattering.utils.features import find_local_maxima, find_local_minima
 from scipy.signal import savgol_filter
@@ -16,17 +15,17 @@ from water_vhf_analysis.utils.utils import get_txt_file
 from water_vhf_analysis.utils.plotting import get_color, make_heatmap
 
 aimd = {
-    "r": np.loadtxt(get_txt_file("aimd/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("aimd/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("aimd/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88",
+    "r": np.loadtxt(get_txt_file("aimd/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("aimd/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("aimd/overlap_nvt", "vhf_final.txt")),
+    "name": "optB88 (AIMD)",
 }
 
 aimd_330 = {
-    "r": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88 (330 K)",
+    "r": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "vhf_final.txt")),
+    "name": "optB88 at 330 K (AIMD)",
 }
 
 aimd_filtered = {
@@ -44,17 +43,17 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    "r": np.loadtxt(get_txt_file("bk3/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("bk3/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("bk3/nvt_total_data", "vhf_random.txt")),
-    "name": "BK3",
+    "r": np.loadtxt(get_txt_file("bk3/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("bk3/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("bk3/overlap_nvt", "vhf_final.txt")),
+    "name": "BK3 (Polarizable CMD)",
 }
 
 dftb_d3 = {
-    "r": np.loadtxt(get_txt_file("dftb/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("dftb/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("dftb/nvt_total_data", "vhf_random.txt")),
-    "name": "3obw",
+    "r": np.loadtxt(get_txt_file("dftb/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("dftb/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("dftb/overlap_nvt", "vhf_final.txt")),
+    "name": "3obw (DFTB)",
 }
 
 dftb_filtered = {
@@ -65,24 +64,24 @@ dftb_filtered = {
 }
 
 spce = {
-    "r": np.loadtxt(get_txt_file("spce/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("spce/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("spce/nvt_total_data", "vhf_random.txt")),
-    "name": "SPC/E",
+    "r": np.loadtxt(get_txt_file("spce/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("spce/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("spce/overlap_nvt", "vhf_final.txt")),
+    "name": "SPC/E (CMD)",
 }
 
 tip3p_ew = {
-    "r": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "vhf_random.txt")),
-    "name": "TIP3P_EW",
+    "r": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "vhf_final.txt")),
+    "name": "TIP3P_EW (CMD)",
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "vhf_random.txt")),
-    "name": "CHON-2017_weak",
+    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
+    "name": "CHON-2017_weak (ReaxFF)",
 }
 
 IXS = {
@@ -171,10 +170,14 @@ def second_peak(datas, normalize=False, save=True):
         ax.set_xlabel(r"Time, $t$ / $t(0)$, $ps$", fontsize=fontsize)
         if save:
             fig.savefig(
-                "figures/overall_second_peak_normalize.png", dpi=500, bbox_inches="tight"
+                "figures/overall_second_peak_normalize.png",
+                dpi=500,
+                bbox_inches="tight",
             )
             fig.savefig(
-                "figures/overall_second_peak_normalize.pdf", dpi=500, bbox_inches="tight"
+                "figures/overall_second_peak_normalize.pdf",
+                dpi=500,
+                bbox_inches="tight",
             )
     else:
         ax.set_xlim((0.005, 0.8))
@@ -193,24 +196,32 @@ def plot_total_subplots(datas, save=True):
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
+
+    # Get a uniform colormap scale
+    color_t = datas[-1]["t"]
+    norm = matplotlib.colors.Normalize(vmin=color_t[0], vmax=color_t[-1])
     for i in range(1, 9):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
+        print(data["name"])
         for idx, frame in enumerate(range(len(data["t"]))):
             if data["name"] in ["IXS"]:
                 if idx % 3 != 0:
                     continue
-            elif data["name"] == "CHON-2017_weak":
+            elif data["name"] == "CHON-2017_weak (ReaxFF)":
                 if idx % 5 != 0:
                     continue
             else:
                 if idx % 10 != 0:
                     continue
             ax.plot(
-                data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                # data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                data["r"],
+                data["g"][frame],
+                c=cmap(data["t"][frame] / color_t[-1]),
             )
 
-        norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
+        # norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
 
@@ -241,7 +252,7 @@ def plot_total_subplots(datas, save=True):
     for i in range(9, 17):
         ax = fig.add_subplot(4, 4, i)
         data = datas[(i - 8) - 1]
-        heatmap = make_heatmap(data, ax, fontsize=fontsize)
+        heatmap = make_heatmap(data, ax, color_t=color_t, fontsize=fontsize)
         axes.append(ax)
 
     cbar = fig.colorbar(heatmap, ax=axes)

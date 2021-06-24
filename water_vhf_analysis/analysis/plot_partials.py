@@ -19,67 +19,77 @@ pairs = ["O_H", "O_O", "H_H"]
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        "r": np.loadtxt(get_txt_file("aimd/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("aimd/nvt_partial_data", f"t_random_{pair}.txt")),
-        "g": np.loadtxt(
-            get_txt_file("aimd/nvt_partial_data", f"vhf_random_{pair}.txt")
+        "r": np.loadtxt(
+            get_txt_file("aimd/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
-        "name": "optB88",
+        "t": np.loadtxt(
+            get_txt_file("aimd/partial_overlap_nvt", f"t_final_{pair}.txt")
+        ),
+        "g": np.loadtxt(
+            get_txt_file("aimd/partial_overlap_nvt", f"vhf_final_{pair}.txt")
+        ),
+        "name": "optB88 (AIMD)",
     }
 
     spce = {
-        "r": np.loadtxt(get_txt_file("spce/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("spce/nvt_partial_data", f"t_random_{pair}.txt")),
-        "g": np.loadtxt(
-            get_txt_file("spce/nvt_partial_data", f"vhf_random_{pair}.txt")
+        "r": np.loadtxt(
+            get_txt_file("spce/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
-        "name": "SPC/E",
+        "t": np.loadtxt(
+            get_txt_file("spce/partial_overlap_nvt", f"t_final_{pair}.txt")
+        ),
+        "g": np.loadtxt(
+            get_txt_file("spce/partial_overlap_nvt", f"vhf_final_{pair}.txt")
+        ),
+        "name": "SPC/E (CMD)",
     }
 
     tip3p_ew = {
         "r": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
-        "name": "TIP3P_EW",
+        "name": "TIP3P_EW (CMD)",
     }
 
     bk3 = {
-        "r": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"t_random_{pair}.txt")),
-        "g": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"vhf_random_{pair}.txt")),
-        "name": "BK3",
+        "r": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"t_final_{pair}.txt")),
+        "g": np.loadtxt(
+            get_txt_file("bk3/partial_overlap_nvt", f"vhf_final_{pair}.txt")
+        ),
+        "name": "BK3 (Polarizable CMD)",
     }
 
     reaxff = {
         "r": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
-        "name": "CHON-2017_weak",
+        "name": "CHON-2017_weak (ReaxFF)",
     }
 
     aimd_330 = {
         "r": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
-        "name": "optB88 (330 K)",
+        "name": "optB88 at 330 K (AIMD)",
     }
 
     aimd_filtered_330 = {
@@ -97,12 +107,16 @@ def get_data(pair):
     }
 
     dftb = {
-        "r": np.loadtxt(get_txt_file("dftb/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("dftb/nvt_partial_data", f"t_random_{pair}.txt")),
-        "g": np.loadtxt(
-            get_txt_file("dftb/nvt_partial_data", f"vhf_random_{pair}.txt")
+        "r": np.loadtxt(
+            get_txt_file("dftb/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
-        "name": "3obw",
+        "t": np.loadtxt(
+            get_txt_file("dftb/partial_overlap_nvt", f"t_final_{pair}.txt")
+        ),
+        "g": np.loadtxt(
+            get_txt_file("dftb/partial_overlap_nvt", f"vhf_final_{pair}.txt")
+        ),
+        "name": "3obw (DFTB)",
     }
 
     datas = [spce, tip3p_ew, bk3, reaxff, dftb, aimd, aimd_330]
@@ -111,7 +125,7 @@ def get_data(pair):
 
 
 def plot_peak_subplots(save=True):
-    fontsize = 20
+    fontsize = 18
     labelsize = 20
     fig, axes = plt.subplots(2, 2, figsize=(12, 12))
     fig.subplots_adjust(wspace=0.5, hspace=0.3)
@@ -141,7 +155,9 @@ def plot_peak_subplots(save=True):
             color=get_color(data["name"]),
         )
 
-    ax.set_xlim((0.00, 0.21))
+    # ax.set_xlim((0.00, 0.21))
+    ax.xaxis.set_major_locator(MultipleLocator(0.04))
+    ax.set_xlim((0.00, 0.12))
     ax.set_ylim(ylim)
     ax.set_ylabel(r"$G_{\mathrm{OH}_1}(t)$", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
@@ -166,7 +182,6 @@ def plot_peak_subplots(save=True):
         min_max = ((maxs - 1) - np.min(maxs - 1)) / (
             np.max(maxs - 1) - np.min(maxs - 1)
         )
-        # ax.plot(data['t'], (maxs-1)/(maxs[0]-1), '--', lw=2, label=data['name'], color=get_color(data['name']))
         ax.plot(
             data["t"],
             min_max,
@@ -176,7 +191,9 @@ def plot_peak_subplots(save=True):
             color=get_color(data["name"]),
         )
 
-    ax.set_xlim((0.00, 0.21))
+    # ax.set_xlim((0.00, 0.21))
+    ax.xaxis.set_major_locator(MultipleLocator(0.04))
+    ax.set_xlim((0.00, 0.12))
     ax.set_ylim(ylim)
     ax.set_ylabel(r"$G_{\mathrm{OH}_1}(t)-1$, normalized", fontsize=fontsize)
     ax.set_xlabel(r"Time, $t$, $ps$", fontsize=fontsize)
@@ -272,7 +289,7 @@ def plot_peak_subplots(save=True):
     lgd = fig.legend(
         handles,
         labels,
-        bbox_to_anchor=(0.52, 1.12),
+        bbox_to_anchor=(0.5, 1.12),
         fontsize=fontsize,
         loc="upper center",
         ncol=3,
@@ -284,49 +301,66 @@ def plot_peak_subplots(save=True):
         fig.savefig("figures/partial_peak_decay.pdf", dpi=500, bbox_inches="tight")
 
 
-def plot_oh_peak(datas, filename, ylim=(0, 3)):
-    fontsize = 14
+def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
+    """Plot H-bond peak around 0.18 nm
+
+    datas : list of dicts
+        List of VHF data
+    filename : str
+        File save data out to
+    ylim : tuple
+        ylim for Matplotlib
+    plot_max : bool, default=False
+        Plot local maxima for peaks
+    """
+    fontsize = 12
     labelsize = 14
     fig = plt.figure(figsize=(14, 10))
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
+
     for i in range(1, len(datas) + 1):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
-        if data["name"] == "optB88 at 330K (filtered)":
-            for j, frame in enumerate(range(len(data["t"][:1000]))):
-                if j % 20 == 0:
-                    ax.plot(
-                        data["r"],
-                        data["g"][frame],
-                        c=cmap(data["t"][:1000][frame] / data["t"][:1000][-1]),
-                    )
-                    ax.set_title(data["name"], fontsize=fontsize)
-            norm = matplotlib.colors.Normalize(
-                vmin=data["t"][0], vmax=data["t"][:1000][-1]
-            )
-        elif data["name"] == "CHON-2017_weak":
+
+        # Test to check where point is
+        r_low = np.where(data["r"] > 0.16)[0][0]
+        r_high = np.where(data["r"] < 0.2)[0][-1]
+        r_range = data["r"][r_low:r_high]
+
+        if data["name"] == "CHON-2017_weak (ReaxFF)":
             for frame in range(len(data["t"][:25])):
+                g_range = data["g"][frame][r_low:r_high]
+                max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
                 ax.plot(
                     data["r"],
                     data["g"][frame],
                     c=cmap(data["t"][:25][frame] / data["t"][:25][-1]),
                 )
+                if plot_max:
+                    ax.scatter(max_r, max_g, c="k")
                 ax.set_title(data["name"], fontsize=fontsize)
             norm = matplotlib.colors.Normalize(
                 vmin=data["t"][0], vmax=data["t"][:25][-1]
             )
         else:
-            for frame in range(len(data["t"][:50])):
+            t_max = 50
+            for frame in range(0, len(data["t"][:t_max])):
+                # Test to check where point is
+                g_range = data["g"][frame][r_low:r_high]
+                max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
+
                 ax.plot(
                     data["r"],
                     data["g"][frame],
-                    c=cmap(data["t"][:50][frame] / data["t"][:50][-1]),
+                    c=cmap(data["t"][:t_max][frame] / data["t"][:t_max][-1]),
                 )
-                ax.set_title(data["name"], fontsize=fontsize)
+                if plot_max:
+                    ax.scatter(max_r, max_g, c="k")
+                ax.set_title(data["name"], fontsize=fontsize, y=1.05)
             norm = matplotlib.colors.Normalize(
-                vmin=data["t"][0], vmax=data["t"][:50][-1]
+                vmin=data["t"][0], vmax=data["t"][:t_max][-1]
             )
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
@@ -341,6 +375,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3)):
         ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
         ax.tick_params(labelsize=14)
         axes.append(ax)
+        ax.xaxis.set_major_locator(MultipleLocator(0.05))
     cbar = fig.colorbar(sm, ax=axes)
     cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=fontsize)
     plt.savefig(filename, bbox_inches="tight", dpi=500)
@@ -358,7 +393,7 @@ def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
         for idx, frame in enumerate(range(len(data["t"]))):
-            if data["name"] == "CHON-2017_weak":
+            if data["name"] == "CHON-2017_weak (ReaxFF)":
                 if idx % 5 != 0:
                     continue
             else:
@@ -372,7 +407,7 @@ def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
         sm.set_array([])
 
         ax.plot(data["r"], np.ones(len(data["r"])), "k--", alpha=0.6)
-        ax.set_title(data["name"], fontsize=fontsize)
+        ax.set_title(data["name"], fontsize=fontsize, y=1.05)
 
         ax.set_xlim((0, 0.8))
         ax.set_ylim(ylim)

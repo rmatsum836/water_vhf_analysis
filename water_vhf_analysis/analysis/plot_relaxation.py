@@ -16,17 +16,17 @@ from scattering.utils.features import find_local_maxima, find_local_minima
 
 
 aimd = {
-    "r": np.loadtxt(get_txt_file("aimd/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("aimd/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("aimd/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88",
+    "r": np.loadtxt(get_txt_file("aimd/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("aimd/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("aimd/overlap_nvt", "vhf_final.txt")),
+    "name": "optB88 (AIMD)",
 }
 
 aimd_330 = {
-    "r": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("aimd/330k/nvt_total_data", "vhf_random.txt")),
-    "name": "optB88 (330 K)",
+    "r": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("aimd/330k/overlap_nvt", "vhf_final.txt")),
+    "name": "optB88 at 330 K (AIMD)",
 }
 
 aimd_filtered = {
@@ -44,17 +44,17 @@ aimd_filtered_330 = {
 }
 
 bk3 = {
-    "r": np.loadtxt(get_txt_file("bk3/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("bk3/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("bk3/nvt_total_data", "vhf_random.txt")),
-    "name": "BK3",
+    "r": np.loadtxt(get_txt_file("bk3/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("bk3/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("bk3/overlap_nvt", "vhf_final.txt")),
+    "name": "BK3 (Polarizable CMD)",
 }
 
 dftb_d3 = {
-    "r": np.loadtxt(get_txt_file("dftb/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("dftb/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("dftb/nvt_total_data", "vhf_random.txt")),
-    "name": "3obw",
+    "r": np.loadtxt(get_txt_file("dftb/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("dftb/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("dftb/overlap_nvt", "vhf_final.txt")),
+    "name": "3obw (DFTB)",
 }
 
 dftb_filtered = {
@@ -65,24 +65,24 @@ dftb_filtered = {
 }
 
 spce = {
-    "r": np.loadtxt(get_txt_file("spce/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("spce/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("spce/nvt_total_data", "vhf_random.txt")),
-    "name": "SPC/E",
+    "r": np.loadtxt(get_txt_file("spce/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("spce/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("spce/overlap_nvt", "vhf_final.txt")),
+    "name": "SPC/E (CMD)",
 }
 
 tip3p_ew = {
-    "r": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("tip3p_ew/nvt_total_data", "vhf_random.txt")),
-    "name": "TIP3P_EW",
+    "r": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("tip3p_ew/overlap_nvt", "vhf_final.txt")),
+    "name": "TIP3P_EW (CMD)",
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "r_random.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "t_random.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/nvt_total_data", "vhf_random.txt")),
-    "name": "CHON-2017_weak",
+    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
+    "name": "CHON-2017_weak (ReaxFF)",
 }
 
 IXS = {
@@ -183,8 +183,14 @@ def first_peak_auc(datas, si=False, save=True):
     fig = plt.figure(figsize=(16, 6))
     fig.subplots_adjust(hspace=0.4, wspace=0.8)
     axes = list()
-    columns = ("$A_{1}$", r"$\tau_{1}$", "$\gamma_{1}$", "$A_{2}$",
-            r"$\tau_{2}$", "$\gamma_{2}$")
+    columns = (
+        "$A_{1}$",
+        r"$\tau_{1}$",
+        "$\gamma_{1}$",
+        "$A_{2}$",
+        r"$\tau_{2}$",
+        "$\gamma_{2}$",
+    )
     index = [i["name"] for i in datas]
     df = pd.DataFrame(index=index, columns=columns)
     for i in range(1, len(datas) + 1):
@@ -202,7 +208,8 @@ def first_peak_auc(datas, si=False, save=True):
             I[i] = get_auc(data, i)
         ls = "--"
 
-        ax.semilogy(t[::2], I[::2], ls=ls, lw=2, label=data["name"])
+        # ax.semilogy(t[::2], I[::2], ls=ls, lw=2, label=data["name"])
+        ax.semilogy(t, I, ls=ls, lw=2, label=data["name"])
 
         # Get finite values
         I_idx = np.where(~np.isnan(I))
@@ -216,11 +223,9 @@ def first_peak_auc(datas, si=False, save=True):
             I = I[:upper_limit]
         else:
             if data["name"] not in ("IXS"):
-                if data["name"] == "optB88":
-                    upper_limit = np.where(t < 1.15)[0][-1]
-                elif data["name"] == "CHON-2017_weak":
+                if data["name"] == "CHON-2017_weak (ReaxFF)":
                     upper_limit = np.where(t < 0.85)[0][-1]
-                elif data["name"] == "3obw":
+                elif data["name"] == "3obw (DFTB)":
                     upper_limit = np.where(t < 0.7)[0][-1]
                 else:
                     upper_limit = np.where(t < 1.00)[0][-1]
@@ -274,8 +279,12 @@ def first_peak_auc(datas, si=False, save=True):
 
     # Rename df index
     df = df.rename_axis("Model")
-    df = df.rename(index={"TIP3P_EW": "TIP3P\_EW", 
-                          "CHON-2017_weak": "CHON-2017\_weak"})
+    df = df.rename(
+        index={
+            "TIP3P_EW (CMD)": "TIP3P\_EW (CMD)",
+            "CHON-2017_weak (ReaxFF)": "CHON-2017\_weak (ReaxFF)",
+        }
+    )
     if save:
         if si:
             plt.savefig("figures/first_peak_auc_si.pdf")
@@ -288,7 +297,7 @@ def first_peak_auc(datas, si=False, save=True):
 
 
 def plot_first_peak_subplot(datas, si=False, save=True):
-    fontsize = 18
+    fontsize = 16
     labelsize = 18
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
     colors = sns.color_palette("muted", len(datas))
@@ -467,8 +476,8 @@ def plot_fits(save=True):
     """
     df = pd.read_csv("tables/first_peak_fits.csv")
     # Hacky
-    df.Model[2] = "TIP3P_EW"
-    df.Model[4] = "CHON-2017_weak"
+    df.Model[2] = "TIP3P_EW (CMD)"
+    df.Model[4] = "CHON-2017_weak (ReaxFF)"
 
     # Plot first-step fit
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -477,8 +486,8 @@ def plot_fits(save=True):
         time = np.arange(0, 2, 0.1)
         ax.plot(
             time,
-            data["$A_{1}$"] * np.exp(-((time / data[r"$\tau_{1}$"]) **
-                data["$\gamma_{1}$"])),
+            data["$A_{1}$"]
+            * np.exp(-((time / data[r"$\tau_{1}$"]) ** data["$\gamma_{1}$"])),
             label=data[0],
             color=get_color(data[0]),
         )
@@ -504,8 +513,9 @@ def plot_fits(save=True):
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
     for i in range(len(df)):
         data = df.loc[i]
-        fit_two = data["$A_{2}$"] * np.exp(-((time /
-            data[r"$\tau_{2}$"]) ** data["$\gamma_{2}$"]))
+        fit_two = data["$A_{2}$"] * np.exp(
+            -((time / data[r"$\tau_{2}$"]) ** data["$\gamma_{2}$"])
+        )
         fit_norm = fit_two / fit_two[0]
         axes[0].plot(time, fit_two, label=data[0], color=get_color(data[0]))
         axes[1].plot(time, fit_norm, label=data[0], color=get_color(data[0]))
@@ -533,7 +543,7 @@ def plot_fits(save=True):
 
 def plot_second_subplot(datas, save=True):
     """Plot the height of second peak, and normalized height of second peak"""
-    fontsize = 18
+    fontsize = 16
     labelsize = 18
     fig, axes = plt.subplots(1, 2, figsize=(16, 6))
     colors = sns.color_palette("muted", len(datas))
@@ -635,4 +645,4 @@ if __name__ == "__main__":
     plot_first_peak_subplot(datas)
     # first_cn(datas)
     plot_fits()
-    plot_second_subplot(datas)
+    # plot_second_subplot(datas)
