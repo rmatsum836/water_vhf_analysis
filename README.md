@@ -20,8 +20,8 @@ ensemble.
 
 ## Package Details
 Raw van hove function data is contained in the `data` directory.  
-The total van hove data is contained within the `nvt_total_data` directories and the partial van
-hove data is contained within the `nvt_partial_data` directories.
+The total van hove data is contained within the `overlap_nvt` directories and the partial van
+hove data is contained within the `overlap_partial_nvt` directories.
 Plotting and analysis functions are contained in the `analysis` directory.  
 Unit tests are contained within `tests` to verify the results of the analysis functions.
 
@@ -37,6 +37,7 @@ the scattering package needs to be installed from source via GitHub.
 - matplotlib
 - Seaborn
 - PyTest
+- Pandas
 
 ## Docker Image
 Docker image is in progress to setup an environment to use the package.
