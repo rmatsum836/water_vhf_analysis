@@ -14,7 +14,7 @@ from water_vhf_analysis.utils.utils import get_txt_file
 
 
 class TestAnalysis(BaseTest):
-    def test_ixs_auc(self, ixs):
+    def test_ixs_auc_run(self, ixs):
         auc = analysis.get_auc(ixs, 0)
 
     @pytest.mark.parametrize("model", ("spce", "reaxff", "bk3", "dftb"))
@@ -65,24 +65,24 @@ class TestAnalysis(BaseTest):
             utils.get_csv_file("first_peak_fits{}.csv".format(si_str))
         )
 
-        assert (
-            table[table["Model"] == "IXS"]["$A_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$A_{1}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "IXS"]["$A_{1}$"].values[0],
+            ref_table[ref_table["Model"] == "IXS"]["$A_{1}$"].values[0],
         )
 
-        assert (
-            table[table["Model"] == "IXS"]["$\gamma_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$\gamma_{1}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "IXS"]["$\gamma_{1}$"].values[0],
+            ref_table[ref_table["Model"] == "IXS"]["$\gamma_{1}$"].values[0],
         )
 
-        assert (
-            table[table["Model"] == "IXS"]["$A_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$A_{2}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "IXS"]["$A_{2}$"].values[0],
+            ref_table[ref_table["Model"] == "IXS"]["$A_{2}$"].values[0],
         )
 
-        assert (
-            table[table["Model"] == "IXS"]["$\gamma_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "IXS"]["$\gamma_{2}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "IXS"]["$\gamma_{2}$"].values[0],
+            ref_table[ref_table["Model"] == "IXS"]["$\gamma_{2}$"].values[0],
         )
 
     @pytest.mark.parametrize("si", (True, False))
@@ -101,22 +101,22 @@ class TestAnalysis(BaseTest):
             utils.get_csv_file("first_peak_fits{}.csv".format(si_str))
         )
 
-        assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0],
+            ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{1}$"].values[0],
         )
 
-        assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0],
+            ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{1}$"].values[0],
         )
 
-        assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0],
+            ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$A_{2}$"].values[0],
         )
 
-        assert (
-            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0]
-            == ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0]
+        assert np.allclose(
+            table[table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0],
+            ref_table[ref_table["Model"] == "SPC/E (CMD)"]["$\gamma_{2}$"].values[0],
         )
