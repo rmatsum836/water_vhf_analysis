@@ -47,7 +47,7 @@ jobs:
         cd ..
         git clone https://github.com/mattwthompson/scattering.git
         cd scattering
-        python setup.py develop --no-deps
+        python setup.py develop
         cd ../water_vhf_analysis
     - name: Install package
       shell: bash -l {0}
