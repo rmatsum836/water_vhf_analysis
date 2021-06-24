@@ -74,8 +74,7 @@ class TestUtils(object):
         file_path = model + "/partial_overlap_nvt/"
         # This is accounted for in plot_partial.py
         if model == "reaxff":
-            last = 201.98
-            first = 200.00
+            last = 1.98
         else:
             last = 1.99
 
@@ -84,10 +83,7 @@ class TestUtils(object):
                 utils.get_txt_file(file_path, "t_final_{}.txt".format(pair))
             )
 
-            if model == "reaxff":
-                assert np.isclose(time[0], first)
-            else:
-                assert np.isclose(time[0], 0)
+            assert np.isclose(time[0], 0)
             assert np.isclose(time[-1], last)
 
             r = np.loadtxt(utils.get_txt_file(file_path, "r_final_{}.txt".format(pair)))

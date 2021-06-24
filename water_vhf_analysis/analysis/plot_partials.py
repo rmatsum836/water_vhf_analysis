@@ -72,8 +72,7 @@ def get_data(pair):
         ),
         "t": np.loadtxt(
             get_txt_file("reaxff/partial_overlap_nvt", f"t_final_{pair}.txt")
-        )
-        - 200,
+        ),
         "g": np.loadtxt(
             get_txt_file("reaxff/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
