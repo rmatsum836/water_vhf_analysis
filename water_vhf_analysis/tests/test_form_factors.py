@@ -20,47 +20,47 @@ class TestFF(BaseTest):
     def test_form_factors(self, model):
         total_data = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
 
         OO = {
             "name": model + "_OO",
             "r": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "r_random_O_O.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "r_final_O_O.txt")
             ),
             "t": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "t_random_O_O.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "t_final_O_O.txt")
             ),
             "g": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_O_O.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "vhf_final_O_O.txt")
             ),
         }
 
         OH = {
             "name": model + "_OH",
             "r": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "r_random_O_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "r_final_O_H.txt")
             ),
             "t": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "t_random_O_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "t_final_O_H.txt")
             ),
             "g": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_O_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "vhf_final_O_H.txt")
             ),
         }
 
         HH = {
             "name": model + "_HH",
             "r": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "r_random_H_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "r_final_H_H.txt")
             ),
             "t": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "t_random_H_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "t_final_H_H.txt")
             ),
             "g": np.loadtxt(
-                get_txt_file(f"{model}/nvt_partial_data", "vhf_random_H_H.txt")
+                get_txt_file(f"{model}/partial_overlap_nvt", "vhf_final_H_H.txt")
             ),
         }
 

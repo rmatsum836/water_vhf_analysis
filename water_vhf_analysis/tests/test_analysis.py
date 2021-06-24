@@ -21,9 +21,9 @@ class TestAnalysis(BaseTest):
     def test_spce_auc(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
         auc = analysis.get_auc(model_dict, 0)
 
@@ -41,9 +41,9 @@ class TestAnalysis(BaseTest):
     def test_first_peak_auc(self, si, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
         os.mkdir("./figures")
         os.mkdir("./tables")

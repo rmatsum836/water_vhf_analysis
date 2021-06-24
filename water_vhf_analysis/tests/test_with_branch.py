@@ -22,9 +22,9 @@ class TestBranch(BaseTest):
     def test_raw_data(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
 
         branch_dict = {
@@ -38,7 +38,10 @@ class TestBranch(BaseTest):
 
         assert np.allclose(model_dict["r"], branch_dict["r"], atol=1e-2)
         assert np.allclose(model_dict["t"], branch_dict["t"], atol=1e-2)
-        assert np.allclose(model_dict["g"][:, 20:], branch_dict["g"][:, 20:], atol=1e-1)
+        # Corresponds to r = 0.227 nm to r = 0.35 nm
+        assert np.allclose(model_dict["g"][:, 45:70], branch_dict["g"][:, 45:70], atol=0.15)
+        # Corresponds r = 0.35 nm and greater
+        assert np.allclose(model_dict["g"][:, 70:], branch_dict["g"][:, 70:], atol=0.1)
 
     @pytest.mark.parametrize(
         "model", ("spce", "reaxff", "bk3", "aimd", "aimd/330k", "tip3p_ew")
@@ -46,9 +49,9 @@ class TestBranch(BaseTest):
     def test_auc(self, model):
         model_dict = {
             "name": model,
-            "r": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "r_random.txt")),
-            "t": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "t_random.txt")),
-            "g": np.loadtxt(get_txt_file(f"{model}/nvt_total_data", "vhf_random.txt")),
+            "r": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "r_final.txt")),
+            "t": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "t_final.txt")),
+            "g": np.loadtxt(get_txt_file(f"{model}/overlap_nvt", "vhf_final.txt")),
         }
 
         branch_dict = {

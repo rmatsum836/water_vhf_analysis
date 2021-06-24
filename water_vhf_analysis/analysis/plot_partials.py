@@ -19,65 +19,65 @@ pairs = ["O_H", "O_O", "H_H"]
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        "r": np.loadtxt(get_txt_file("aimd/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("aimd/nvt_partial_data", f"t_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("aimd/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("aimd/partial_overlap_nvt", f"t_final_{pair}.txt")),
         "g": np.loadtxt(
-            get_txt_file("aimd/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("aimd/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "optB88 (AIMD)",
     }
 
     spce = {
-        "r": np.loadtxt(get_txt_file("spce/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("spce/nvt_partial_data", f"t_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("spce/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("spce/partial_overlap_nvt", f"t_final_{pair}.txt")),
         "g": np.loadtxt(
-            get_txt_file("spce/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("spce/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "SPC/E (CMD)",
     }
 
     tip3p_ew = {
         "r": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("tip3p_ew/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("tip3p_ew/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "TIP3P_EW (CMD)",
     }
 
     bk3 = {
-        "r": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"t_random_{pair}.txt")),
-        "g": np.loadtxt(get_txt_file("bk3/nvt_partial_data", f"vhf_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"t_final_{pair}.txt")),
+        "g": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"vhf_final_{pair}.txt")),
         "name": "BK3 (Polarizable CMD)",
     }
 
     reaxff = {
         "r": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("reaxff/9000_partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"t_random_{pair}.txt")
-        ),
+            get_txt_file("reaxff/9000_partial_overlap_nvt", f"t_final_{pair}.txt")
+        )-200,
         "g": np.loadtxt(
-            get_txt_file("reaxff/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("reaxff/9000_partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "CHON-2017_weak (ReaxFF)",
     }
 
     aimd_330 = {
         "r": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"r_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"t_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"t_final_{pair}.txt")
         ),
         "g": np.loadtxt(
-            get_txt_file("aimd/330k/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("aimd/330k/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "optB88 at 330 K (AIMD)",
     }
@@ -97,10 +97,10 @@ def get_data(pair):
     }
 
     dftb = {
-        "r": np.loadtxt(get_txt_file("dftb/nvt_partial_data", f"r_random_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("dftb/nvt_partial_data", f"t_random_{pair}.txt")),
+        "r": np.loadtxt(get_txt_file("dftb/partial_overlap_nvt", f"r_final_{pair}.txt")),
+        "t": np.loadtxt(get_txt_file("dftb/partial_overlap_nvt", f"t_final_{pair}.txt")),
         "g": np.loadtxt(
-            get_txt_file("dftb/nvt_partial_data", f"vhf_random_{pair}.txt")
+            get_txt_file("dftb/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "3obw (DFTB)",
     }
@@ -305,6 +305,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
+
     for i in range(1, len(datas) + 1):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
@@ -314,7 +315,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
         r_high = np.where(data["r"] < 0.2)[0][-1]
         r_range = data["r"][r_low:r_high]
 
-        if data["name"] == "CHON-2017_weak":
+        if data["name"] == "CHON-2017_weak (ReaxFF)":
             for frame in range(len(data["t"][:25])):
                 g_range = data["g"][frame][r_low:r_high]
                 max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
@@ -331,7 +332,7 @@ def plot_oh_peak(datas, filename, ylim=(0, 3), plot_max=False):
             )
         else:
             t_max = 50
-            for frame in range(len(data["t"][:t_max])):
+            for frame in range(0, len(data["t"][:t_max])):
                 # Test to check where point is
                 g_range = data["g"][frame][r_low:r_high]
                 max_r, max_g = find_local_maxima(r_range, g_range, r_guess=0.18)
@@ -378,7 +379,7 @@ def plot_vhf_subplots(datas, filename=None, ylim=(0, 3)):
         ax = fig.add_subplot(4, 4, i)
         data = datas[i - 1]
         for idx, frame in enumerate(range(len(data["t"]))):
-            if data["name"] == "CHON-2017_weak":
+            if data["name"] == "CHON-2017_weak (ReaxFF)":
                 if idx % 5 != 0:
                     continue
             else:
