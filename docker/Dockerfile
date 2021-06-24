@@ -18,7 +18,7 @@ RUN apk --update-cache upgrade && \
 	    conda activate vanhove && \
     git clone https://github.com/mattwthompson/scattering && \
     cd scattering && \
-    pip install . && cd ../ && \
+    python setup.py develop && cd ../ && \
     # Uncomment when water_vhf_analysis is public
     #git clone https://github.com/rmatsum836/water_vhf_analysis && \
     #cd water_vhf_analysis && \
