@@ -53,7 +53,7 @@ for combo in combos:
                r, header='# Positions')
 
     np.savetxt('{}/t_final_{}_{}.txt'.format(directory,combo[0],combo[1]),
-               t, header='# Time')
+               t-200.0, header='# Time')
 
     fig, ax = plt.subplots()
 

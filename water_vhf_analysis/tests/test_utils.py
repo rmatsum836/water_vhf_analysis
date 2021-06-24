@@ -72,6 +72,7 @@ class TestUtils(object):
     @pytest.mark.parametrize("model", ("spce", "bk3", "tip3p_ew", "reaxff", "dftb"))
     def test_read_partial_txt_file(self, model):
         file_path = model + "/partial_overlap_nvt/"
+        # This is accounted for in plot_partial.py
         if model == "reaxff":
             last = 1.98
         else:
@@ -85,9 +86,7 @@ class TestUtils(object):
             assert np.isclose(time[0], 0)
             assert np.isclose(time[-1], last)
 
-            r = np.loadtxt(
-                utils.get_txt_file(file_path, "r_final_{}.txt".format(pair))
-            )
+            r = np.loadtxt(utils.get_txt_file(file_path, "r_final_{}.txt".format(pair)))
 
             assert np.isclose(r[0], 0.0025)
             assert np.isclose(r[-1], 0.9975)
@@ -106,9 +105,7 @@ class TestUtils(object):
             assert np.isclose(time[0], 0)
             assert np.isclose(time[-1], 1.99)
 
-            r = np.loadtxt(
-                utils.get_txt_file(file_path, "r_final_{}.txt".format(pair))
-            )
+            r = np.loadtxt(utils.get_txt_file(file_path, "r_final_{}.txt".format(pair)))
 
             assert np.isclose(r[0], 0.0025)
             assert np.isclose(r[-1], 0.9975)
