@@ -190,7 +190,6 @@ def second_peak(datas, normalize=False, save=True):
 
 def plot_total_subplots(datas, save=True):
     fontsize = 16
-
     fig = plt.figure(figsize=(20, 14))
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
@@ -544,10 +543,83 @@ def plot_second_subplot(datas):
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
+def plot_toc(datas, save=True):
+    fontsize = 20
+    fig = plt.figure(figsize=(22, 16))
+    fig.subplots_adjust(hspace=0.8, wspace=0.8)
+    axes = list()
+    cmap = matplotlib.cm.get_cmap("copper")
+
+    # Get a uniform colormap scale
+    color_t = datas[-1]["t"]
+    norm = matplotlib.colors.Normalize(vmin=color_t[0], vmax=color_t[-1])
+    for i in range(1, 9):
+        ax = fig.add_subplot(4, 4, i)
+        data = datas[i - 1]
+        print(data["name"])
+        for idx, frame in enumerate(range(len(data["t"]))):
+            if data["name"] in ["IXS"]:
+                if idx % 3 != 0:
+                    continue
+            elif data["name"] == "CHON-2017_weak (ReaxFF)":
+                if idx % 5 != 0:
+                    continue
+            else:
+                if idx % 10 != 0:
+                    continue
+            ax.plot(
+                # data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                data["r"],
+                data["g"][frame],
+                c=cmap(data["t"][frame] / color_t[-1]),
+            )
+
+        # norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+
+        # cbar = plt.colorbar(sm)
+        # cbar.set_label(r'Time, ps', rotation=90)
+        ax.plot(data["r"], np.ones(len(data["r"])), "k--", alpha=0.6)
+        ax.set_title(data["name"], fontsize=fontsize, y=1.05)
+
+        from matplotlib.ticker import MaxNLocator
+
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+        ax.set_xlim((round(data["r"][0], 1), round(data["r"][-1], 1)))
+        ax.set_ylim((0, 3.5))
+
+        ax.set_xlim((0, 0.8))
+        xlabel = r"r, $nm$"
+        ax.set_xlabel(xlabel, fontsize=fontsize)
+        ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
+        ax.tick_params(labelsize=fontsize)
+        ax.xaxis.set_major_locator(MultipleLocator(0.2))
+        axes.append(ax)
+    cbar = fig.colorbar(sm, ax=axes)
+    cbar.ax.tick_params(labelsize=fontsize)
+    cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=fontsize)
+
+    axes = list()
+    for i in range(9, 17):
+        ax = fig.add_subplot(4, 4, i)
+        data = datas[(i - 8) - 1]
+        heatmap = make_heatmap(data, ax, color_t=color_t, fontsize=fontsize)
+        axes.append(ax)
+
+    cbar = fig.colorbar(heatmap, ax=axes)
+    cbar.ax.tick_params(labelsize=fontsize)
+    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=fontsize)
+    if save:
+        plt.savefig("figures/toc_subplot.png", bbox_inches="tight", dpi=500)
+        plt.savefig("figures/toc_subplot.pdf", bbox_inches="tight", dpi=500)
+
 
 if __name__ == "__main__":
-    plot_total_subplots(datas)
+    #plot_total_subplots(datas)
     # plot_self_subplots(datas)
     # plot_heatmap(datas)
     # plot_decay_subplot(datas)
     # plot_second_subplot(datas)
+    plot_toc(datas)
