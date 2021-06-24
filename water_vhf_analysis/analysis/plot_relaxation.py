@@ -79,9 +79,9 @@ tip3p_ew = {
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "r_final.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "t_final.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "vhf_final.txt")),
+    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
     "name": "CHON-2017_weak (ReaxFF)",
 }
 
@@ -183,8 +183,14 @@ def first_peak_auc(datas, si=False, save=True):
     fig = plt.figure(figsize=(16, 6))
     fig.subplots_adjust(hspace=0.4, wspace=0.8)
     axes = list()
-    columns = ("$A_{1}$", r"$\tau_{1}$", "$\gamma_{1}$", "$A_{2}$",
-            r"$\tau_{2}$", "$\gamma_{2}$")
+    columns = (
+        "$A_{1}$",
+        r"$\tau_{1}$",
+        "$\gamma_{1}$",
+        "$A_{2}$",
+        r"$\tau_{2}$",
+        "$\gamma_{2}$",
+    )
     index = [i["name"] for i in datas]
     df = pd.DataFrame(index=index, columns=columns)
     for i in range(1, len(datas) + 1):
@@ -202,7 +208,7 @@ def first_peak_auc(datas, si=False, save=True):
             I[i] = get_auc(data, i)
         ls = "--"
 
-        #ax.semilogy(t[::2], I[::2], ls=ls, lw=2, label=data["name"])
+        # ax.semilogy(t[::2], I[::2], ls=ls, lw=2, label=data["name"])
         ax.semilogy(t, I, ls=ls, lw=2, label=data["name"])
 
         # Get finite values
@@ -273,8 +279,12 @@ def first_peak_auc(datas, si=False, save=True):
 
     # Rename df index
     df = df.rename_axis("Model")
-    df = df.rename(index={"TIP3P_EW (CMD)": "TIP3P\_EW (CMD)", 
-                          "CHON-2017_weak (ReaxFF)": "CHON-2017\_weak (ReaxFF)"})
+    df = df.rename(
+        index={
+            "TIP3P_EW (CMD)": "TIP3P\_EW (CMD)",
+            "CHON-2017_weak (ReaxFF)": "CHON-2017\_weak (ReaxFF)",
+        }
+    )
     if save:
         if si:
             plt.savefig("figures/first_peak_auc_si.pdf")
@@ -476,8 +486,8 @@ def plot_fits(save=True):
         time = np.arange(0, 2, 0.1)
         ax.plot(
             time,
-            data["$A_{1}$"] * np.exp(-((time / data[r"$\tau_{1}$"]) **
-                data["$\gamma_{1}$"])),
+            data["$A_{1}$"]
+            * np.exp(-((time / data[r"$\tau_{1}$"]) ** data["$\gamma_{1}$"])),
             label=data[0],
             color=get_color(data[0]),
         )
@@ -503,8 +513,9 @@ def plot_fits(save=True):
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
     for i in range(len(df)):
         data = df.loc[i]
-        fit_two = data["$A_{2}$"] * np.exp(-((time /
-            data[r"$\tau_{2}$"]) ** data["$\gamma_{2}$"]))
+        fit_two = data["$A_{2}$"] * np.exp(
+            -((time / data[r"$\tau_{2}$"]) ** data["$\gamma_{2}$"])
+        )
         fit_norm = fit_two / fit_two[0]
         axes[0].plot(time, fit_two, label=data[0], color=get_color(data[0]))
         axes[1].plot(time, fit_norm, label=data[0], color=get_color(data[0]))
@@ -634,4 +645,4 @@ if __name__ == "__main__":
     plot_first_peak_subplot(datas)
     # first_cn(datas)
     plot_fits()
-    #plot_second_subplot(datas)
+    # plot_second_subplot(datas)

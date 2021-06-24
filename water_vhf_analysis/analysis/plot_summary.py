@@ -78,9 +78,9 @@ tip3p_ew = {
 }
 
 reaxff = {
-    "r": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "r_final.txt")),
-    "t": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "t_final.txt")),
-    "g": np.loadtxt(get_txt_file("reaxff/9000_overlap_nvt", "vhf_final.txt")),
+    "r": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "r_final.txt")),
+    "t": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "t_final.txt")),
+    "g": np.loadtxt(get_txt_file("reaxff/overlap_nvt", "vhf_final.txt")),
     "name": "CHON-2017_weak (ReaxFF)",
 }
 
@@ -169,10 +169,14 @@ def second_peak(datas, normalize=False, save=True):
         ax.set_xlabel(r"Time, $t$ / $t(0)$, $ps$", fontsize=fontsize)
         if save:
             fig.savefig(
-                "figures/overall_second_peak_normalize.png", dpi=500, bbox_inches="tight"
+                "figures/overall_second_peak_normalize.png",
+                dpi=500,
+                bbox_inches="tight",
             )
             fig.savefig(
-                "figures/overall_second_peak_normalize.pdf", dpi=500, bbox_inches="tight"
+                "figures/overall_second_peak_normalize.pdf",
+                dpi=500,
+                bbox_inches="tight",
             )
     else:
         ax.set_xlim((0.005, 0.8))
@@ -210,11 +214,13 @@ def plot_total_subplots(datas, save=True):
                 if idx % 10 != 0:
                     continue
             ax.plot(
-                #data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
-                data["r"], data["g"][frame], c=cmap(data["t"][frame] / color_t[-1])
+                # data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                data["r"],
+                data["g"][frame],
+                c=cmap(data["t"][frame] / color_t[-1]),
             )
 
-        #norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
+        # norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
 

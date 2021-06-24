@@ -19,8 +19,12 @@ pairs = ["O_H", "O_O", "H_H"]
 def get_data(pair):
     """Get data based on pair"""
     aimd = {
-        "r": np.loadtxt(get_txt_file("aimd/partial_overlap_nvt", f"r_final_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("aimd/partial_overlap_nvt", f"t_final_{pair}.txt")),
+        "r": np.loadtxt(
+            get_txt_file("aimd/partial_overlap_nvt", f"r_final_{pair}.txt")
+        ),
+        "t": np.loadtxt(
+            get_txt_file("aimd/partial_overlap_nvt", f"t_final_{pair}.txt")
+        ),
         "g": np.loadtxt(
             get_txt_file("aimd/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
@@ -28,8 +32,12 @@ def get_data(pair):
     }
 
     spce = {
-        "r": np.loadtxt(get_txt_file("spce/partial_overlap_nvt", f"r_final_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("spce/partial_overlap_nvt", f"t_final_{pair}.txt")),
+        "r": np.loadtxt(
+            get_txt_file("spce/partial_overlap_nvt", f"r_final_{pair}.txt")
+        ),
+        "t": np.loadtxt(
+            get_txt_file("spce/partial_overlap_nvt", f"t_final_{pair}.txt")
+        ),
         "g": np.loadtxt(
             get_txt_file("spce/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
@@ -52,19 +60,22 @@ def get_data(pair):
     bk3 = {
         "r": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"r_final_{pair}.txt")),
         "t": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"t_final_{pair}.txt")),
-        "g": np.loadtxt(get_txt_file("bk3/partial_overlap_nvt", f"vhf_final_{pair}.txt")),
+        "g": np.loadtxt(
+            get_txt_file("bk3/partial_overlap_nvt", f"vhf_final_{pair}.txt")
+        ),
         "name": "BK3 (Polarizable CMD)",
     }
 
     reaxff = {
         "r": np.loadtxt(
-            get_txt_file("reaxff/9000_partial_overlap_nvt", f"r_final_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"r_final_{pair}.txt")
         ),
         "t": np.loadtxt(
-            get_txt_file("reaxff/9000_partial_overlap_nvt", f"t_final_{pair}.txt")
-        )-200,
+            get_txt_file("reaxff/partial_overlap_nvt", f"t_final_{pair}.txt")
+        )
+        - 200,
         "g": np.loadtxt(
-            get_txt_file("reaxff/9000_partial_overlap_nvt", f"vhf_final_{pair}.txt")
+            get_txt_file("reaxff/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
         "name": "CHON-2017_weak (ReaxFF)",
     }
@@ -97,8 +108,12 @@ def get_data(pair):
     }
 
     dftb = {
-        "r": np.loadtxt(get_txt_file("dftb/partial_overlap_nvt", f"r_final_{pair}.txt")),
-        "t": np.loadtxt(get_txt_file("dftb/partial_overlap_nvt", f"t_final_{pair}.txt")),
+        "r": np.loadtxt(
+            get_txt_file("dftb/partial_overlap_nvt", f"r_final_{pair}.txt")
+        ),
+        "t": np.loadtxt(
+            get_txt_file("dftb/partial_overlap_nvt", f"t_final_{pair}.txt")
+        ),
         "g": np.loadtxt(
             get_txt_file("dftb/partial_overlap_nvt", f"vhf_final_{pair}.txt")
         ),
@@ -141,7 +156,7 @@ def plot_peak_subplots(save=True):
             color=get_color(data["name"]),
         )
 
-    #ax.set_xlim((0.00, 0.21))
+    # ax.set_xlim((0.00, 0.21))
     ax.xaxis.set_major_locator(MultipleLocator(0.04))
     ax.set_xlim((0.00, 0.12))
     ax.set_ylim(ylim)
@@ -177,7 +192,7 @@ def plot_peak_subplots(save=True):
             color=get_color(data["name"]),
         )
 
-    #ax.set_xlim((0.00, 0.21))
+    # ax.set_xlim((0.00, 0.21))
     ax.xaxis.set_major_locator(MultipleLocator(0.04))
     ax.set_xlim((0.00, 0.12))
     ax.set_ylim(ylim)
