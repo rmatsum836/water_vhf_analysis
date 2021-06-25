@@ -1,3 +1,5 @@
+[![CI with Anaconda](https://github.com/rmatsum836/water_vhf_analysis/actions/workflows/main.yml/badge.svg)](https://github.com/rmatsum836/water_vhf_analysis/actions/workflows/main.yml)
+
 # Water Van Hove Function Analysis
 
 This package contains Python functions and raw data to analyze the Van Hove function.

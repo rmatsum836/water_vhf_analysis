@@ -19,18 +19,17 @@ RUN apk --update-cache upgrade && \
     git clone https://github.com/mattwthompson/scattering && \
     cd scattering && \
     python setup.py develop && cd ../ && \
-    # Uncomment when water_vhf_analysis is public
-    #git clone https://github.com/rmatsum836/water_vhf_analysis && \
-    #cd water_vhf_analysis && \
-    #python setup.py install && cd ../ && \
-    mkdir /home/anaconda/data && \
-    #chown -R anaconda:anaconda /water_vhf_analysis && \
+    git clone https://github.com/rmatsum836/water_vhf_analysis && \
+    cd water_vhf_analysis && \
+    python setup.py develop && cd ../ && \
+    #mkdir /home/anaconda/data && \
+    chown -R anaconda:anaconda /water_vhf_analysis && \
     chown -R anaconda:anaconda /opt && \
     chown -R anaconda:anaconda /home/anaconda && \
     conda clean -afy && apk del .build_deps && \
     rm -rf /var/cache/apk/*
 
-WORKDIR /home/anaconda
+WORKDIR /water_vhf_analysis
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
