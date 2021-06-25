@@ -386,7 +386,8 @@ def first_peak_auc(time_datas, size_datas):
             I[i] = get_auc(data, i)
         ls = '--'
 
-        ax.semilogy(t[::2], I[::2], ls=ls,
+        #ax.semilogy(t[::2], I[::2], ls=ls,
+        ax.semilogy(t, I, ls=ls,
             lw=2,
             label=data['name'])
         
@@ -411,7 +412,8 @@ def first_peak_auc(time_datas, size_datas):
 
         # Calling `compute_fit` to get the compressed exponential function fit
         try:
-            fit, popt = compute_fit(t[::2], I[::2])
+            #fit, popt = compute_fit(t[::2], I[::2])
+            fit, popt = compute_fit(t, I)
         except:
             print(f"Fit for {data['name']} has failed")
             continue
@@ -444,7 +446,8 @@ def first_peak_auc(time_datas, size_datas):
             print(f"A_2 is: {popt[0]}")
             print(f"gamma_2 is: {popt[2]}")
 
-        ax.semilogy(t[::2], fit, linestyle=ls, color="k", label=f"{data['name']}_fit")
+        #ax.semilogy(t[::2], fit, linestyle=ls, color="k", label=f"{data['name']}_fit")
+        ax.semilogy(t, fit, linestyle=ls, color="k", label=f"{data['name']}_fit")
         ax.set_title(data["name"], fontsize=12)
 
         ax.xaxis.set_major_locator(MultipleLocator(0.25))
