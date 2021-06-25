@@ -5,7 +5,7 @@ conda activate base
 conda activate vanhove
 
 if [ "$@" == "jupyter" ]; then
-	jupyter notebook --no-browser --notebook-dir /home/anaconda/data --ip="0.0.0.0"
+	jupyter notebook --no-browser --notebook-dir /water_vhf_analysis/notebooks --ip="0.0.0.0"
 else
 	$@
 fi

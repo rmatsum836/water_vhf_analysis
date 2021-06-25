@@ -97,6 +97,7 @@ def gaussian(x, amplitude, mean, stddev):
 
 
 datas = [IXS, spce, tip3p_ew, bk3, reaxff, dftb_d3, aimd, aimd_330]
+comp_datas = [IXS, aimd, aimd_330]
 
 
 def second_peak(datas, normalize=False, save=True):
