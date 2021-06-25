@@ -66,7 +66,7 @@ def make_heatmap(data, ax, color_t=None, v=0.1, fontsize=14):
     xlabel = r"r, $nm$"
     ax.set_xlabel(xlabel, fontsize=fontsize)
     ax.set_ylabel(r"Time, $t$, $ps$", fontsize=fontsize)
-    ax.tick_params(labelsize=14)
+    ax.tick_params(labelsize=fontsize)
     ax.set_title(data["name"], fontsize=fontsize, y=1.05)
     ax.xaxis.set_major_locator(MultipleLocator(0.2))
 

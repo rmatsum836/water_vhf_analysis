@@ -191,7 +191,6 @@ def second_peak(datas, normalize=False, save=True):
 
 def plot_total_subplots(datas, save=True):
     fontsize = 16
-
     fig = plt.figure(figsize=(20, 14))
     fig.subplots_adjust(hspace=0.7, wspace=0.7)
     axes = list()
@@ -545,35 +544,43 @@ def plot_second_subplot(datas):
     fig.savefig("figures/second_subplot.png", dpi=500, bbox_inches="tight")
     fig.savefig("figures/second_subplot.pdf", dpi=500, bbox_inches="tight")
 
-def plot_total_comparison(datas, save=True):
-    """Plot comparison between IXS and one or two other model"""
-    fontsize = 16
-
-    fig = plt.figure(figsize=(10, 5))
-    fig.subplots_adjust(hspace=0.8, wspace=0.7)
+def plot_toc(datas, save=True):
+    fontsize = 20
+    fig = plt.figure(figsize=(12, 18))
+    fig.subplots_adjust(hspace=0.6, wspace=0.8)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
-    for i in range(1, len(datas)+1):
-        ax = fig.add_subplot(2, len(datas), i)
+
+    # Get a uniform colormap scale
+    color_t = datas[-1]["t"]
+    norm = matplotlib.colors.Normalize(vmin=color_t[0], vmax=color_t[-1])
+    for i in range(1, 9):
+        ax = fig.add_subplot(4, 2, i)
         data = datas[i - 1]
+        print(data["name"])
         for idx, frame in enumerate(range(len(data["t"]))):
             if data["name"] in ["IXS"]:
                 if idx % 3 != 0:
                     continue
-            elif data["name"] == "CHON-2017_weak":
+            elif data["name"] == "CHON-2017_weak (ReaxFF)":
                 if idx % 5 != 0:
                     continue
             else:
                 if idx % 10 != 0:
                     continue
             ax.plot(
-                data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                # data["r"], data["g"][frame], c=cmap(data["t"][frame] / data["t"][-1])
+                data["r"],
+                data["g"][frame],
+                c=cmap(data["t"][frame] / color_t[-1]),
             )
 
-        norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
+        # norm = matplotlib.colors.Normalize(vmin=data["t"][0], vmax=data["t"][-1])
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
 
+        # cbar = plt.colorbar(sm)
+        # cbar.set_label(r'Time, ps', rotation=90)
         ax.plot(data["r"], np.ones(len(data["r"])), "k--", alpha=0.6)
         ax.set_title(data["name"], fontsize=fontsize, y=1.05)
 
@@ -588,26 +595,17 @@ def plot_total_comparison(datas, save=True):
         xlabel = r"r, $nm$"
         ax.set_xlabel(xlabel, fontsize=fontsize)
         ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
-        ax.tick_params(labelsize=14)
-        ax.xaxis.set_major_locator(MultipleLocator(0.2))
+        ax.tick_params(labelsize=fontsize)
+        ax.xaxis.set_major_locator(MultipleLocator(0.4))
+        ax.xaxis.set_minor_locator(MultipleLocator(0.2))
         axes.append(ax)
     cbar = fig.colorbar(sm, ax=axes)
-    cbar.ax.tick_params(labelsize=14)
+    cbar.ax.tick_params(labelsize=fontsize)
     cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=fontsize)
 
-    axes = list()
-    for i in range(len(datas)+1, len(datas)*2+1):
-        ax = fig.add_subplot(2, len(datas), i)
-        data = datas[(i - len(datas)) - 1]
-        heatmap = make_heatmap(data, ax, fontsize=fontsize)
-        axes.append(ax)
-
-    cbar = fig.colorbar(heatmap, ax=axes)
-    cbar.ax.tick_params(labelsize=14)
-    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=fontsize)
     if save:
-        plt.savefig("figures/comp_subplot.png", bbox_inches="tight", dpi=500)
-        plt.savefig("figures/comp_subplot.pdf", bbox_inches="tight", dpi=500)
+        plt.savefig("figures/toc_subplot.png", bbox_inches="tight", dpi=500)
+        plt.savefig("figures/toc_subplot.pdf", bbox_inches="tight", dpi=500)
 
 
 if __name__ == "__main__":
@@ -616,4 +614,4 @@ if __name__ == "__main__":
     # plot_heatmap(datas)
     # plot_decay_subplot(datas)
     # plot_second_subplot(datas)
-    plot_total_comparison(comp_datas)
+    plot_toc(datas)

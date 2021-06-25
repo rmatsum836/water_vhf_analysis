@@ -318,10 +318,8 @@ def plot_first_peak_subplot(datas, si=False, save=True):
                 maxs[i] = np.nan
                 continue
             g_range = frame[r_low:r_high]
-            # maxs[i] = find_local_maxima(data['r'], frame, r_guess=0.26)[1]
             maxs[i] = find_local_maxima(r_range, g_range, r_guess=0.28)[1]
             if data["name"] == "SPC/E":
-                # max_r.append(find_local_maxima(data['r'], frame, r_guess=0.26)[0])
                 max_r.append(find_local_maxima(r_range, g_range, r_guess=0.28)[0])
         if data["name"] == "IXS":
             ax.semilogy(
@@ -367,17 +365,16 @@ def plot_first_peak_subplot(datas, si=False, save=True):
         I[:] = np.nan
 
         # Get area under the curve
-        for i in range(0, t.shape[0], 2):
+        for i in range(0, t.shape[0]):
             I[i] = get_auc(data, i)
 
-        ls = "--"
         if data["name"] == "IXS":
-            ax.semilogy(t, I, marker=".", label=data["name"], lw=4, color="k")
+            ax.semilogy(t, I, marker=".", label=data["name"], ls='None', lw=4, color="k")
         else:
-            # Get rid of NANs with [::2]
+            ls = "--"
             ax.semilogy(
-                t[::2],
-                I[::2],
+                t,
+                I,
                 ls=ls,
                 lw=3,
                 label=data["name"],
@@ -638,11 +635,11 @@ def plot_second_subplot(datas, save=True):
 
 if __name__ == "__main__":
     # plot_first_fit()
-    first_peak_auc(datas)
-    first_peak_auc(datas, si=True)
-    plot_peak_locations(datas)
-    plot_first_peak_subplot(datas, si=True)
+    #first_peak_auc(datas)
+    #first_peak_auc(datas, si=True)
+    #plot_peak_locations(datas)
+    #plot_first_peak_subplot(datas, si=True)
     plot_first_peak_subplot(datas)
     # first_cn(datas)
-    plot_fits()
+    #plot_fits()
     # plot_second_subplot(datas)
