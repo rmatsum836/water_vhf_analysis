@@ -545,8 +545,8 @@ def plot_second_subplot(datas):
 
 def plot_toc(datas, save=True):
     fontsize = 20
-    fig = plt.figure(figsize=(22, 16))
-    fig.subplots_adjust(hspace=0.8, wspace=0.8)
+    fig = plt.figure(figsize=(20, 7))
+    fig.subplots_adjust(hspace=0.6, wspace=0.8)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
 
@@ -554,7 +554,7 @@ def plot_toc(datas, save=True):
     color_t = datas[-1]["t"]
     norm = matplotlib.colors.Normalize(vmin=color_t[0], vmax=color_t[-1])
     for i in range(1, 9):
-        ax = fig.add_subplot(4, 4, i)
+        ax = fig.add_subplot(2, 4, i)
         data = datas[i - 1]
         print(data["name"])
         for idx, frame in enumerate(range(len(data["t"]))):
@@ -595,22 +595,13 @@ def plot_toc(datas, save=True):
         ax.set_xlabel(xlabel, fontsize=fontsize)
         ax.set_ylabel(r"$G(r, t)$", fontsize=fontsize)
         ax.tick_params(labelsize=fontsize)
-        ax.xaxis.set_major_locator(MultipleLocator(0.2))
+        ax.xaxis.set_major_locator(MultipleLocator(0.4))
+        ax.xaxis.set_minor_locator(MultipleLocator(0.2))
         axes.append(ax)
     cbar = fig.colorbar(sm, ax=axes)
     cbar.ax.tick_params(labelsize=fontsize)
     cbar.set_label(r"Time, $t$, $ps$", rotation=90, fontsize=fontsize)
 
-    axes = list()
-    for i in range(9, 17):
-        ax = fig.add_subplot(4, 4, i)
-        data = datas[(i - 8) - 1]
-        heatmap = make_heatmap(data, ax, color_t=color_t, fontsize=fontsize)
-        axes.append(ax)
-
-    cbar = fig.colorbar(heatmap, ax=axes)
-    cbar.ax.tick_params(labelsize=fontsize)
-    cbar.set_label(r"$G(r, t) - 1$", rotation=90, fontsize=fontsize)
     if save:
         plt.savefig("figures/toc_subplot.png", bbox_inches="tight", dpi=500)
         plt.savefig("figures/toc_subplot.pdf", bbox_inches="tight", dpi=500)
