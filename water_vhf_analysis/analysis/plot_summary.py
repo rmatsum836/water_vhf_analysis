@@ -545,7 +545,7 @@ def plot_second_subplot(datas):
 
 def plot_toc(datas, save=True):
     fontsize = 20
-    fig = plt.figure(figsize=(20, 7))
+    fig = plt.figure(figsize=(12, 18))
     fig.subplots_adjust(hspace=0.6, wspace=0.8)
     axes = list()
     cmap = matplotlib.cm.get_cmap("copper")
@@ -554,7 +554,7 @@ def plot_toc(datas, save=True):
     color_t = datas[-1]["t"]
     norm = matplotlib.colors.Normalize(vmin=color_t[0], vmax=color_t[-1])
     for i in range(1, 9):
-        ax = fig.add_subplot(2, 4, i)
+        ax = fig.add_subplot(4, 2, i)
         data = datas[i - 1]
         print(data["name"])
         for idx, frame in enumerate(range(len(data["t"]))):
