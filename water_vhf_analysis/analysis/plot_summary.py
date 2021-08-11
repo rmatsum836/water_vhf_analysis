@@ -607,6 +607,51 @@ def plot_toc(datas, save=True):
         plt.savefig("figures/toc_subplot.png", bbox_inches="tight", dpi=500)
         plt.savefig("figures/toc_subplot.pdf", bbox_inches="tight", dpi=500)
 
+def plot_rdf(datas, save=True):
+    fontsize = 16
+    fig, ax = plt.subplots()
+    for i in range(len(datas)):
+        data = datas[i]
+        ax.plot(
+            data["r"],
+            data["g"][0],
+            color=get_color(data["name"]),
+            label=data["name"],
+        )
+
+    plt.xlim((0, 0.8))
+    plt.ylim((0, 3.5))
+    xlabel = r"r, $nm$"
+    plt.xlabel(xlabel, fontsize=fontsize)
+    plt.ylabel(r"$G(r, 0)$", fontsize=fontsize)
+    plt.legend()
+    if save:
+        plt.savefig("figures/total_rdf.png", bbox_inches="tight", dpi=500)
+
+def plot_rdf_2(datas, save=True):
+    fontsize = 16
+    fig = plt.figure(figsize=(20, 10))
+    fig.subplots_adjust(hspace=0.5, wspace=0.5)
+    axes = list()
+    for i in range(1, 9):
+        ax = fig.add_subplot(2, 4, i)
+        data = datas[i - 1]
+        ax.plot(
+            data["r"],
+            data["g"][0],
+            color="k",
+            label=data["name"],
+        )
+
+        ax.set_xlim((0, 0.8))
+        ax.set_ylim((0, 3.5))
+        xlabel = r"r, $nm$"
+        ax.set_xlabel(xlabel, fontsize=fontsize)
+        ax.set_ylabel(r"$G(r, 0)$", fontsize=fontsize)
+        ax.set_title(data["name"], fontsize=fontsize, y=1.05)
+    if save:
+        plt.savefig("figures/total_rdf_2.png", bbox_inches="tight", dpi=500)
+
 
 if __name__ == "__main__":
     #plot_total_subplots(datas)
@@ -614,4 +659,6 @@ if __name__ == "__main__":
     # plot_heatmap(datas)
     # plot_decay_subplot(datas)
     # plot_second_subplot(datas)
-    plot_toc(datas)
+    #plot_toc(datas)
+    plot_rdf(datas)
+    plot_rdf_2(datas)
