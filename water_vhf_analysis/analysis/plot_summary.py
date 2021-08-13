@@ -629,7 +629,7 @@ def plot_rdf(datas, save=True):
         plt.savefig("figures/total_rdf.png", bbox_inches="tight", dpi=500)
 
 def plot_rdf_2(datas, save=True):
-    fontsize = 16
+    fontsize = 18
     fig = plt.figure(figsize=(20, 10))
     fig.subplots_adjust(hspace=0.5, wspace=0.5)
     axes = list()
@@ -649,6 +649,7 @@ def plot_rdf_2(datas, save=True):
         ax.set_xlabel(xlabel, fontsize=fontsize)
         ax.set_ylabel(r"$G(r, 0)$", fontsize=fontsize)
         ax.set_title(data["name"], fontsize=fontsize, y=1.05)
+        ax.tick_params(axis="both", labelsize=14)
     if save:
         plt.savefig("figures/total_rdf_2.png", bbox_inches="tight", dpi=500)
 
